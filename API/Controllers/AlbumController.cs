@@ -11,9 +11,9 @@ namespace API.Controllers
     [ApiController]
     public class AlbumController : ControllerBase
     {
-        private readonly IDbContext _ctx;
+        private readonly SpotyPieIDbContext _ctx;
 
-        public AlbumController(IDbContext ctx)
+        public AlbumController(SpotyPieIDbContext ctx)
         {
             _ctx = ctx;
         }

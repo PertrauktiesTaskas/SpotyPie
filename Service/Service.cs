@@ -5,9 +5,9 @@ namespace Service
 {
     public class Service : IDb
     {
-        private readonly IDbContext _ctx;
+        private readonly SpotyPieIDbContext _ctx;
 
-        public Service(IDbContext ctx)
+        public Service(SpotyPieIDbContext ctx)
         {
             _ctx = ctx;
         }

@@ -6,9 +6,9 @@ using System.Text;
 
 namespace Database
 {
-    public class IDbContext : DbContext
+    public class SpotyPieIDbContext : DbContext
     {
-        public IDbContext(DbContextOptions options) : base(options)
+        public SpotyPieIDbContext(DbContextOptions options) : base(options)
         {
         }
 
