@@ -7,7 +7,7 @@ namespace Models.BackEnd
 {
     public class Item
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public List<Artist> Artists { get; set; }
 
@@ -24,6 +24,8 @@ namespace Models.BackEnd
         public string Name { get; set; }
 
         public long TrackNumber { get; set; }
+
+        public string LocalUrl { get; set; }
 
     }
 }

@@ -4,5 +4,6 @@ namespace Database
 {
     public interface IDb
     {
+        void Start();
     }
 }

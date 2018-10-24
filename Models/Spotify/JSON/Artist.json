@@ -1,0 +1,156 @@
+{
+  "artists": [
+    {
+      "external_urls": {
+        "spotify": "https://open.spotify.com/artist/3iOvXCl6edW5Um0fXEBRXy"
+      },
+      "followers": {
+        "href": null,
+        "total": 2974500
+      },
+      "genres": [
+        "downtempo",
+        "dream pop",
+        "indietronica",
+        "pop"
+      ],
+      "href": "https://api.spotify.com/v1/artists/3iOvXCl6edW5Um0fXEBRXy",
+      "id": "3iOvXCl6edW5Um0fXEBRXy",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://i.scdn.co/image/922163afa546eca372c27be4513a481de06e9481",
+          "width": 640
+        },
+        {
+          "height": 320,
+          "url": "https://i.scdn.co/image/8ef506656acfc2bc1449b9a963026bd7296df2e2",
+          "width": 320
+        },
+        {
+          "height": 160,
+          "url": "https://i.scdn.co/image/7e7c16105b54b9abcc056d25b3fb549372a8df38",
+          "width": 160
+        }
+      ],
+      "name": "The xx",
+      "popularity": 73,
+      "type": "artist",
+      "uri": "spotify:artist:3iOvXCl6edW5Um0fXEBRXy"
+    },
+    {
+      "external_urls": {
+        "spotify": "https://open.spotify.com/artist/26T3LtbuGT1Fu9m0eRq5X3"
+      },
+      "followers": {
+        "href": null,
+        "total": 1274981
+      },
+      "genres": [
+        "garage rock",
+        "indie pop",
+        "indie rock",
+        "modern alternative rock",
+        "modern rock",
+        "punk blues",
+        "rock"
+      ],
+      "href": "https://api.spotify.com/v1/artists/26T3LtbuGT1Fu9m0eRq5X3",
+      "id": "26T3LtbuGT1Fu9m0eRq5X3",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://i.scdn.co/image/eb2046b1fca6e9fc911e3b77691a0153c9248ec2",
+          "width": 640
+        },
+        {
+          "height": 320,
+          "url": "https://i.scdn.co/image/fb71116b49a86a1632d3eb7d558846262948c112",
+          "width": 320
+        },
+        {
+          "height": 160,
+          "url": "https://i.scdn.co/image/f55de3db0b2845af43ad2eabe6b360339e9e950f",
+          "width": 160
+        }
+      ],
+      "name": "Cage The Elephant",
+      "popularity": 74,
+      "type": "artist",
+      "uri": "spotify:artist:26T3LtbuGT1Fu9m0eRq5X3"
+    },
+    {
+      "external_urls": {
+        "spotify": "https://open.spotify.com/artist/3EaMbsBlExxNxLvTJcZvDq"
+      },
+      "followers": {
+        "href": null,
+        "total": 61904
+      },
+      "genres": [
+        "canadian indie",
+        "toronto indie"
+      ],
+      "href": "https://api.spotify.com/v1/artists/3EaMbsBlExxNxLvTJcZvDq",
+      "id": "3EaMbsBlExxNxLvTJcZvDq",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://i.scdn.co/image/863a912568e7f77d34eebcb28b54b61234c492fd",
+          "width": 640
+        },
+        {
+          "height": 320,
+          "url": "https://i.scdn.co/image/c3824098e42a032bd3fd1ec29a81a7566e17f00c",
+          "width": 320
+        },
+        {
+          "height": 160,
+          "url": "https://i.scdn.co/image/df9631354ae8353b612368714b5742b402aab388",
+          "width": 160
+        }
+      ],
+      "name": "July Talk",
+      "popularity": 49,
+      "type": "artist",
+      "uri": "spotify:artist:3EaMbsBlExxNxLvTJcZvDq"
+    },
+    {
+      "external_urls": {
+        "spotify": "https://open.spotify.com/artist/77SW9BnxLY8rJ0RciFqkHh"
+      },
+      "followers": {
+        "href": null,
+        "total": 2385304
+      },
+      "genres": [
+        "modern alternative rock",
+        "modern rock",
+        "pop"
+      ],
+      "href": "https://api.spotify.com/v1/artists/77SW9BnxLY8rJ0RciFqkHh",
+      "id": "77SW9BnxLY8rJ0RciFqkHh",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://i.scdn.co/image/7880e6831c1b83030a4c261f46386b04003b0a97",
+          "width": 640
+        },
+        {
+          "height": 320,
+          "url": "https://i.scdn.co/image/ad76578926bf4d5905a86edd51d3db9f621203a2",
+          "width": 320
+        },
+        {
+          "height": 160,
+          "url": "https://i.scdn.co/image/39b84f6034757c4bed31d497e7810dc84af6fa48",
+          "width": 160
+        }
+      ],
+      "name": "The Neighbourhood",
+      "popularity": 78,
+      "type": "artist",
+      "uri": "spotify:artist:77SW9BnxLY8rJ0RciFqkHh"
+    }
+  ]
+}
