@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Net.Http.Headers;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace API.Controllers
 {
@@ -13,10 +14,12 @@ namespace API.Controllers
         private readonly SpotyPieIDbContext _ctx;
         private readonly CancellationTokenSource cts;
         private CancellationToken ct;
+        private Service.Service _service;
 
-        public StreamController(SpotyPieIDbContext ctx)
+        public StreamController(SpotyPieIDbContext ctx, Service.Service service)
         {
             _ctx = ctx;
+            _service = service;
             cts = new CancellationTokenSource();
             ct = cts.Token;
         }
@@ -27,17 +30,27 @@ namespace API.Controllers
             return Ok("Gerai");
         }
 
-        [HttpGet("doSomething")]
-        public IActionResult GetMusic(CancellationToken t)
+        [HttpGet("play/{id}")]
+        public async Task<IActionResult> GetMusic(CancellationToken t, int id)
         {
             try
             {
                 t.ThrowIfCancellationRequested();
-                //"C:\Users\lukas\Source\Repos\SpotyPie\API\music.flac"
-                //"/root/Music/" + file + ".flac"
-                return Service.Service.OpenFile(@"C:\Users\lukas\Source\Repos\SpotyPie\API\music.flac", out FileStream fs)
-                    ? File(fs, new MediaTypeHeaderValue("audio/mpeg").MediaType, true)
-                    : (IActionResult)BadRequest();
+                var path = await _service.GetAudioPathById(id);
+
+                if (!string.IsNullOrWhiteSpace(path))
+                {
+                    if (_service.SetAudioPlaying(id))
+                    {
+                        return Service.Service.OpenFile(path, out FileStream fs)
+                            ? File(fs, new MediaTypeHeaderValue("audio/mpeg").MediaType, true)
+                            : (IActionResult)BadRequest();
+                    }
+
+                    return BadRequest("Cannot find path specified/File not playable");
+                }
+
+                return BadRequest("Cannot find path specified/File not playable");
             }
             catch (System.Exception ex)
             {

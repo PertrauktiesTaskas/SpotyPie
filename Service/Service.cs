@@ -1,10 +1,11 @@
 ﻿using Database;
 using Microsoft.EntityFrameworkCore;
-using Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Spotify = Models.Spotify;
 
 namespace Service
@@ -18,6 +19,47 @@ namespace Service
             _ctx = ctx;
 
             Start();
+        }
+
+        public static bool OpenFile(string path, out FileStream fs)
+        {
+            try
+            {
+                fs = File.OpenRead(path);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                fs = null;
+                return false;
+            }
+        }
+
+        public async Task<string> GetAudioPathById(int id)
+        {
+            try
+            {
+                var file = await _ctx.Items.FirstOrDefaultAsync(x => x.Id == id);
+                return file.IsPlayable ? file.LocalUrl : string.Empty;
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
+
+        public bool SetAudioPlaying(int id)
+        {
+            try
+            {
+                //var audio = _ctx.NowPlaying.Add(id);
+                _ctx.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public void Start()
@@ -42,7 +84,7 @@ namespace Service
                     foreach (var x in Albums.Albums)
                     {
                         var model = new Models.BackEnd.Album(x);
-                        for (int i = 0; i< model.Tracks.Items.Count; i++)
+                        for (int i = 0; i < model.Tracks.Items.Count; i++)
                         {
                             model.Tracks.Items[i].Artists = null;
                         }
