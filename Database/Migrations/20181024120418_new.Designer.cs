@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(SpotyPieIDbContext))]
-    [Migration("20181023144236_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20181024120418_new")]
+    partial class @new
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,10 +23,13 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Models.BackEnd.Album", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AlbumType");
+
+                    b.Property<string>("Artists");
 
                     b.Property<string>("Genres");
 
@@ -42,7 +45,7 @@ namespace Database.Migrations
 
                     b.Property<int?>("TracksId");
 
-                    b.Property<string>("UserId");
+                    b.Property<int?>("UserId");
 
                     b.HasKey("Id");
 
@@ -55,22 +58,19 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Models.BackEnd.Artist", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AlbumId");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Genres");
 
-                    b.Property<string>("ItemId");
+                    b.Property<int?>("ItemId");
 
                     b.Property<string>("Name");
 
                     b.Property<long>("Popularity");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AlbumId");
 
                     b.HasIndex("ItemId");
 
@@ -83,7 +83,7 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AlbumId");
+                    b.Property<int?>("AlbumId");
 
                     b.Property<string>("Text");
 
@@ -102,9 +102,9 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AlbumId");
+                    b.Property<int?>("AlbumId");
 
-                    b.Property<string>("ArtistId");
+                    b.Property<int?>("ArtistId");
 
                     b.Property<long>("Height");
 
@@ -123,8 +123,9 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Models.BackEnd.Item", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<long>("DiscNumber");
 
@@ -136,7 +137,11 @@ namespace Database.Migrations
 
                     b.Property<bool>("IsPlayable");
 
+                    b.Property<string>("LocalUrl");
+
                     b.Property<string>("Name");
+
+                    b.Property<int?>("PlaylistId");
 
                     b.Property<long>("TrackNumber");
 
@@ -144,9 +149,26 @@ namespace Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PlaylistId");
+
                     b.HasIndex("TracksId");
 
-                    b.ToTable("Items");
+                    b.ToTable("Item");
+                });
+
+            modelBuilder.Entity("Models.BackEnd.Playlist", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("Limit");
+
+                    b.Property<long>("Total");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Playlist");
                 });
 
             modelBuilder.Entity("Models.BackEnd.Tracks", b =>
@@ -164,8 +186,9 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Models.BackEnd.User", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTimeOffset>("Birthdate");
 
@@ -197,10 +220,6 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Models.BackEnd.Artist", b =>
                 {
-                    b.HasOne("Models.BackEnd.Album")
-                        .WithMany("Artists")
-                        .HasForeignKey("AlbumId");
-
                     b.HasOne("Models.BackEnd.Item")
                         .WithMany("Artists")
                         .HasForeignKey("ItemId");
@@ -226,6 +245,10 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Models.BackEnd.Item", b =>
                 {
+                    b.HasOne("Models.BackEnd.Playlist")
+                        .WithMany("Items")
+                        .HasForeignKey("PlaylistId");
+
                     b.HasOne("Models.BackEnd.Tracks")
                         .WithMany("Items")
                         .HasForeignKey("TracksId");

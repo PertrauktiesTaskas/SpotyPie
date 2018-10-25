@@ -7,11 +7,18 @@ namespace API.Controllers
     [ApiController]
     public class AlbumController : ControllerBase
     {
-        private readonly SpotyPieIDbContext _ctx;
+        private readonly IDb _ctx;
 
-        public AlbumController(SpotyPieIDbContext ctx)
+        public AlbumController(IDb ctx)
         {
             _ctx = ctx;
+        }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            _ctx.Start();
+            return Ok();
         }
     }
 }
