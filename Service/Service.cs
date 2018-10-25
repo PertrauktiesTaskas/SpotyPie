@@ -1,5 +1,6 @@
 ﻿using Database;
 using Microsoft.EntityFrameworkCore;
+using Models.BackEnd;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,18 @@ namespace Service
             }
         }
 
+        public bool AddAudioToLibrary(Item file)
+        {
+            try
+            {
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
         public bool SetAudioPlaying(int id)
         {
             try
@@ -59,6 +72,18 @@ namespace Service
             catch (Exception ex)
             {
                 return false;
+            }
+        }
+
+        public async Task<List<Item>> GetSongList()
+        {
+            try
+            {
+                return await _ctx.Items.Where(x => x.IsPlayable).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
         }
 
