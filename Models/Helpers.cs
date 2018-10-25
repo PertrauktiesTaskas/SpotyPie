@@ -28,7 +28,7 @@ namespace Models
                 var model = new Item
                 {
                     Id = 0,
-                    Artists = x.Artists != null ? GetArtist(x.Artists) : null,
+                    //Artists = x.Artists != null ? GetArtist(x.Artists) : null,
                     DiscNumber = x.DiscNumber,
                     DurationMs = x.DurationMs,
                     Explicit = x.Explicit,

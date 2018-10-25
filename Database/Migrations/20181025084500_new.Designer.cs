@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(SpotyPieIDbContext))]
-    [Migration("20181024120418_new")]
+    [Migration("20181025084500_new")]
     partial class @new
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,11 +29,21 @@ namespace Database.Migrations
 
                     b.Property<string>("AlbumType");
 
+                    b.Property<int?>("ArtistId");
+
                     b.Property<string>("Artists");
+
+                    b.Property<int?>("CopyrightId");
+
+                    b.Property<string>("Copyrights");
+
+                    b.Property<DateTime>("Created");
 
                     b.Property<string>("Genres");
 
                     b.Property<string>("Label");
+
+                    b.Property<DateTime>("LastActiveTime");
 
                     b.Property<string>("Name");
 
@@ -43,15 +53,11 @@ namespace Database.Migrations
 
                     b.Property<long>("TotalTracks");
 
-                    b.Property<int?>("TracksId");
-
-                    b.Property<int?>("UserId");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("TracksId");
+                    b.HasIndex("ArtistId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("CopyrightId");
 
                     b.ToTable("Albums");
                 });
@@ -64,15 +70,11 @@ namespace Database.Migrations
 
                     b.Property<string>("Genres");
 
-                    b.Property<int?>("ItemId");
-
                     b.Property<string>("Name");
 
                     b.Property<long>("Popularity");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ItemId");
 
                     b.ToTable("Artists");
                 });
@@ -83,15 +85,11 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AlbumId");
-
                     b.Property<string>("Text");
 
                     b.Property<string>("Type");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AlbumId");
 
                     b.ToTable("Copyrights");
                 });
@@ -127,6 +125,12 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("AlbumId");
+
+                    b.Property<int?>("ArtistId");
+
+                    b.Property<string>("Artists");
+
                     b.Property<long>("DiscNumber");
 
                     b.Property<long>("DurationMs");
@@ -136,6 +140,8 @@ namespace Database.Migrations
                     b.Property<bool>("IsLocal");
 
                     b.Property<bool>("IsPlayable");
+
+                    b.Property<DateTime>("LastActiveTime");
 
                     b.Property<string>("LocalUrl");
 
@@ -149,6 +155,10 @@ namespace Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AlbumId");
+
+                    b.HasIndex("ArtistId");
+
                     b.HasIndex("PlaylistId");
 
                     b.HasIndex("TracksId");
@@ -161,6 +171,10 @@ namespace Database.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Created");
+
+                    b.Property<DateTime>("LastActiveTime");
 
                     b.Property<long>("Limit");
 
@@ -198,38 +212,22 @@ namespace Database.Migrations
 
                     b.Property<string>("Email");
 
-                    b.Property<int?>("ImagesId");
+                    b.Property<string>("Images");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ImagesId");
 
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Models.BackEnd.Album", b =>
                 {
-                    b.HasOne("Models.BackEnd.Tracks", "Tracks")
-                        .WithMany()
-                        .HasForeignKey("TracksId");
-
-                    b.HasOne("Models.BackEnd.User")
+                    b.HasOne("Models.BackEnd.Artist")
                         .WithMany("Albums")
-                        .HasForeignKey("UserId");
-                });
+                        .HasForeignKey("ArtistId");
 
-            modelBuilder.Entity("Models.BackEnd.Artist", b =>
-                {
-                    b.HasOne("Models.BackEnd.Item")
-                        .WithMany("Artists")
-                        .HasForeignKey("ItemId");
-                });
-
-            modelBuilder.Entity("Models.BackEnd.Copyright", b =>
-                {
-                    b.HasOne("Models.BackEnd.Album")
-                        .WithMany("Copyrights")
-                        .HasForeignKey("AlbumId");
+                    b.HasOne("Models.BackEnd.Copyright")
+                        .WithMany("Albums")
+                        .HasForeignKey("CopyrightId");
                 });
 
             modelBuilder.Entity("Models.BackEnd.Image", b =>
@@ -245,6 +243,14 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Models.BackEnd.Item", b =>
                 {
+                    b.HasOne("Models.BackEnd.Album")
+                        .WithMany("Songs")
+                        .HasForeignKey("AlbumId");
+
+                    b.HasOne("Models.BackEnd.Artist")
+                        .WithMany("Songs")
+                        .HasForeignKey("ArtistId");
+
                     b.HasOne("Models.BackEnd.Playlist")
                         .WithMany("Items")
                         .HasForeignKey("PlaylistId");
@@ -252,13 +258,6 @@ namespace Database.Migrations
                     b.HasOne("Models.BackEnd.Tracks")
                         .WithMany("Items")
                         .HasForeignKey("TracksId");
-                });
-
-            modelBuilder.Entity("Models.BackEnd.User", b =>
-                {
-                    b.HasOne("Models.BackEnd.Image", "Images")
-                        .WithMany()
-                        .HasForeignKey("ImagesId");
                 });
 #pragma warning restore 612, 618
         }

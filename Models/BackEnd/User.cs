@@ -16,8 +16,6 @@ namespace Models.BackEnd
 
         public string Email { get; set; }
 
-        public List<Album> Albums { get; set; }
-
-        public Image Images { get; set; }
+        public string Images { get; set; }
     }
 }

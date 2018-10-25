@@ -9,7 +9,8 @@ namespace Models.BackEnd
     {
         public int Id { get; set; }
 
-        public List<Artist> Artists { get; set; }
+        // JSON string
+        public string Artists { get; set; }
 
         public long DiscNumber { get; set; }
 
@@ -26,6 +27,8 @@ namespace Models.BackEnd
         public long TrackNumber { get; set; }
 
         public string LocalUrl { get; set; }
+
+        public DateTime LastActiveTime { get; set; }
 
     }
 }
