@@ -1,5 +1,6 @@
 ﻿using Database;
 using System;
+using System.IO;
 
 namespace Service
 {
@@ -10,6 +11,20 @@ namespace Service
         public Service(SpotyPieIDbContext ctx)
         {
             _ctx = ctx;
+        }
+
+        public static bool OpenFile(string path, out FileStream fs)
+        {
+            try
+            {
+                fs = File.OpenRead(path);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                fs = null;
+                return false;
+            }
         }
     }
 }
