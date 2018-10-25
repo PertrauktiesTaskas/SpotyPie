@@ -1,10 +1,12 @@
 ﻿using Database;
 using Microsoft.EntityFrameworkCore;
-using Models;
+using Models.BackEnd;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Spotify = Models.Spotify;
 
 namespace Service
@@ -18,6 +20,71 @@ namespace Service
             _ctx = ctx;
 
             Start();
+        }
+
+        public static bool OpenFile(string path, out FileStream fs)
+        {
+            try
+            {
+                fs = File.OpenRead(path);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                fs = null;
+                return false;
+            }
+        }
+
+        public async Task<string> GetAudioPathById(int id)
+        {
+            try
+            {
+                var file = await _ctx.Items.FirstOrDefaultAsync(x => x.Id == id);
+                return file.IsPlayable ? file.LocalUrl : string.Empty;
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
+
+        public bool AddAudioToLibrary(Item file)
+        {
+            try
+            {
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool SetAudioPlaying(int id)
+        {
+            try
+            {
+                //var audio = _ctx.NowPlaying.Add(id);
+                _ctx.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<List<Item>> GetSongList()
+        {
+            try
+            {
+                return await _ctx.Items.Where(x => x.IsPlayable).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public void Start()
