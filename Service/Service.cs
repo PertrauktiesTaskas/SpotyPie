@@ -1,5 +1,6 @@
 ﻿using Database;
 using Microsoft.EntityFrameworkCore;
+using Models;
 using Models.BackEnd;
 using Newtonsoft.Json;
 using System;
@@ -97,7 +98,7 @@ namespace Service
             try
             {
                 //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Public\TestFolder\WriteLines2.txt");
-                string artist = System.IO.File.ReadAllText(@"C:\Users\Eimantas\source\repos\Models\Models\bin\Debug\netcoreapp2.1\Spotify\JSON\Artist.json");
+                string artist = System.IO.File.ReadAllText(@"C:\Users\Eimantas\source\repos\Models\Models\bin\Debug\netcoreapp2.1\Spotify\JSON\Artist19data.json");
 
                 string albums = System.IO.File.ReadAllText(@"C:\Users\Eimantas\source\repos\Models\Models\bin\Debug\netcoreapp2.1\Spotify\JSON\14.json");
 
@@ -105,6 +106,7 @@ namespace Service
                 var Albums = JsonConvert.DeserializeObject<Spotify.AlbumRoot>(albums);
 
                 InsertArtist(Albums);
+                UpdateArtisthFullData(Artist);
                 InsertCopyrights(Albums);
                 InsertAlbums(Albums);
 
@@ -113,6 +115,29 @@ namespace Service
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+            }
+        }
+
+        private void UpdateArtisthFullData(Spotify.ArtistRoot artist)
+        {
+            foreach (var art in artist.Artists)
+            {
+                if (art == null)
+                    continue;
+
+                var DbArt = _ctx.Artists.Include(x => x.Images).FirstOrDefault(x => x.Name == art.Name);
+                if (DbArt != null)
+                {
+                    DbArt.Genres = JsonConvert.SerializeObject(art.Genres.ToList());
+                    if (DbArt.Images == null)
+                        DbArt.Images = new List<Image>();
+
+                    if (DbArt.Images.Count == 0)
+                        DbArt.Images.AddRange(Helpers.GetImages(art.Images));
+
+                    _ctx.Entry(DbArt).State = EntityState.Modified;
+                    _ctx.SaveChanges();
+                }
             }
         }
 
