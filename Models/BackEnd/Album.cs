@@ -12,10 +12,11 @@ namespace Models.BackEnd
 
         public string AlbumType { get; set; }
 
-        //[JSON]
+        // JSON
         public string Artists { get; set; }
 
-        public List<Copyright> Copyrights { get; set; }
+        // Json
+        public string Copyrights { get; set; }
 
         //[Json] List<string>
         public string Genres { get; set; }
@@ -33,7 +34,11 @@ namespace Models.BackEnd
 
         public long TotalTracks { get; set; }
 
-        public Tracks Tracks { get; set; }
+        public List<Item> Songs { get; set; }
+
+        public DateTime Created { get; set; }
+
+        public DateTime LastActiveTime { get; set; }
 
         public Album()
         {
@@ -43,9 +48,10 @@ namespace Models.BackEnd
         public Album(Models.Spotify.Album al)
         {
             Id = 0;
+            Created = DateTime.Now;
             AlbumType = al.AlbumType;
             Artists = al.Artists != null ? JsonConvert.SerializeObject(Helpers.GetArtist(al.Artists)) : null;
-            Copyrights = al.Copyrights != null ? Helpers.GetCopyrights(al.Copyrights) : null;
+            Copyrights = al.Copyrights != null ? JsonConvert.SerializeObject(Helpers.GetCopyrights(al.Copyrights)) : null;
             Genres = al.Genres != null ? JsonConvert.SerializeObject(al.Genres.ToList()) : null;
             Images = al.Images != null ? Helpers.GetImages(al.Images) : null;
             Label = al.Label;
@@ -53,7 +59,8 @@ namespace Models.BackEnd
             Popularity = 0;
             ReleaseDate = al.ReleaseDate;
             TotalTracks = al.TotalTracks;
-            Tracks = al.Tracks != null ? Helpers.GetTrack(al.Tracks) : null;
+            Songs = al.Tracks != null ? Helpers.GetItems(al.Tracks.Items) : null;
+            LastActiveTime = DateTime.Now;
         }
     }
 }

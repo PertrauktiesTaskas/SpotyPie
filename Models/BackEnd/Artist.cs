@@ -15,6 +15,10 @@ namespace Models.BackEnd
 
         public List<Image> Images { get; set; }
 
+        public List<Item> Songs { get; set; }
+
+        public List<Album> Albums { get; set; }
+
         public long Popularity { get; set; }
     }
 }

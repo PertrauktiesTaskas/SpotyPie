@@ -131,52 +131,16 @@ namespace Service
                 //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Public\TestFolder\WriteLines2.txt");
                 string artist = System.IO.File.ReadAllText(@"C:\Users\Eimantas\source\repos\Models\Models\bin\Debug\netcoreapp2.1\Spotify\JSON\Artist.json");
 
-                string albums = System.IO.File.ReadAllText(@"C:\Users\Eimantas\source\repos\Models\Models\bin\Debug\netcoreapp2.1\Spotify\JSON\Albums.json");
+                string albums = System.IO.File.ReadAllText(@"C:\Users\Eimantas\source\repos\Models\Models\bin\Debug\netcoreapp2.1\Spotify\JSON\14.json");
 
                 var Artist = JsonConvert.DeserializeObject<Spotify.ArtistRoot>(artist);
                 var Albums = JsonConvert.DeserializeObject<Spotify.AlbumRoot>(albums);
 
-                try
-                {
-                    foreach (var x in Albums.Albums)
-                    {
-                        var model = new Models.BackEnd.Album(x);
-                        for (int i = 0; i < model.Tracks.Items.Count; i++)
-                        {
-                            model.Tracks.Items[i].Artists = null;
-                        }
-                        _ctx.Albums.Add(model);
-                        _ctx.SaveChanges();
+                InsertArtist(Albums);
+                InsertCopyrights(Albums);
+                InsertAlbums(Albums);
 
-                        foreach (var y in x.Tracks.Items)
-                        {
-                            var dbSong = _ctx.Items.Include(z => z.Artists).First(d => d.Name == y.Name);
 
-                            if (dbSong.Artists == null)
-                                dbSong.Artists = new List<Models.BackEnd.Artist>();
-
-                            var SongArtist = Models.Helpers.GetArtist(y.Artists);
-                            foreach (var z in SongArtist)
-                            {
-                                var dbArt = _ctx.Artists.FirstOrDefault(f => f.Name == z.Name);
-                                if (dbArt == null)
-                                    dbSong.Artists.Add(z);
-                                else
-                                {
-                                    if (!dbSong.Artists.Any(yy => yy.Name == z.Name))
-                                    {
-                                        dbSong.Artists.Add(z);
-                                    }
-                                }
-                            }
-                            _ctx.SaveChanges();
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
             }
             catch (Exception e)
             {
@@ -184,59 +148,190 @@ namespace Service
             }
         }
 
-        //private void InsertAlbums(ArtistAlbums albums)
-        //{
-        //    foreach (var x in albums.Items)
-        //    {
-        //        var a = new Models.Spotify.ArtistRoot.ArtistRoot { Artists = x.Artists;};
-        //        foreach (var artist in x.Artists)
-        //        {
-        //            var AddToThisArtist = _ctx.Artists.FirstOrDefault(y => y.Name == artist.Name);
-        //            if (AddToThisArtist != null)
-        //            {
+        public void InsertArtist(Spotify.AlbumRoot album)
+        {
+            List<Models.BackEnd.Artist> DistintArtist = _ctx.Artists.ToList();
 
-        //            }
-        //        }
-        //    }
-        //}
+            if (DistintArtist == null)
+                DistintArtist = new List<Models.BackEnd.Artist>();
 
-        //public void InsertArtist(Spotify.ArtistRoot root)
-        //{
-        //    foreach (var x in root.Artists)
-        //    {
-        //        var model = new Models.BackEnd.Artist
-        //        {
-        //            Id = 0,
-        //            Genres = JsonConvert.SerializeObject(x.Genres),
-        //            Images = GetImages(x.Images),
-        //            Name = x.Name,
-        //            Popularity = 0
-        //        };
+            foreach (var x in album.Albums)
+            {
+                foreach (var a in Helpers.GetArtist(x.Artists))
+                {
+                    if (!DistintArtist.Any(z => z.Name == a.Name))
+                    {
+                        DistintArtist.Add(a);
+                        _ctx.Artists.Add(a);
+                    }
+                }
+            }
+            _ctx.SaveChanges();
+        }
 
-        //        if (!_ctx.Artists.Any(y => y.Name.Contains(model.Name)))
-        //        {
-        //            _ctx.Artists.Add(model);
-        //            _ctx.SaveChanges();
-        //        }
-        //    }
-        //}
+        public void InsertCopyrights(Spotify.AlbumRoot album)
+        {
+            List<Models.BackEnd.Copyright> DistintArtist = _ctx.Copyrights.ToList();
 
-        //public List<Models.BackEnd.Image> GetImages(List<Spotify.Image> img)
-        //{
-        //    List<Models.BackEnd.Image> images = new List<Models.BackEnd.Image>();
+            if (DistintArtist == null)
+                DistintArtist = new List<Models.BackEnd.Copyright>();
 
-        //    foreach (var x in img)
-        //    {
-        //        var model = new Models.BackEnd.Image
-        //        {
-        //            Height = x.Height,
-        //            Id = 0,
-        //            Url = x.Url.ToString(),
-        //            Width = x.Width
-        //        };
-        //        images.Add(model);
-        //    }
-        //    return images;
-        //}
+            foreach (var x in album.Albums)
+            {
+                foreach (var a in Helpers.GetCopyrights(x.Copyrights))
+                {
+                    if (!DistintArtist.Any(z => z.Text == a.Text && z.Type == a.Type))
+                    {
+                        DistintArtist.Add(a);
+                        _ctx.Copyrights.Add(a);
+                    }
+                }
+            }
+            _ctx.SaveChanges();
+        }
+
+        public void InsertAlbums(Spotify.AlbumRoot album)
+        {
+            List<Models.BackEnd.Artist> DistintArtist = _ctx.Artists.ToList();
+            List<Models.BackEnd.Copyright> DistintCopyrights = _ctx.Copyrights.ToList();
+
+            List<Models.BackEnd.Album> DistintAlbum = _ctx.Albums.ToList();
+
+            if (DistintAlbum == null)
+                DistintAlbum = new List<Models.BackEnd.Album>();
+
+            foreach (var x in album.Albums)
+            {
+                var albumGood = new Models.BackEnd.Album(x);
+                albumGood.Songs = null;
+
+                if (!DistintAlbum.Any(z => z.Name == x.Name))
+                {
+                    DistintAlbum.Add(albumGood);
+
+                    _ctx.Albums.Add(albumGood);
+                    _ctx.SaveChanges();
+                }
+                BindArtistToAlbum(x);
+                BindCoryrightsToAlbum(x);
+                InsertTracks(x);
+
+            }
+            _ctx.SaveChanges();
+        }
+
+        private void InsertTracks(Spotify.Album x)
+        {
+            //Einu per albumo dainas
+            foreach (var song in Helpers.GetItems(x.Tracks.Items))
+            {
+                //Albumas su dainomis
+                var dbSong = _ctx.Albums.Include(y => y.Songs)
+                    .FirstOrDefault(ar => ar.Name == x.Name);
+
+                if (dbSong != null)
+                {
+                    if (dbSong.Songs == null)
+                        dbSong.Songs = new List<Models.BackEnd.Item>();
+
+                    if (!dbSong.Songs.Any(y => y.Name == song.Name))
+                    {
+                        //ADDING SONG TO ALBUM
+                        song.Artists = JsonConvert.SerializeObject(Helpers.GetArtist(x.Artists));
+                        dbSong.Songs.Add(song);
+                        _ctx.Entry(dbSong).State = EntityState.Modified;
+                        _ctx.SaveChanges();
+                    }
+                    addSongToArtist(song);
+                }
+            }
+
+            void addSongToArtist(Models.BackEnd.Item song)
+            {
+                //ADDING SONG TO ARTIST
+                foreach (var AlbumArtist in x.Artists)
+                {
+                    var artist = _ctx.Artists.Include(y => y.Songs).FirstOrDefault(y => y.Name == AlbumArtist.Name);
+                    if (artist != null)
+                    {
+                        if (artist.Songs == null)
+                            artist.Songs = new List<Models.BackEnd.Item>();
+                        if (!artist.Songs.Any(y => y.Name == song.Name))
+                        {
+                            artist.Songs.Add(_ctx.Items.First(y => y.Name == song.Name));
+                            _ctx.Entry(artist).State = EntityState.Modified;
+                            _ctx.SaveChanges();
+                        }
+                    }
+                }
+            }
+        }
+
+        public void BindArtistToAlbum(Spotify.Album x)
+        {
+            foreach (var artist in Helpers.GetArtist(x.Artists))
+            {
+                var albumartist = _ctx.Artists.Include(y => y.Albums)
+                    .FirstOrDefault(ar => ar.Name == artist.Name);
+
+                if (albumartist != null)
+                {
+                    if (albumartist.Albums == null)
+                        albumartist.Albums = new List<Models.BackEnd.Album>();
+
+                    if (!albumartist.Albums.Any(y => y.Name == x.Name))
+                    {
+                        albumartist.Albums.Add(_ctx.Albums.First(xx => xx.Name == x.Name));
+                        _ctx.Entry(albumartist).State = EntityState.Modified;
+                        _ctx.SaveChanges();
+                    }
+                }
+            }
+        }
+
+        public void BindCoryrightsToAlbum(Spotify.Album x)
+        {
+            foreach (var copyrigth in Helpers.GetCopyrights(x.Copyrights))
+            {
+                var AlbumCopyRight = _ctx.Copyrights.Include(y => y.Albums)
+                    .FirstOrDefault(ar => ar.Text == copyrigth.Text && ar.Type == copyrigth.Type);
+
+                if (AlbumCopyRight != null)
+                {
+                    if (AlbumCopyRight.Albums == null)
+                        AlbumCopyRight.Albums = new List<Models.BackEnd.Album>();
+
+                    if (!AlbumCopyRight.Albums.Any(y => y.Name == x.Name))
+                    {
+                        AlbumCopyRight.Albums.Add(_ctx.Albums.First(xx => xx.Name == x.Name));
+                        _ctx.Entry(AlbumCopyRight).State = EntityState.Modified;
+                        _ctx.SaveChanges();
+                    }
+                }
+            }
+        }
+
+        public void InsertTrack(Spotify.AlbumRoot album)
+        {
+            List<Models.BackEnd.Album> DistintAlbum = _ctx.Albums.ToList();
+
+            if (DistintAlbum == null)
+                DistintAlbum = new List<Models.BackEnd.Album>();
+
+            foreach (var x in album.Albums)
+            {
+                var albumGood = new Models.BackEnd.Album(x);
+                albumGood.Songs = null;
+
+                if (!DistintAlbum.Any(z => z.Name == x.Name))
+                {
+                    DistintAlbum.Add(albumGood);
+
+                    _ctx.Albums.Add(albumGood);
+                    _ctx.SaveChanges();
+                }
+            }
+            _ctx.SaveChanges();
+        }
     }
 }
