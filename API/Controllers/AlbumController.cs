@@ -41,19 +41,18 @@ namespace API.Controllers
             {
                 //Need includes
                 var album = await _ctx.Albums
+                    .Include(x => x.Images)
+                    .Include(x => x.Songs)
                     .FirstOrDefaultAsync(x => x.Id == id);
-
-                var image = "";//await _ctx.Images.FirstOrDefaultAsync(x =>)
 
                 return new JsonResult(new
                 {
                     Artist = JsonConvert.DeserializeObject<Artist>(album.Artists).Name,
-                    Copyrights = JsonConvert.DeserializeObject<Copyright>("").Text,
                     album.Name,
-                    Image = image,
+                    album.Images,
                     album.ReleaseDate,
-                    album.TotalTracks//,
-                    //album.Items
+                    album.TotalTracks,
+                    album.Songs
                 });
             }
             catch (System.Exception ex)

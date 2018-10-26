@@ -1,5 +1,6 @@
 ﻿using Database;
 using Microsoft.EntityFrameworkCore;
+using Models;
 using Models.BackEnd;
 using Newtonsoft.Json;
 using System;
@@ -18,7 +19,6 @@ namespace Service
         public Service(SpotyPieIDbContext ctx)
         {
             _ctx = ctx;
-
             Start();
         }
 
@@ -84,10 +84,10 @@ namespace Service
                     .Select(x =>
                     new
                     {
-                        x.Id,
-                        x.Name,
+                        Artist = JsonConvert.DeserializeObject<Artist>(x.Artists).Name,
                         x.DurationMs,
-                        x.Artists
+                        x.IsPlayable,
+                        x.Name
                     })
                     .ToListAsync();
 
@@ -139,7 +139,6 @@ namespace Service
                 InsertArtist(Albums);
                 InsertCopyrights(Albums);
                 InsertAlbums(Albums);
-
 
             }
             catch (Exception e)

@@ -1,6 +1,8 @@
 ﻿using Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Models.BackEnd;
+using Newtonsoft.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,11 +30,16 @@ namespace API.Controllers
         {
             try
             {
-                //Need includes
                 var song = await _ctx.Items
                     .FirstOrDefaultAsync(x => x.Id == id);
 
-                return new JsonResult(new { });
+                return new JsonResult(new
+                {
+                    Artist = JsonConvert.DeserializeObject<Artist>(song.Artists).Name,
+                    song.DurationMs,
+                    song.IsPlayable,
+                    song.Name
+                });
             }
             catch (System.Exception ex)
             {
