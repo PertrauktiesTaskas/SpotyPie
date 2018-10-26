@@ -29,17 +29,31 @@ namespace API.Controllers
         {
             try
             {
-                var artist = await _ctx.Artists
+                var artist = await _ctx.Artists.Include(x => x.Images)
                     .FirstOrDefaultAsync(x => x.Id == id);
 
-                return new JsonResult(new
-                {
-                    artist.Name
-                });
+                return Ok(artist);
             }
             catch (System.Exception ex)
             {
-                return BadRequest(ex);
+                return StatusCode(500);
+            }
+        }
+
+        [Route("ArtistWithSongs/")]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetArtistWithSongs(int id)
+        {
+            try
+            {
+                var artist = await _ctx.Artists.Include(x => x.Images).Include(x => x.Songs)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+
+                return Ok(artist);
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500);
             }
         }
 

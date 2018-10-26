@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.BackEnd;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -38,25 +40,35 @@ namespace API.Controllers
         {
             try
             {
+                if (id <= 0)
+                    return BadRequest("Id can't be " + id);
+
                 //Need includes
                 var album = await _ctx.Albums
                     .Include(x => x.Images)
                     .Include(x => x.Songs)
+                    .Select(x => new { x.Id, x.Artists, x.Name, x.Images, x.ReleaseDate, x.TotalTracks, x.Songs })
                     .FirstOrDefaultAsync(x => x.Id == id);
 
-                return new JsonResult(new
-                {
-                    Artist = JsonConvert.DeserializeObject<List<Artist>>(album.Artists)[0].Name,
-                    album.Name,
-                    album.Images,
-                    album.ReleaseDate,
-                    album.TotalTracks,
-                    album.Songs
-                });
+                return Ok(album);
             }
             catch (System.Exception ex)
             {
-                return BadRequest(ex);
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetArtistAlbums(int id)
+        {
+            try
+            {
+                var data = await _ctx.Artists.Include(x => x.Albums).Select(x => new { x.Id, x.Albums }).FirstOrDefaultAsync(x => x.Id == id);
+                return Ok(data.Albums);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
         }
     }

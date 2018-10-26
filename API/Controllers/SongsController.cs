@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Models.BackEnd;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,16 +32,10 @@ namespace API.Controllers
         {
             try
             {
-                var song = await _ctx.Items
+                var song = await _ctx.Items.Select(x => new { x.Id, x.Artists, x.DurationMs, x.IsPlayable, x.Name })
                     .FirstOrDefaultAsync(x => x.Id == id);
 
-                return new JsonResult(new
-                {
-                    Artist = JsonConvert.DeserializeObject<List<Artist>>(song.Artists)[0].Name,
-                    song.DurationMs,
-                    song.IsPlayable,
-                    song.Name
-                });
+                return Ok(song);
             }
             catch (System.Exception ex)
             {
