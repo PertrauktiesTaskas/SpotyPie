@@ -18,7 +18,7 @@ using SupportToolbar = Android.Support.V7.Widget.Toolbar;
 
 namespace SpotyPie
 {
-    [Activity(Label = "KTU", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait, MainLauncher = false, Icon = "@drawable/logo", Theme = "@style/Theme.SpotyPie")]
+    [Activity(Label = "KTU", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait, MainLauncher = true, Icon = "@drawable/logo", Theme = "@style/Theme.SpotyPie")]
     public class MainActivity : AppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)
@@ -52,8 +52,10 @@ namespace SpotyPie
         private void SetUpViewPager(ViewPager viewPager)
         {
             TabAdapter adapter = new TabAdapter(SupportFragmentManager);
-            adapter.AddFragment(new MainPageFragment(), "Pagrindinis puslapis");
-            adapter.AddFragment(new CalendarViewFragment(), "Kalendorius");
+            adapter.AddFragment(new Home(), "Home");
+            adapter.AddFragment(new Browse(), "Browse");
+            adapter.AddFragment(new Search(), "Search");
+            adapter.AddFragment(new Library(), "Library");
 
             viewPager.Adapter = adapter;
         }

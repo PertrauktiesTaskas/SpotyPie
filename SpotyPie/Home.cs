@@ -18,8 +18,10 @@ using SupportFragment = Android.Support.V4.App.Fragment;
 
 namespace SpotyPie
 {
-    public class Home : Fragment
+    public class Home : SupportFragment
     {
+        View RootView;
+
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -29,10 +31,9 @@ namespace SpotyPie
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            // Use this to return your custom view for this Fragment
-            // return inflater.Inflate(Resource.Layout.YourFragment, container, false);
+            RootView = inflater.Inflate(Resource.Layout.home_layout, container, false);
 
-            return base.OnCreateView(inflater, container, savedInstanceState);
+            return RootView;
         }
     }
 }
