@@ -75,11 +75,43 @@ namespace Service
             }
         }
 
-        public async Task<List<Item>> GetSongList()
+        public async Task<string> GetSongList()
         {
             try
             {
-                return await _ctx.Items.Where(x => x.IsPlayable).ToListAsync();
+                var list = await _ctx.Items
+                    .Where(x => x.IsPlayable)
+                    .Select(x =>
+                    new
+                    {
+                        x.Id,
+                        x.Name,
+                        x.DurationMs,
+                        x.Artists
+                    })
+                    .ToListAsync();
+
+                return JsonConvert.SerializeObject(list);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<string> GetArtistList()
+        {
+            try
+            {
+                var list = await _ctx.Artists
+                    .Select(x =>
+                    new
+                    {
+                        x.Name
+                    })
+                    .ToListAsync();
+
+                return JsonConvert.SerializeObject(list);
             }
             catch (Exception ex)
             {

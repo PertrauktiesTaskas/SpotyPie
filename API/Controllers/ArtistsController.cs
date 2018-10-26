@@ -8,14 +8,15 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SongsController : ControllerBase
+    public class ArtistsController : ControllerBase
     {
+
         private readonly SpotyPieIDbContext _ctx;
         private readonly CancellationTokenSource cts;
         private CancellationToken ct;
         private Service.Service _service;
 
-        public SongsController(SpotyPieIDbContext ctx, Service.Service service)
+        public ArtistsController(SpotyPieIDbContext ctx, Service.Service service)
         {
             _ctx = ctx;
             _service = service;
@@ -24,15 +25,17 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetArtist(int id)
         {
             try
             {
-                //Need includes
-                var song = await _ctx.Items
+                var artist = await _ctx.Artists
                     .FirstOrDefaultAsync(x => x.Id == id);
 
-                return new JsonResult(new { });
+                return new JsonResult(new
+                {
+                    artist.Name
+                });
             }
             catch (System.Exception ex)
             {
@@ -41,12 +44,12 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllSongs()
+        public async Task<IActionResult> GetAllArtists()
         {
             try
             {
-                var songs = await _service.GetSongList();
-                return Ok(songs);
+                var artists = await _service.GetArtistList();
+                return Ok(artists);
             }
             catch (System.Exception ex)
             {
