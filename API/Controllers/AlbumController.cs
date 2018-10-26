@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.BackEnd;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,13 +17,11 @@ namespace API.Controllers
         private readonly SpotyPieIDbContext _ctx;
         private readonly CancellationTokenSource cts;
         private CancellationToken ct;
-        private Service.Service _service;
 
-        public AlbumController(IDb ctdd, SpotyPieIDbContext ctx, Service.Service service)
+        public AlbumController(IDb ctdd, SpotyPieIDbContext ctx)
         {
             _ctd = ctdd;
             _ctx = ctx;
-            _service = service;
             cts = new CancellationTokenSource();
             ct = cts.Token;
         }
@@ -47,7 +46,7 @@ namespace API.Controllers
 
                 return new JsonResult(new
                 {
-                    Artist = JsonConvert.DeserializeObject<Artist>(album.Artists).Name,
+                    Artist = JsonConvert.DeserializeObject<List<Artist>>(album.Artists)[0].Name,
                     album.Name,
                     album.Images,
                     album.ReleaseDate,

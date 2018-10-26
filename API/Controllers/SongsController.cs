@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.BackEnd;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,12 +16,12 @@ namespace API.Controllers
         private readonly SpotyPieIDbContext _ctx;
         private readonly CancellationTokenSource cts;
         private CancellationToken ct;
-        private Service.Service _service;
+        private readonly IDb _ctd;
 
-        public SongsController(SpotyPieIDbContext ctx, Service.Service service)
+        public SongsController(SpotyPieIDbContext ctx, IDb ctd)
         {
             _ctx = ctx;
-            _service = service;
+            _ctd = ctd;
             cts = new CancellationTokenSource();
             ct = cts.Token;
         }
@@ -35,7 +36,7 @@ namespace API.Controllers
 
                 return new JsonResult(new
                 {
-                    Artist = JsonConvert.DeserializeObject<Artist>(song.Artists).Name,
+                    Artist = JsonConvert.DeserializeObject<List<Artist>>(song.Artists)[0].Name,
                     song.DurationMs,
                     song.IsPlayable,
                     song.Name
@@ -52,7 +53,7 @@ namespace API.Controllers
         {
             try
             {
-                var songs = await _service.GetSongList();
+                var songs = await _ctd.GetSongList();
                 return Ok(songs);
             }
             catch (System.Exception ex)

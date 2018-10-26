@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Spotify = Models.Spotify;
 
-namespace Service
+namespace Services
 {
     public class Service : IDb
     {
@@ -22,7 +22,7 @@ namespace Service
             Start();
         }
 
-        public static bool OpenFile(string path, out FileStream fs)
+        public bool OpenFile(string path, out FileStream fs)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace Service
                     .Select(x =>
                     new
                     {
-                        Artist = JsonConvert.DeserializeObject<Artist>(x.Artists).Name,
+                        Artist = JsonConvert.DeserializeObject<List<Artist>>(x.Artists)[0].Name,
                         x.DurationMs,
                         x.IsPlayable,
                         x.Name

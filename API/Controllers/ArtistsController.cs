@@ -14,12 +14,12 @@ namespace API.Controllers
         private readonly SpotyPieIDbContext _ctx;
         private readonly CancellationTokenSource cts;
         private CancellationToken ct;
-        private Service.Service _service;
+        private readonly IDb _ctd;
 
-        public ArtistsController(SpotyPieIDbContext ctx, Service.Service service)
+        public ArtistsController(SpotyPieIDbContext ctx, IDb ctd)
         {
             _ctx = ctx;
-            _service = service;
+            _ctd = ctd;
             cts = new CancellationTokenSource();
             ct = cts.Token;
         }
@@ -48,7 +48,7 @@ namespace API.Controllers
         {
             try
             {
-                var artists = await _service.GetArtistList();
+                var artists = await _ctd.GetArtistList();
                 return Ok(artists);
             }
             catch (System.Exception ex)
