@@ -15,12 +15,12 @@ namespace API.Controllers
         private readonly SpotyPieIDbContext _ctx;
         private readonly CancellationTokenSource cts;
         private CancellationToken ct;
-        private Service.Service _service;
+        private readonly IDb _ctd;
 
-        public UploadController(SpotyPieIDbContext ctx, Service.Service service)
+        public UploadController(SpotyPieIDbContext ctx, IDb ctd)
         {
             _ctx = ctx;
-            _service = service;
+            _ctd = ctd;
             cts = new CancellationTokenSource();
             ct = cts.Token;
         }
@@ -39,7 +39,7 @@ namespace API.Controllers
                     {
                         await file.CopyToAsync(stream).ContinueWith((o) =>
                         {
-                            _service.AddAudioToLibrary(info);
+                            _ctd.AddAudioToLibrary(info);
                         });
                     }
                 }

@@ -14,12 +14,12 @@ namespace API.Controllers
         private readonly SpotyPieIDbContext _ctx;
         private readonly CancellationTokenSource cts;
         private CancellationToken ct;
-        private Service.Service _service;
+        private readonly IDb _ctd;
 
-        public StreamController(SpotyPieIDbContext ctx, Service.Service service)
+        public StreamController(SpotyPieIDbContext ctx, IDb ctd)
         {
             _ctx = ctx;
-            _service = service;
+            _ctd = ctd;
             cts = new CancellationTokenSource();
             ct = cts.Token;
         }
@@ -36,13 +36,13 @@ namespace API.Controllers
             try
             {
                 t.ThrowIfCancellationRequested();
-                var path = await _service.GetAudioPathById(id);
+                var path = await _ctd.GetAudioPathById(id);
 
                 if (!string.IsNullOrWhiteSpace(path))
                 {
-                    if (_service.SetAudioPlaying(id))
+                    if (_ctd.SetAudioPlaying(id))
                     {
-                        return Service.Service.OpenFile(path, out FileStream fs)
+                        return _ctd.OpenFile(path, out FileStream fs)
                             ? File(fs, new MediaTypeHeaderValue("audio/mpeg").MediaType, true)
                             : (IActionResult)BadRequest();
                     }
@@ -66,7 +66,7 @@ namespace API.Controllers
                 t.ThrowIfCancellationRequested();
                 //"C:\Users\lukas\Source\Repos\SpotyPie\API\music.flac"
                 //"/root/Music/" + file + ".flac"
-                return Service.Service.OpenFile(@"/root/Music/" + file + ".flac", out FileStream fs)
+                return _ctd.OpenFile(@"/root/Music/" + file + ".flac", out FileStream fs)
                     ? File(fs, new MediaTypeHeaderValue("audio/mpeg").MediaType, true)
                     : (IActionResult)BadRequest();
             }

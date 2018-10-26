@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Spotify = Models.Spotify;
 
-namespace Service
+namespace Services
 {
     public class Service : IDb
     {
@@ -19,11 +19,10 @@ namespace Service
         public Service(SpotyPieIDbContext ctx)
         {
             _ctx = ctx;
-
             Start();
         }
 
-        public static bool OpenFile(string path, out FileStream fs)
+        public bool OpenFile(string path, out FileStream fs)
         {
             try
             {
@@ -76,11 +75,43 @@ namespace Service
             }
         }
 
-        public async Task<List<Item>> GetSongList()
+        public async Task<string> GetSongList()
         {
             try
             {
-                return await _ctx.Items.Where(x => x.IsPlayable).ToListAsync();
+                var list = await _ctx.Items
+                    .Where(x => x.IsPlayable)
+                    .Select(x =>
+                    new
+                    {
+                        Artist = JsonConvert.DeserializeObject<List<Artist>>(x.Artists)[0].Name,
+                        x.DurationMs,
+                        x.IsPlayable,
+                        x.Name
+                    })
+                    .ToListAsync();
+
+                return JsonConvert.SerializeObject(list);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<string> GetArtistList()
+        {
+            try
+            {
+                var list = await _ctx.Artists
+                    .Select(x =>
+                    new
+                    {
+                        x.Name
+                    })
+                    .ToListAsync();
+
+                return JsonConvert.SerializeObject(list);
             }
             catch (Exception ex)
             {
@@ -109,7 +140,6 @@ namespace Service
                 UpdateArtisthFullData(Artist);
                 InsertCopyrights(Albums);
                 InsertAlbums(Albums);
-
 
             }
             catch (Exception e)
