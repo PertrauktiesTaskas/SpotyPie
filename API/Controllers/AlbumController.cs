@@ -31,10 +31,11 @@ namespace API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            _ctd.Start();
+            //_ctd.Start();
             return Ok();
         }
 
+        //Returns full Album info without songs
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAlbum(int id)
         {
@@ -45,9 +46,8 @@ namespace API.Controllers
 
                 //Need includes
                 var album = await _ctx.Albums
+                    .AsNoTracking()
                     .Include(x => x.Images)
-                    .Include(x => x.Songs)
-                    .Select(x => new { x.Id, x.Artists, x.Name, x.Images, x.ReleaseDate, x.TotalTracks, x.Songs })
                     .FirstOrDefaultAsync(x => x.Id == id);
 
                 return Ok(album);
@@ -58,13 +58,79 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetArtistAlbums(int id)
+        //Updated albums used time and popularity
+        [Route("Update/{id}")]
+        [HttpGet]
+        public void IncreaseAlbumPopularity(int id)
         {
             try
             {
-                var data = await _ctx.Artists.Include(x => x.Albums).Select(x => new { x.Id, x.Albums }).FirstOrDefaultAsync(x => x.Id == id);
-                return Ok(data.Albums);
+                var album = _ctx.Albums.First(x => x.Id == id);
+
+                album.Popularity++;
+
+                album.LastActiveTime = DateTime.Now;
+                _ctx.Entry(album).State = EntityState.Modified;
+                _ctx.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        //Return album with songs
+        [Route("{id}/tracks")]
+        [HttpGet]
+        public async Task<IActionResult> GetAlbumTracks(int id)
+        {
+            try
+            {
+                var data = await _ctx.Albums
+                    .Include(x => x.Songs).Include(x => x.Images)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+
+                return Ok(data);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        //Return 6 most recent albums
+        [Route("Recent")]
+        [HttpGet]
+        public async Task<IActionResult> GetRecentAlbums()
+        {
+            try
+            {
+                var data = await _ctx.Albums
+                    .Include(x => x.Images)
+                    .OrderBy(x => x.LastActiveTime)
+                    .Take(6).ToListAsync();
+
+                return Ok(data);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        //Return 6 most popular albums
+        [Route("Popular")]
+        [HttpGet]
+        public async Task<IActionResult> GetPopularAlbums()
+        {
+            try
+            {
+                var data = await _ctx.Albums
+                    .Include(x => x.Images)
+                    .OrderBy(x => x.Popularity)
+                    .Take(6).ToListAsync();
+
+                return Ok(data);
             }
             catch (Exception e)
             {

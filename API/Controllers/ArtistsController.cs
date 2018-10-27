@@ -70,5 +70,18 @@ namespace API.Controllers
                 return BadRequest(ex);
             }
         }
+
+        //public async Task<IActionResult> GetArtistAlbums(int id)
+        //{
+        //    try
+        //    {
+        //        var data = await _ctx.Artists.Include(x => x.Albums).Select(x => new { x.Id, x.Albums }).FirstOrDefaultAsync(x => x.Id == id);
+        //        return Ok(data.Albums);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(e.Message);
+        //    }
+        //}
     }
 }

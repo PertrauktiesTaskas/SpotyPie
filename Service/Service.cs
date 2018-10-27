@@ -19,7 +19,7 @@ namespace Services
         public Service(SpotyPieIDbContext ctx)
         {
             _ctx = ctx;
-            Start();
+            //Start();
         }
 
         public bool OpenFile(string path, out FileStream fs)
