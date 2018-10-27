@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.BackEnd;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -32,7 +33,7 @@ namespace API.Controllers
         {
             try
             {
-                var song = await _ctx.Items.Select(x => new { x.Id, x.Artists, x.DurationMs, x.IsPlayable, x.Name })
+                var song = await _ctx.Items.AsNoTracking()  ///.Select(x => new { x.Id, x.Artists, x.DurationMs, x.IsPlayable, x.Name })
                     .FirstOrDefaultAsync(x => x.Id == id);
 
                 return Ok(song);
@@ -40,6 +41,24 @@ namespace API.Controllers
             catch (System.Exception ex)
             {
                 return BadRequest(ex);
+            }
+        }
+
+        [Route("{id}/Update")]
+        [HttpGet]
+        public async Task Update(int id)
+        {
+            try
+            {
+                var song = _ctx.Items  ///.Select(x => new { x.Id, x.Artists, x.DurationMs, x.IsPlayable, x.Name })
+                    .First(x => x.Id == id);
+
+                song.LastActiveTime = DateTime.Now;
+                _ctx.Entry(song).State = EntityState.Modified;
+                _ctx.SaveChanges();
+            }
+            catch (System.Exception ex)
+            {
             }
         }
 
