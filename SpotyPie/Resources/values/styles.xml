@@ -1,9 +1,9 @@
 <resources>
 
   <style name="Theme.SpotyPie" parent="Theme.AppCompat.Light.NoActionBar">
-    <item name="colorPrimary">#2E415E</item>
-    <item name="colorPrimaryDark">#2E415E</item>
-    <item name="colorAccent">#FF4081</item>
+    <item name="colorPrimary">#222327</item>
+    <item name="colorPrimaryDark">#3f3f3f</item>
+    <item name="colorAccent">#121013</item>
   </style>
 
   <!-- Base application theme. -->

@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.OS;
+using Android.Support.Constraints;
 using Android.Support.Design.Widget;
 using Android.Support.V4.App;
 using Android.Support.V4.View;
@@ -9,6 +10,7 @@ using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
 using Java.Lang;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using SupportActionBar = Android.Support.V7.App.ActionBar;
@@ -21,15 +23,80 @@ namespace SpotyPie
     [Activity(Label = "KTU", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait, MainLauncher = true, Icon = "@drawable/logo", Theme = "@style/Theme.SpotyPie")]
     public class MainActivity : AppCompatActivity
     {
+        SupportFragment Home;
+        SupportFragment Browse;
+        SupportFragment Search;
+        SupportFragment Library;
+        SupportFragment Player;
+
+        BottomNavigationView bottomNavigation;
+        ImageButton PlayToggle;
+
+        TextView ArtistName;
+        TextView SongTitle;
+
+        public static int widthInDp = 0;
+        public static bool PlayerVisible = false;
+
+        TextView ActionName;
+        ConstraintLayout MiniPlayer;
+        public static FrameLayout PlayerContainer;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
 
-            TabLayout tabs = FindViewById<TabLayout>(Resource.Id.tabs);
-            ViewPager viewPager = FindViewById<ViewPager>(Resource.Id.viewpager);
-            SetUpViewPager(viewPager);
-            tabs.SetupWithViewPager(viewPager);
+            PlayerContainer = FindViewById<FrameLayout>(Resource.Id.player_frame);
+
+            widthInDp = Resources.DisplayMetrics.WidthPixels;
+            PlayerContainer.TranslationX = 10000;
+
+            Home = new Home();
+            Browse = new Browse();
+            Search = new Search();
+            Library = new Library();
+            Player = new Player();
+            SupportFragmentManager.BeginTransaction()
+                .Replace(Resource.Id.player_frame, Player).Commit();
+
+            PlayToggle = FindViewById<ImageButton>(Resource.Id.play_stop);
+            bottomNavigation = FindViewById<BottomNavigationView>(Resource.Id.NavBot);
+            ActionName = FindViewById<TextView>(Resource.Id.textView);
+            MiniPlayer = FindViewById<ConstraintLayout>(Resource.Id.PlayerContainer);
+            ArtistName = FindViewById<TextView>(Resource.Id.artist_name);
+            SongTitle = FindViewById<TextView>(Resource.Id.song_name);
+
+            if (Current_state.IsPlaying)
+                PlayToggle.SetImageResource(Resource.Drawable.pause);
+            else
+                PlayToggle.SetImageResource(Resource.Drawable.play_button);
+
+            MiniPlayer.Click += MiniPlayer_Click;
+            PlayToggle.Click += PlayToggle_Click;
+            bottomNavigation.NavigationItemSelected += BottomNavigation_NavigationItemSelected;
+            LoadFragment(Resource.Id.home);
+        }
+
+        private void PlayToggle_Click(object sender, EventArgs e)
+        {
+            Current_state.IsPlaying = !Current_state.IsPlaying;
+
+            if (Current_state.IsPlaying)
+                PlayToggle.SetImageResource(Resource.Drawable.pause);
+            else
+                PlayToggle.SetImageResource(Resource.Drawable.play_button);
+        }
+
+        private void MiniPlayer_Click(object sender, EventArgs e)
+        {
+            PlayToggle_Click(null, null);
+            PlayerContainer.TranslationX = 0;
+        }
+
+        private void BottomNavigation_NavigationItemSelected(object sender, BottomNavigationView.NavigationItemSelectedEventArgs e)
+        {
+            LoadFragment(e.Item.ItemId);
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
@@ -40,11 +107,11 @@ namespace SpotyPie
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            int id = item.ItemId;
-            if (id == Resource.Id.action_settings)
-            {
-                return true;
-            }
+            //int id = item.ItemId;
+            //if (id == Resource.Id.action_settings)
+            //{
+            //    return true;
+            //}
 
             return base.OnOptionsItemSelected(item);
         }
@@ -88,6 +155,37 @@ namespace SpotyPie
             {
                 return new Java.Lang.String(FragmentsNames[position]);
             }
+        }
+
+        void LoadFragment(int id)
+        {
+            Android.Support.V4.App.Fragment fragment = null;
+            switch (id)
+            {
+                case Resource.Id.home:
+                    fragment = Home;
+                    ActionName.Text = "Home";
+                    break;
+                case Resource.Id.browse:
+                    fragment = Browse;
+                    ActionName.Text = "Browse";
+                    break;
+                case Resource.Id.search:
+                    fragment = Search;
+                    ActionName.Text = "Search";
+                    break;
+                case Resource.Id.library:
+                    fragment = Library;
+                    ActionName.Text = "Library";
+                    break;
+            }
+
+            if (fragment == null)
+                return;
+
+            SupportFragmentManager.BeginTransaction()
+                .Replace(Resource.Id.content_frame, fragment)
+                .Commit();
         }
     }
 }
