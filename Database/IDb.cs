@@ -1,4 +1,5 @@
 ﻿using Models.BackEnd;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -9,10 +10,11 @@ namespace Database
         void Start();
         bool OpenFile(string path, out FileStream fs);
         Task<string> GetAudioPathById(int id);
-        bool AddAudioToLibrary(Item file);
+        Task<bool> AddAudioToLibrary(string path, string name, Item file);
         bool SetAudioPlaying(int id);
         Task<string> GetSongList();
         Task<string> GetArtistList();
+        Task<List<Album>> GetAlbumsByArtist(int id);
 
     }
 }
