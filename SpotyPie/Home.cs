@@ -6,6 +6,7 @@ using Android.Support.V4.Widget;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
+using SpotyPie.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -22,16 +23,33 @@ namespace SpotyPie
     {
         View RootView;
 
-        public override void OnCreate(Bundle savedInstanceState)
-        {
-            base.OnCreate(savedInstanceState);
-
-            // Create your fragment here
-        }
+        public static RecycleViewList<string> RecentAlbums = new RecycleViewList<string>();
+        private RecyclerView.LayoutManager mLayoutManager;
+        private static RecyclerView.Adapter mAdapter;
+        private static RecyclerView mRecyclerView;
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             RootView = inflater.Inflate(Resource.Layout.home_layout, container, false);
+
+            mLayoutManager = new LinearLayoutManager(this.Activity, LinearLayoutManager.Horizontal, false);
+            mRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.rv);
+            mRecyclerView.SetLayoutManager(mLayoutManager);
+            mAdapter = new HorizontalRV(RecentAlbums, mRecyclerView);
+            RecentAlbums.Adapter = mAdapter;
+            mRecyclerView.SetAdapter(mAdapter);
+
+            RecentAlbums.Add("das");
+            RecentAlbums.Add("das");
+            RecentAlbums.Add("das");
+            RecentAlbums.Add("das");
+            RecentAlbums.Add("das");
+            RecentAlbums.Add("das");
+            RecentAlbums.Add("das");
+            RecentAlbums.Add("das");
+            RecentAlbums.Add("das");
+            RecentAlbums.Add("das");
+            RecentAlbums.Add("das");
 
             return RootView;
         }

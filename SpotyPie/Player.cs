@@ -48,10 +48,10 @@ namespace SpotyPie
             TotalSongTimeText = RootView.FindViewById<TextView>(Resource.Id.total_song_time);
             TotalSongTimeText.Visibility = ViewStates.Invisible;
 
-            player = new MediaPlayer();
-            player.Prepared += Player_Prepared;
-            player.BufferingUpdate += Player_BufferingUpdate;
-            MusicPlayer("");
+            //player = new MediaPlayer();
+            //player.Prepared += Player_Prepared;
+            //player.BufferingUpdate += Player_BufferingUpdate;
+            //MusicPlayer("");
 
             HidePlayerButton = RootView.FindViewById<ImageButton>(Resource.Id.back_button);
             PlayToggle = RootView.FindViewById<ImageButton>(Resource.Id.play_stop);

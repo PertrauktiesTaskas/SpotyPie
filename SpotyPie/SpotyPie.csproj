@@ -59,6 +59,8 @@
     <Compile Include="API_data.cs" />
     <Compile Include="Browse.cs" />
     <Compile Include="Current_state.cs" />
+    <Compile Include="Helpers\HorizontalRV.cs" />
+    <Compile Include="Helpers\RecycleViewList.cs" />
     <Compile Include="Home.cs" />
     <Compile Include="Library.cs" />
     <Compile Include="MainActivity.cs" />
@@ -249,6 +251,11 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\touch.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\Loading.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -21,7 +21,7 @@ using SupportToolbar = Android.Support.V7.Widget.Toolbar;
 
 namespace SpotyPie
 {
-    [Activity(Label = "KTU", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait, MainLauncher = true, Icon = "@drawable/logo", Theme = "@style/Theme.SpotyPie")]
+    [Activity(Label = "SpotyPie", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait, MainLauncher = true, Icon = "@drawable/logo", Theme = "@style/Theme.SpotyPie")]
     public class MainActivity : AppCompatActivity
     {
         SupportFragment Home;
