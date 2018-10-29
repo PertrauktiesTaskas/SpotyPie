@@ -49,10 +49,14 @@ namespace Services
             }
         }
 
-        public bool AddAudioToLibrary(Item file)
+        public async Task<bool> AddAudioToLibrary(string path, string name, Item file = null)
         {
             try
             {
+                var audioDb = await _ctx.Items.FirstOrDefaultAsync(x => x.Name.Contains(name));
+                _ctx.Update(audioDb);
+                audioDb.LocalUrl = path;
+                _ctx.SaveChanges();
                 return true;
             }
             catch (Exception ex)
@@ -112,6 +116,21 @@ namespace Services
                     .ToListAsync();
 
                 return JsonConvert.SerializeObject(list);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<Album>> GetAlbumsByArtist(int id)
+        {
+            try
+            {
+                var albums = await _ctx.Artists
+                    .Include(x => x.Albums)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+                return albums.Albums;
             }
             catch (Exception ex)
             {

@@ -59,5 +59,32 @@ namespace API.Controllers
                 return BadRequest(ex);
             }
         }
+
+        [HttpGet("artist/{id}")]
+        public async Task<IActionResult> GetAlbumsByArtist(int id)
+        {
+            try
+            {
+                //Need includes
+                var album = await _ctx.Albums
+                    .Include(x => x.Images)
+                    .Include(x => x.Songs)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+
+                return new JsonResult(new
+                {
+                    Artist = JsonConvert.DeserializeObject<List<Artist>>(album.Artists)[0].Name,
+                    album.Name,
+                    album.Images,
+                    album.ReleaseDate,
+                    album.TotalTracks,
+                    album.Songs
+                });
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
     }
 }

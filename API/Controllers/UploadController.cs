@@ -39,7 +39,7 @@ namespace API.Controllers
                     {
                         await file.CopyToAsync(stream).ContinueWith((o) =>
                         {
-                            _ctd.AddAudioToLibrary(info);
+                            _ctd.AddAudioToLibrary(filePath, file.FileName, info);
                         });
                     }
                 }
