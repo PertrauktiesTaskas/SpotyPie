@@ -33,7 +33,7 @@ namespace SpotyPie
             RootView = inflater.Inflate(Resource.Layout.home_layout, container, false);
 
             mLayoutManager = new LinearLayoutManager(this.Activity, LinearLayoutManager.Horizontal, false);
-            mRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.rv);
+            mRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.recent_rv);
             mRecyclerView.SetLayoutManager(mLayoutManager);
             mAdapter = new HorizontalRV(RecentAlbums, mRecyclerView);
             RecentAlbums.Adapter = mAdapter;
