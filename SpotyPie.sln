@@ -12,7 +12,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.csproj", "{FB27A38E-66C2-442F-A19C-C99C3122D532}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotyPie", "SpotyPie\SpotyPie.csproj", "{3BC0AC7E-3B3B-4D3F-9CC0-B2BDECC460A6}"
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.csproj", "{FB27A38E-66C2-442F-A19C-C99C3122D532}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UploadMusic", "UploadMusic\UploadMusic.csproj", "{CB12A947-1667-4C06-B52C-ED3413C6A494}"
 EndProject
