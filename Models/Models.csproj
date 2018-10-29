@@ -54,6 +54,9 @@
     <None Update="Spotify\JSON\Artist.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Spotify\JSON\Artist19data.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Spotify\JSON\ThexxAlbums.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
