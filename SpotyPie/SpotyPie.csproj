@@ -56,6 +56,7 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API_data.cs" />
     <Compile Include="Browse.cs" />
     <Compile Include="Current_state.cs" />
     <Compile Include="Home.cs" />
@@ -103,6 +104,9 @@
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_round.png" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="RestSharp">
+      <Version>106.5.4</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.Compat">
       <Version>27.0.2.1</Version>
     </PackageReference>

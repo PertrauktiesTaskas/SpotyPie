@@ -13,6 +13,7 @@ using Java.Lang;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using SupportActionBar = Android.Support.V7.App.ActionBar;
 using SupportFragment = Android.Support.V4.App.Fragment;
 using SupportFragmentManager = Android.Support.V4.App.FragmentManager;
@@ -76,6 +77,12 @@ namespace SpotyPie
             PlayToggle.Click += PlayToggle_Click;
             bottomNavigation.NavigationItemSelected += BottomNavigation_NavigationItemSelected;
             LoadFragment(Resource.Id.home);
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+            Task.Run(() => API_data.GetSong());
         }
 
         private void PlayToggle_Click(object sender, EventArgs e)
