@@ -80,7 +80,7 @@ namespace SpotyPie
             BestArtistsLayoutManager = new LinearLayoutManager(this.Activity, LinearLayoutManager.Horizontal, false);
             BestArtistsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.best_artists_rv);
             BestArtistsRecyclerView.SetLayoutManager(BestArtistsLayoutManager);
-            BestArtistsAdapter = new HorizontalRV(BestAlbums, BestArtistsRecyclerView, this.Context);
+            BestArtistsAdapter = new HorizontalRV(BestArtists, BestArtistsRecyclerView, this.Context);
             BestArtists.Adapter = BestArtistsAdapter;
             BestArtistsRecyclerView.SetAdapter(BestArtistsAdapter);
 
@@ -102,6 +102,8 @@ namespace SpotyPie
 
             Task.Run(() => GetRecentAlbumsAsync(this.Context));
             Task.Run(() => GetPolularAlbumsAsync(this.Context));
+            Task.Run(() => GetPolularArtistsAsync(this.Context));
+            Task.Run(() => GetOldAlbumsAsync(this.Context));
             return RootView;
         }
 
@@ -119,7 +121,7 @@ namespace SpotyPie
                     {
                         foreach (var x in album)
                         {
-                            RecentAlbums.Add(new BlockWithImage(x.Name, x.Label, x.Images.First().Url));
+                            RecentAlbums.Add(new BlockWithImage(x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name, x.Images.First().Url));
                         }
                     }, null);
                 }
@@ -151,7 +153,86 @@ namespace SpotyPie
                     {
                         foreach (var x in album)
                         {
-                            BestAlbums.Add(new BlockWithImage(x.Name, x.Label, x.Images.First().Url));
+                            BestAlbums.Add(new BlockWithImage(x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name, x.Images.First().Url));
+                        }
+                    }, null);
+                }
+                else
+                {
+                    Application.SynchronizationContext.Post(_ =>
+                    {
+                        Toast.MakeText(this.Context, "Recent Albums API error", ToastLength.Short).Show();
+                    }, null);
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+
+        public async Task GetPolularArtistsAsync(Context cnt)
+        {
+            try
+            {
+                RestClient Client = new RestClient("http://spotypie.deveim.com/api/artist/popular");
+                var request = new RestRequest(Method.GET);
+                IRestResponse response = await Client.ExecuteGetTaskAsync(request);
+                if (response.IsSuccessful)
+                {
+                    List<Artist> artists = JsonConvert.DeserializeObject<List<Artist>>(response.Content);
+                    Application.SynchronizationContext.Post(_ =>
+                    {
+                        foreach (var x in artists)
+                        {
+                            string DisplayGenre;
+                            var genres = JsonConvert.DeserializeObject<List<string>>(x.Genres);
+                            if (genres.Count > 1)
+                            {
+                                Random ran = new Random();
+                                int index = ran.Next(0, genres.Count - 1);
+                                DisplayGenre = genres[index];
+                            }
+                            else if (genres.Count == 1)
+                            {
+                                DisplayGenre = genres[0];
+                            }
+                            else
+                                DisplayGenre = string.Empty;
+
+                            BestArtists.Add(new BlockWithImage(x.Name, DisplayGenre, x.Images.First().Url));
+                        }
+                    }, null);
+                }
+                else
+                {
+                    Application.SynchronizationContext.Post(_ =>
+                    {
+                        Toast.MakeText(this.Context, "Recent Albums API error", ToastLength.Short).Show();
+                    }, null);
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+
+        public async Task GetOldAlbumsAsync(Context cnt)
+        {
+            try
+            {
+                RestClient Client = new RestClient("http://spotypie.deveim.com/api/album/old");
+                var request = new RestRequest(Method.GET);
+                IRestResponse response = await Client.ExecuteGetTaskAsync(request);
+                if (response.IsSuccessful)
+                {
+                    List<Album> album = JsonConvert.DeserializeObject<List<Album>>(response.Content);
+                    Application.SynchronizationContext.Post(_ =>
+                    {
+                        foreach (var x in album)
+                        {
+                            JumpBack.Add(new BlockWithImage(x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name, x.Images.First().Url));
                         }
                     }, null);
                 }

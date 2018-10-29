@@ -48,10 +48,10 @@ namespace SpotyPie
             TotalSongTimeText = RootView.FindViewById<TextView>(Resource.Id.total_song_time);
             TotalSongTimeText.Visibility = ViewStates.Invisible;
 
-            //player = new MediaPlayer();
-            //player.Prepared += Player_Prepared;
-            //player.BufferingUpdate += Player_BufferingUpdate;
-            //MusicPlayer("");
+            player = new MediaPlayer();
+            player.Prepared += Player_Prepared;
+            player.BufferingUpdate += Player_BufferingUpdate;
+            MusicPlayer("");
 
             HidePlayerButton = RootView.FindViewById<ImageButton>(Resource.Id.back_button);
             PlayToggle = RootView.FindViewById<ImageButton>(Resource.Id.play_stop);
@@ -103,7 +103,7 @@ namespace SpotyPie
         public void MusicPlayer(string url)
         {
             player.SetAudioStreamType(Stream.Music);
-            player.SetDataSource("http://pertrauktiestaskas.lt/music");
+            player.SetDataSource("http://spotypie.deveim.com/api/stream/play/542");
             player.Prepare();
         }
 

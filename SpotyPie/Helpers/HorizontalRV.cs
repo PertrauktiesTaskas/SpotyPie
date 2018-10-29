@@ -83,7 +83,8 @@ namespace SpotyPie.Helpers
                 {
                     Image = mImage,
                     SubTitile = mSubTitle,
-                    Title = mTitle
+                    Title = mTitle,
+                    IsRecyclable = false
                 };
 
                 return view;
@@ -101,7 +102,7 @@ namespace SpotyPie.Helpers
                 BlockImage view = holder as BlockImage;
                 view.Title.Text = Dataset[position].Title;
                 view.SubTitile.Text = Dataset[position].SubTitle;
-                Picasso.With(Context).Load(Dataset[position].Image).Resize(120, 120).CenterCrop().Into(view.Image);
+                Picasso.With(Context).Load(Dataset[position].Image).Into(view.Image);
 
             }
         }
