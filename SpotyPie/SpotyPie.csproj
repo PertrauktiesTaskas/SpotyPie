@@ -56,6 +56,7 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlbumFragment.cs" />
     <Compile Include="API_data.cs" />
     <Compile Include="Browse.cs" />
     <Compile Include="Current_state.cs" />
@@ -269,6 +270,27 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Loading.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\album_back_info.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\Album_layout.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\button_rounded.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\playable_button.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\album_song_list.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
