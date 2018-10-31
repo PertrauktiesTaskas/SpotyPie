@@ -55,8 +55,8 @@ namespace SpotyPie
             Library = new Library();
             Player = new Player();
             Album = new AlbumFragment();
-            SupportFragmentManager.BeginTransaction()
-                .Replace(Resource.Id.player_frame, Player).Commit();
+            //SupportFragmentManager.BeginTransaction()
+            //    .Replace(Resource.Id.player_frame, Player).Commit();
 
             PlayToggle = FindViewById<ImageButton>(Resource.Id.play_stop);
             bottomNavigation = FindViewById<BottomNavigationView>(Resource.Id.NavBot);

@@ -62,6 +62,7 @@
     <Compile Include="Current_state.cs" />
     <Compile Include="Helpers\HorizontalRV.cs" />
     <Compile Include="Helpers\RecycleViewList.cs" />
+    <Compile Include="Helpers\VerticalRV.cs" />
     <Compile Include="Home.cs" />
     <Compile Include="Library.cs" />
     <Compile Include="MainActivity.cs" />
@@ -293,6 +294,22 @@
     <AndroidResource Include="Resources\layout\album_song_list.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\song_list.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\option.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\song_list_rv.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\dots.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
