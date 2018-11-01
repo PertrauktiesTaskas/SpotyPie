@@ -1,11 +1,6 @@
 import React from 'react';
 import '../css/main_styles.css';
-import MainContent from "./MainContent";
-import SongList from "./SongList";
-import AlbumList from "./AlbumList";
-import ArtistList from "./ArtistList";
-import FilesList from "./FilesList";
-import NewPlaylist from "./NewPlaylist";
+import '../css/responsive.css';
 
 class ArtistInfo extends React.Component {
     constructor(props) {
