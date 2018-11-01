@@ -35,7 +35,7 @@ namespace SpotyPie
         public static int widthInDp = 0;
         public static bool PlayerVisible = false;
 
-        TextView ActionName;
+        public static TextView ActionName;
         ConstraintLayout MiniPlayer;
         public static FrameLayout PlayerContainer;
 
