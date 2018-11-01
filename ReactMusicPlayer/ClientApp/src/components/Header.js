@@ -1,5 +1,6 @@
 import React from 'react';
 import '../css/main_styles.css';
+import '../css/responsive.css';
 
 const HeaderBar = ({props}) => {
     return (<div>

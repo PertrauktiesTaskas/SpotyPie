@@ -1,5 +1,6 @@
 import React from 'react';
 import '../css/main_styles.css';
+import '../css/responsive.css';
 import HeaderBar from "./Header";
 import MainContent from "./MainContent";
 import SideMenuPanel2 from "./RightSideMenu";

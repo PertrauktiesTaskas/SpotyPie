@@ -1,14 +1,9 @@
 import React from 'react';
 import '../css/main_styles.css';
+import '../css/responsive.css';
 import '../css/slider.css';
-import Slider from "rc-slider/es/Slider";
+import Slider from "rc-slider";
 import ReactPlayer from 'react-player'
-import MainContent from "./MainContent";
-import SongList from "./SongList";
-import AlbumList from "./AlbumList";
-import ArtistList from "./ArtistList";
-import FilesList from "./FilesList";
-import NewPlaylist from "./NewPlaylist";
 
 class MusicPlayer extends React.Component {
 
@@ -34,11 +29,51 @@ class MusicPlayer extends React.Component {
     }
 
     handleClick(event) {
-        console.log("Seconds played", this.player.getCurrentTime());
-        // noinspection JSAnnotator
-        this.setState({
-            playing: !this.state.playing
-        });
+        switch (event.target.id) {
+            case "play/pause":
+                console.log("Seconds played", this.player.getCurrentTime());
+                this.setState({
+                    playing: !this.state.playing
+                });
+                break;
+            case "forward":
+                this.player.seekTo(this.player.getCurrentTime() + 5);
+                let minutes = Math.floor(this.player.getCurrentTime() / 60);
+                let seconds = this.player.getCurrentTime() - 60 * minutes;
+                if (seconds < 10) {
+                    this.setState({
+                        played: minutes + ":0" + Math.round(seconds),
+                        played_percentage: this.player.getCurrentTime() / this.player.getDuration() * 100
+                    });
+                }
+                else {
+                    this.setState({
+                        played: minutes + ":" + Math.round(seconds),
+                        played_percentage: this.player.getCurrentTime() / this.player.getDuration() * 100
+                    });
+                }
+                break;
+            case "backward":
+                this.player.seekTo(this.player.getCurrentTime() - 5);
+                minutes = Math.floor(this.player.getCurrentTime() / 60);
+                seconds = this.player.getCurrentTime() - 60 * minutes;
+                if (seconds < 10) {
+                    this.setState({
+                        played: minutes + ":0" + Math.round(seconds),
+                        played_percentage: this.player.getCurrentTime() / this.player.getDuration() * 100
+                    });
+                }
+                else {
+                    this.setState({
+                        played: minutes + ":" + Math.round(seconds),
+                        played_percentage: this.player.getCurrentTime() / this.player.getDuration() * 100
+                    });
+                }
+                break;
+            default:
+                break;
+        }
+
     }
 
     handleVolume(value) {
@@ -120,6 +155,11 @@ class MusicPlayer extends React.Component {
         }
     }
 
+    handleSeek(value) {
+        console.log("Seeking to", this.player.getDuration() / 100 * value);
+        this.player.seekTo(this.player.getDuration() / 100 * value);
+    }
+
     ref = player => {
         this.player = player
     }
@@ -140,8 +180,8 @@ class MusicPlayer extends React.Component {
         };
 
         let playing_song = this.state.playing ?
-            <a><i className="fas fa-pause" onClick={this.handleClick.bind(this)}/></a> :
-            <a><i className="fas fa-play" onClick={this.handleClick.bind(this)}/></a>;
+            <a><i id="play/pause" className="fas fa-pause" onClick={this.handleClick.bind(this)}/></a> :
+            <a><i id="play/pause" className="fas fa-play" onClick={this.handleClick.bind(this)}/></a>;
 
         let loop_enabled = this.state.loop ?
             <a className="control"><i className="fas fa-sync-alt" style={{color: "#107dac"}}
@@ -153,9 +193,9 @@ class MusicPlayer extends React.Component {
             <div className="player_content">
                 <section className="current-track">
                     <div className="current-track__actions">
-                        <a><i id="backward" className="fas fa-backward"/></a>
+                        <a><i id="backward" className="fas fa-backward" onClick={this.handleClick.bind(this)}/></a>
                         {playing_song}
-                        <a><i id="forward" className="fas fa-forward"/></a>
+                        <a><i id="forward" className="fas fa-forward" onClick={this.handleClick.bind(this)}/></a>
                     </div>
 
                     <div className="current-track__progress">
@@ -165,7 +205,8 @@ class MusicPlayer extends React.Component {
                                     min={0}
                                     max={100}
                                     defaultValue={0}
-                                    value={this.state.played_percentage}/>
+                                    value={this.state.played_percentage}
+                                    onChange={this.handleSeek.bind(this)}/>
                         </div>
                         <div className="current-track__progress__finish">{this.state.duration}</div>
                     </div>
