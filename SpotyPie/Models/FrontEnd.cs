@@ -18,6 +18,11 @@ namespace SpotyPie.Models
         public string SubTitle { get; set; }
         public string Image { get; set; }
 
+        public BlockWithImage()
+        {
+
+        }
+
         public BlockWithImage(string title, string subtitle, string url)
         {
             Title = title;
