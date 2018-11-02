@@ -60,6 +60,7 @@
     <Compile Include="API_data.cs" />
     <Compile Include="Browse.cs" />
     <Compile Include="Current_state.cs" />
+    <Compile Include="Helpers\BoxedRV.cs" />
     <Compile Include="Helpers\HorizontalRV.cs" />
     <Compile Include="Helpers\RecycleViewList.cs" />
     <Compile Include="Helpers\RV_click.cs" />
@@ -329,6 +330,14 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\artist_scrolled_content.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\gradient_grey_trasparent.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\boxed_rv_list_two.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

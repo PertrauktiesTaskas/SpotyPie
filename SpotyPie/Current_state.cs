@@ -14,5 +14,7 @@ namespace SpotyPie
         public static Android.Support.V4.App.Fragment BackFragment { get; set; }
 
         public static BlockWithImage ClickedInRVH { get; set; } = null;
+
+        public static Artist Current_Artist { get; set; } = null;
     }
 }
