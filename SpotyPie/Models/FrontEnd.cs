@@ -14,6 +14,8 @@ namespace SpotyPie.Models
 {
     public class BlockWithImage
     {
+        public int Id { get; set; }
+        public RvType Type { get; set; }
         public string Title { get; set; }
         public string SubTitle { get; set; }
         public string Image { get; set; }
@@ -23,11 +25,20 @@ namespace SpotyPie.Models
 
         }
 
-        public BlockWithImage(string title, string subtitle, string url)
+        public BlockWithImage(int id, RvType type, string title, string subtitle, string url)
         {
+            Id = id;
+            Type = type;
             Title = title;
             SubTitle = subtitle;
             Image = url;
         }
+    }
+
+    public enum RvType
+    {
+        Artist,
+        Album,
+        Playlist
     }
 }

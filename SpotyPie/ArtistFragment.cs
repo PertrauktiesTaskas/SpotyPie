@@ -21,22 +21,22 @@ using SupportFragment = Android.Support.V4.App.Fragment;
 
 namespace SpotyPie
 {
-    public class AlbumFragment : SupportFragment
+    public class ArtistFragment : SupportFragment
     {
         View RootView;
 
         //Background info
 
-        ImageView AlbumPhoto;
+        ImageView Photo;
         TextView AlbumTitle;
         Button PlayableButton;
         TextView AlbumByText;
 
         //Album Songs
-        public static RecycleViewList<List> AlbumSongs = new RecycleViewList<List>();
-        private RecyclerView.LayoutManager AlbumSongsLayoutManager;
-        private static RecyclerView.Adapter AlbumSongsAdapter;
-        private static RecyclerView AlbumSongsRecyclerView;
+        public static RecycleViewList<List> ArtistTopSongs = new RecycleViewList<List>();
+        private RecyclerView.LayoutManager ArtistSongsLayoutManager;
+        private static RecyclerView.Adapter ArtistSongsAdapter;
+        private static RecyclerView ArtistSongsRecyclerView;
 
         private TextView download;
         private TextView Copyrights;
@@ -57,12 +57,12 @@ namespace SpotyPie
             MainActivity.ActionName.Text = Current_state.ClickedInRVH.Title;
 
             //Background binding
-            AlbumPhoto = RootView.FindViewById<ImageView>(Resource.Id.album_photo);
+            Photo = RootView.FindViewById<ImageView>(Resource.Id.album_photo);
             AlbumTitle = RootView.FindViewById<TextView>(Resource.Id.album_title);
             PlayableButton = RootView.FindViewById<Button>(Resource.Id.playable_button);
             AlbumByText = RootView.FindViewById<TextView>(Resource.Id.album_by_title);
 
-            Picasso.With(Context).Load(Current_state.ClickedInRVH.Image).Into(AlbumPhoto);
+            Picasso.With(Context).Load(Current_state.ClickedInRVH.Image).Into(Photo);
             AlbumTitle.Text = Current_state.ClickedInRVH.Title;
             AlbumByText.Text = Current_state.ClickedInRVH.SubTitle;
 
@@ -80,29 +80,32 @@ namespace SpotyPie
             Height = backViewContainer.LayoutParameters.Height;
             ScrollFather.ScrollChange += Scroll_ScrollChange;
 
-            //ALBUM song list
-            AlbumSongsLayoutManager = new LinearLayoutManager(this.Activity);
-            AlbumSongsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.song_list);
-            AlbumSongsRecyclerView.SetLayoutManager(AlbumSongsLayoutManager);
-            AlbumSongsAdapter = new VerticalRV(AlbumSongs, AlbumSongsRecyclerView, this.Context);
-            AlbumSongs.Adapter = AlbumSongsAdapter;
-            AlbumSongsRecyclerView.SetAdapter(AlbumSongsAdapter);
-            AlbumSongsRecyclerView.NestedScrollingEnabled = false;
+            //Artist song list
+            ArtistSongsLayoutManager = new LinearLayoutManager(this.Activity);
+            ArtistSongsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.song_list);
+            ArtistSongsRecyclerView.SetLayoutManager(ArtistSongsLayoutManager);
+            ArtistSongsAdapter = new VerticalRV(ArtistTopSongs, ArtistSongsRecyclerView, this.Context);
+            ArtistTopSongs.Adapter = ArtistSongsAdapter;
+            ArtistSongsRecyclerView.SetAdapter(ArtistSongsAdapter);
+            ArtistSongsRecyclerView.NestedScrollingEnabled = false;
 
-            Task.Run(() => GetSongsAsync(Current_state.ClickedInRVH.Id));
+
+            //artist_albums_list
+
+            Task.Run(() => GetSongsAsync(1));
 
             return RootView;
         }
 
         public override void OnDestroyView()
         {
-            AlbumSongs = new RecycleViewList<List>();
+            ArtistTopSongs = new RecycleViewList<List>();
             base.OnDestroyView();
         }
 
         public override void OnResume()
         {
-            if (AlbumSongs == null || AlbumSongs.Count == 0)
+            if (ArtistTopSongs == null || ArtistTopSongs.Count == 0)
             {
                 Task.Run(() => GetSongsAsync(Current_state.ClickedInRVH.Id));
             }
@@ -123,7 +126,7 @@ namespace SpotyPie
                     {
                         foreach (var x in album.Songs)
                         {
-                            AlbumSongs.Add(new List(x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name));
+                            ArtistTopSongs.Add(new List(x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name));
                         }
                         List<Copyright> Copyright = JsonConvert.DeserializeObject<List<Copyright>>(album.Copyrights);
                         Copyrights.Text = string.Join("\n", Copyright.Select(x => x.Text));

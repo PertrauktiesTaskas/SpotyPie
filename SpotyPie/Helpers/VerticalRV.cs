@@ -17,11 +17,11 @@ namespace SpotyPie.Helpers
 {
     public class VerticalRV : RecyclerView.Adapter
     {
-        private RecycleViewList<BlockWithImage> Dataset;
+        private RecycleViewList<List> Dataset;
         private readonly RecyclerView mRecyclerView;
         private Context Context;
 
-        public VerticalRV(RecycleViewList<BlockWithImage> data, RecyclerView recyclerView, Context context)
+        public VerticalRV(RecycleViewList<List> data, RecyclerView recyclerView, Context context)
         {
             Dataset = data;
             mRecyclerView = recyclerView;
@@ -44,7 +44,7 @@ namespace SpotyPie.Helpers
 
             public TextView SubTitile { get; set; }
 
-            public ImageView Image { get; set; }
+            public ImageButton Options { get; set; }
 
             public BlockImage(View view) : base(view) { }
         }
@@ -57,7 +57,7 @@ namespace SpotyPie.Helpers
             }
             else
             {
-                return Resource.Layout.big_rv_list;
+                return Resource.Layout.song_list_rv;
             }
         }
 
@@ -75,15 +75,15 @@ namespace SpotyPie.Helpers
             {
                 View EmptyTime = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.song_list_rv, parent, false);
 
-                TextView mTitle = EmptyTime.FindViewById<TextView>(Resource.Id.textView10);
-                TextView mSubTitle = EmptyTime.FindViewById<TextView>(Resource.Id.textView11);
-                ImageView mImage = EmptyTime.FindViewById<ImageView>(Resource.Id.imageView5);
+                TextView mTitle = EmptyTime.FindViewById<TextView>(Resource.Id.Title);
+                TextView mSubTitle = EmptyTime.FindViewById<TextView>(Resource.Id.subtitle);
+                ImageButton mImage = EmptyTime.FindViewById<ImageButton>(Resource.Id.option);
 
                 BlockImage view = new BlockImage(EmptyTime)
                 {
-                    Image = mImage,
-                    SubTitile = mSubTitle,
                     Title = mTitle,
+                    SubTitile = mSubTitle,
+                    Options = mImage,
                     IsRecyclable = false
                 };
 
@@ -100,8 +100,8 @@ namespace SpotyPie.Helpers
             else if (holder is BlockImage)
             {
                 BlockImage view = holder as BlockImage;
-                //view.Title.Text = Dataset[position].Title;
-                //view.SubTitile.Text = Dataset[position].SubTitle;
+                view.Title.Text = Dataset[position].Title;
+                view.SubTitile.Text = Dataset[position].Subtitle;
                 //Picasso.With(Context).Load(Dataset[position].Image).Into(view.Image);
 
             }

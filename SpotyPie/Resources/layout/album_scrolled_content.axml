@@ -5,8 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-	app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    android:layout_height="wrap_content">
 
 <android.support.v4.widget.NestedScrollView
     android:id="@+id/fatherScrool"
@@ -14,7 +13,7 @@
     android:background="@android:color/transparent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-		app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 <android.support.constraint.ConstraintLayout
 
@@ -33,8 +32,14 @@
 
     </TextView>
 
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/innerWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#222222"
+        app:layout_constraintTop_toBottomOf="@+id/view">
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/download_text"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:gravity="start|center"
@@ -42,33 +47,52 @@
         android:paddingLeft="16dp"
         android:background="#222222"
         android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
-        app:layout_constraintEnd_toStartOf="@+id/switch2"
+        app:layout_constraintEnd_toStartOf="@+id/download_switch"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Switch
-        android:id="@+id/switch2"
+        android:id="@+id/download_switch"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:background="#222222"
         android:paddingRight="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView4"
+        app:layout_constraintBottom_toBottomOf="@+id/download_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView4" />
+        app:layout_constraintTop_toTopOf="@+id/download_text" />
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/song_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#222222"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-				android:nestedScrollingEnabled="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/song_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#222222"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/download_text" />
+
+        <TextView
+            android:id="@+id/copyrights"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginBottom="32dp"
+            android:gravity="center"
+            android:text="© 2016 Sleepless Records Inc., Under Exclusive License to Universal Music Canada \n ℗ 2016 Sleepless Records Inc., Under Exclusive License to Universal Music Canada"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/song_list" />
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>
