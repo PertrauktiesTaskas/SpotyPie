@@ -35,6 +35,10 @@ body #root {
     align-items: center;
 }
 
+.logo{
+    height: 50px;
+}
+
 .header .page-flows .flow {
     font-size: 20px;
     color: #aaaaaa;
@@ -144,6 +148,7 @@ body #root {
     color: #107dac;
     font-size: 25px;
     font-weight: 700;
+    display: inline-block;
 }
 
 .header div a:hover {
@@ -175,6 +180,21 @@ body #root {
     margin-top: 5%;
     padding-bottom: 10px;
     text-align: center;
+}
+
+.dashboard_section{
+    color: #aaaaaa;
+    border: solid 1px #aaaaaa;
+    border-radius: 25px;
+    margin-left: 4%;
+    margin-right: 4%;
+    margin-top: 5%;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.dashboard_section div{
+    font-size: 18px;
 }
 
 .section_name {
@@ -414,6 +434,7 @@ body #root {
 
 .current-track__actions {
     width: 10%;
+    padding-left: 5%;
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
@@ -435,7 +456,7 @@ body #root {
 }
 
 .current-track__progress {
-    width: 60%;
+    width: 65%;
     padding: 0 30px;
     color: #aaaaaa;
     font-size: 11px;
@@ -497,10 +518,9 @@ body #root {
 }
 
 .current-track__options .controls {
-    width: 85%;
+    width: 100%;
     display: flex;
     flex-flow: row wrap;
-    justify-content: space-between;
 }
 
 .current-track__options .controls .devices:hover {
@@ -517,7 +537,8 @@ body #root {
 }
 
 .current-track__options .controls .volume {
-    width: 40%;
+    width: 80%;
+    padding-left: 15%;
     display: flex;
     flex-flow: row wrap;
     align-items: center;
@@ -827,6 +848,12 @@ body #root {
     align-items: center;
 }
 
+.tracks__heading__file {
+    margin-left: 110px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
 .tracks__heading__number {
     margin-left: 15px;
     font-style: italic;
@@ -840,7 +867,7 @@ body #root {
 
 .tracks__heading__title {
     margin-left: 100px;
-    width: 45%;
+    width: 44.5%;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -856,6 +883,91 @@ body #root {
 }
 
 .tracks__heading__popularity {
+    font-size: 20px;
+    margin-left: 55px;
+    padding-right: 10px;
+}
+
+.album__tracks__heading {
+    color: #aaaaaa;
+    height: 42px;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+}
+
+.album__tracks__heading__number {
+    margin-left: 15px;
+    font-style: italic;
+}
+
+.album__tracks__heading__artist {
+    margin-left: 35px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.album__tracks__heading__title {
+    margin-left: 8.5%;
+    width: 44.5%;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.album__tracks__heading__album {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.album__tracks__heading__length {
+    margin-left: auto;
+    margin-right: 1.5%;
+}
+
+.album__tracks__heading__popularity {
+    font-size: 20px;
+    margin-left: 55px;
+    padding-right: 10px;
+}
+
+
+.artist__album__tracks__heading {
+    color: #aaaaaa;
+    height: 42px;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+}
+
+.artist__album__tracks__heading__number {
+    margin-left: 15px;
+    font-style: italic;
+}
+
+.artist__album__tracks__heading__artist {
+    margin-left: 35px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.artist__album__tracks__heading__title {
+    margin-left: 8.5%;
+    width: 44.5%;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.artist__album__tracks__heading__album {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.artist__album__tracks__heading__length {
+    margin-left: auto;
+    margin-right: 1.5%;
+}
+
+.artist__album__tracks__heading__popularity {
     font-size: 20px;
     margin-left: 55px;
     padding-right: 10px;
@@ -960,6 +1072,10 @@ body #root {
     margin-left: auto;
     color: #aaaaaa;
     margin-right: 5px;
+}
+
+.tracks .track__length i{
+    display: none;
 }
 
 .tracks .track__popularity {
@@ -1168,7 +1284,6 @@ body #root {
 }
 
 .dashboard .dashboard_items .dashboard_item {
-    padding: 15px 0;
     display: flex;
     flex-flow: row nowrap;
     align-items: center;

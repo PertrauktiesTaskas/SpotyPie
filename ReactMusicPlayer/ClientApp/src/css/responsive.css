@@ -13,28 +13,46 @@
 
     .current-track__actions {
         width: 10%;
+        padding-left: 0;
     }
 
     .current-track__progress {
-        width: 50%;
+        width: 60%;
+    }
+
+    .current-track__progress__bar {
+        width: 90%;
     }
 
     .current-track__options {
-        width: 40%;
+        width: 30%;
+    }
+
+    .tracks__heading__length {
+        margin-right: 1.5%;
+    }
+
+    .album__tracks__heading__title {
+        margin-left: 10%;
+    }
+
+    .artist__album__tracks__heading__title {
+        margin-left: 10%;
+    }
+
+    .artist__album__tracks__heading__length {
+        margin-right: 1.5%;
+    }
+
+    .current-track__options .controls .volume {
+        width: 95%;
     }
 }
 
 @media (max-width: 1199px) {
-    .tracks__heading__title {
-        width: auto;
-    }
 
     .tracks__heading__popularity {
         display: none;
-    }
-
-    .tracks .track__title {
-        width: auto !important;
     }
 
     .tracks .track__explicit {
@@ -52,6 +70,10 @@
 
     .media-cards .media-card {
         width: calc((100% / 3) - 30px);
+    }
+
+    .artist__album__tracks__heading__title {
+        margin-left: 11.5%;
     }
 }
 
@@ -73,6 +95,10 @@
         margin: 10px;
         width: calc((100% / 3) - 20px);
     }
+
+    .artist__album__tracks__heading__title {
+        margin-left: 13.5%;
+    }
 }
 
 @media (max-width: 991px) {
@@ -85,15 +111,34 @@
     }
 
     .current-track__progress {
-        width: 40%;
+        width: 60%;
     }
 
     .current-track__options {
-        width: 50%;
+        width: 30%;
+    }
+
+    .playing__art img {
+        height: 50px;
+        width: 50px;
+    }
+
+    .playing__song {
+        font-size: 12px;
+        padding-left: 5px;
+    }
+
+    .dashboard_graph{
+        
     }
 }
 
 @media (max-width: 767px) {
+    .page-flows{
+        width: 100%;
+        text-align: center;
+    }
+
     .content__left {
         width: 100%;
     }
@@ -139,16 +184,34 @@
         border-top: 1px solid #181818;
     }
 
+    .playing__song {
+        font-size: 26px;
+        padding-left: 10%;
+    }
+
+    .playing__art img {
+        width: 275px;
+        height: 275px;
+    }
+
     .current-track__actions {
-        width: 25%;
+        width: 10%;
     }
 
     .current-track__progress {
-        width: 75%;
+        width: 60%;
+    }
+
+    .current-track__progress__bar {
+        width: 85%;
+    }
+
+    .current-track__options .controls .volume {
+        width: 90%;
     }
 
     .current-track__options {
-        width: 100%;
+        width: 30%;
     }
 
     .current-track__action {
@@ -171,16 +234,34 @@
     .media-cards .media-card {
         width: calc((100% / 2) - 30px);
     }
+
+    .content__middle {
+        width: 100%;
+        display: block;
+        margin-bottom: 15%;
+    }
+
+    .player_content {
+        position: fixed;
+        z-index: 3;
+    }
+
+    .dashboard_section div {
+        padding: 2px;
+    }
+
+    .album__tracks__heading__title {
+        margin-left: 15%;
+    }
+
+    .artist__album__tracks__heading__title {
+        margin-left: 14.5%;
+    }
 }
 
 @media (max-width: 650px) {
     .header .window__actions {
         width: 15%;
-    }
-
-    .header .page-flows {
-        width: 20%;
-        margin: 0;
     }
 
     .header .search {
@@ -197,6 +278,38 @@
         width: 100%;
         margin-top: 15px;
         justify-content: space-around;
+    }
+
+    .tracks .track__title {
+        margin-left: 50px;
+    }
+
+    .tracks__heading__title {
+        margin-left: 40px;
+    }
+
+    .tracks__heading__length {
+        margin-right: 2.5%;
+    }
+
+    .album__tracks__heading__title {
+        margin-left: 8.5%;
+    }
+
+    .album__tracks__heading__length {
+        margin-right: 2.5%;
+    }
+
+    .artist__album__tracks__heading__title {
+        margin-left: 7.5%;
+    }
+
+    .tracks__heading__file {
+        margin-left: 55px;
+    }
+
+    .current-track__progress__bar {
+        width: 80%;
     }
 }
 
@@ -231,6 +344,102 @@
         width: 100%;
         text-align: center;
     }
+
+    .playing__art img {
+        height: 120px;
+        width: 120px;
+    }
+
+    .playing__song {
+        font-size: 20px;
+    }
+
+    .current-track__actions {
+        width: 17%;
+    }
+
+    .current-track__progress {
+        width: 50%;
+        padding: 2%;
+    }
+
+    .current-track__progress__bar {
+        width: 75%;
+    }
+
+    .current-track__options .controls .volume {
+        width: 70%;
+        padding-left: 5%;
+    }
+
+    .current-track__options {
+        width: 33%;
+    }
+
+    .current-track__action {
+        padding-top: 15px;
+    }
+
+    .tracks__heading {
+        display: none;
+    }
+
+    .tracks__heading__length {
+        display: none;
+    }
+
+    .tracks .track {
+        height: auto;
+    }
+
+    .tracks .track__number {
+        display: none;
+    }
+
+    .tracks .track__artist {
+        font-size: 16px;
+        margin-left: 15px;
+        width: 100%;
+        display: inline-block;
+    }
+
+    .tracks .track__title {
+        font-size: 16px;
+        margin-left: 15px;
+        width: 100%;
+        display: inline-block;
+    }
+
+    .tracks .track__album {
+        font-size: 16px;
+        margin-left: 15px;
+        width: 100%;
+        display: inline-block;
+    }
+
+    .tracks__heading__artist {
+        display: none;
+    }
+
+    .tracks__heading__title {
+        display: none;
+    }
+
+    .tracks__heading__album {
+        display: none;
+    }
+
+    .tracks .track__length i {
+        display: inline-block;
+    }
+
+    .album__tracks__heading {
+        display: none;
+    }
+
+    .artist__album__tracks__heading {
+        display: none;
+    }
 }
 
 @media (max-width: 480px) {
@@ -253,6 +462,14 @@
     .current-track__progress {
         width: 100%;
         padding: 5px 0;
+    }
+
+    .current-track__progress__bar {
+        width: 90%;
+    }
+
+    .current-track__options .controls {
+        justify-content: center;
     }
 
     .current-track__options {
@@ -278,6 +495,70 @@
     .media-cards .media-card {
         margin: 15px 0;
         width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .tracks .track__title {
+        width: 60%;
+        font-size: 14px;
+    }
+
+    .tracks .track__artist {
+        font-size: 14px;
+    }
+
+    .tracks .track__album {
+        font-size: 14px;
+    }
+
+    .tracks .track__length {
+        font-size: 14px;
+    }
+
+    .album__info__meta .album__name {
+        font-size: 18px;
+    }
+
+    .top_artist img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .top_artist_name {
+        font-size: 18px;
+    }
+
+    .top_album img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .top_album_name {
+        font-size: 18px;
+    }
+
+    .top_song img{
+        width: 100px;
+        height: 100px;
+    }
+
+    .top_song_name{
+        font-size: 18px;
+    }
+
+    .album__info__art img{
+        width: 100px;
+        height: 100px;
+    }
+
+    .artist__info__art img{
+        width: 100px;
+        height: 100px;
+    }
+
+    .playing__song{
+        font-size: 14px;
     }
 }
 

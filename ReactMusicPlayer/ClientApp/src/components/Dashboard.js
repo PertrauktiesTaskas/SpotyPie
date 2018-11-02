@@ -1,10 +1,9 @@
 import React from 'react';
 import '../css/main_styles.css';
 import '../css/responsive.css';
-import Chart from 'chart.js/dist/Chart.js';
+import Chart from "chart.js/dist/Chart";
 
-
-class SideMenuPanel2 extends React.Component {
+class Dashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
@@ -103,44 +102,46 @@ class SideMenuPanel2 extends React.Component {
     }
 
     render() {
-
-
         return (
-            <div className="content__right">
+            <div style={{height: "100%"}}>
 
-                <div className="dashboard">
-
-                    <div className="dashboard_items">
-
-                    <span className="dashboard_item">
-                        <i className="far fa-clock"/> Total length: 2h 15min
-                    </span>
-
-                        <span className="dashboard_item">
-                        <i className="fas fa-music"/> Songs: 15
-                    </span>
-
-                        <span className="dashboard_item">
-                        <i className="fas fa-user"/> Artists: 5
-                    </span>
-
-                        <span className="dashboard_item">
-                        <i className="fas fa-compact-disc"/> Albums: 3
-                    </span>
-
-                        <span className="dashboard_item">
-                        <i className="fas fa-list-ul"/> Playlists: 2
-                    </span>
-
-                        <canvas id="system" style={{height: "300px;", width: "300px;"}}/>
-                        <canvas id="temp" style={{height: "300px;", width: "300px;"}}/>
-                        <canvas id="storage" style={{height: "300px;", width: "300px;"}}/>
+                <div className="col-sm-11 dashboard_section">
+                    <div className="section_name">Songs info</div>
+                    <div className="col-sm-4">
+                        <div><i className="far fa-clock"/> Total length: 2h 15min</div>
+                    </div>
+                    <div className="col-sm-4">
+                        <div><i className="fas fa-music"/> Songs: 15</div>
+                    </div>
+                    <div className="col-sm-4">
+                        <div><i className="fas fa-user-alt"/> Artists: 5</div>
+                    </div>
+                    <div className="col-sm-4">
+                        <div><i className="fas fa-compact-disc"/> Albums: 3</div>
+                    </div>
+                    <div className="col-sm-4">
+                        <div><i className="fas fa-list-ul"/> Playlists: 3</div>
                     </div>
                 </div>
 
+                <div className="col-sm-11 dashboard_section">
+                    <div className="section_name">System info</div>
+                    <div className="col-sm-4">
+                        <canvas id="system" className="dashboard_graph" style={{height: "200px;", width: "200px;"}}/>
+                    </div>
+                    <div className="col-sm-4">
+                        <canvas id="temp" className="dashboard_graph" style={{height: "200px;", width: "200px;"}}/>
+                    </div>
+                    <div className="col-sm-4">
+                        <canvas id="storage" className="dashboard_graph" style={{height: "200px;", width: "200px;"}}/>
+                    </div>
+                </div>
+
+
             </div>
+
         );
     }
 }
 
-export default SideMenuPanel2;
+export default Dashboard;

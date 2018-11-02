@@ -122,7 +122,7 @@ class MusicPlayer extends React.Component {
 
     SetSongInfo() {
         let length = Math.round(this.player.getDuration());
-        let minutes = Math.round(length / 60);
+        let minutes = Math.floor(length / 60);
         let seconds = length - 60 * minutes;
         console.log("Minutes", minutes);
         console.log("Seconds", seconds);

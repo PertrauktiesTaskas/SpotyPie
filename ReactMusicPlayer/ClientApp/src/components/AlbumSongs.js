@@ -9,13 +9,13 @@ class AlbumSongs extends React.Component {
 
                 <div className="tracks">
 
-                    <div className="tracks__heading">
+                    <div className="album__tracks__heading">
 
-                        <div className="tracks__heading__number">#</div>
+                        <div className="album__tracks__heading__number">#</div>
 
-                        <div className="tracks__heading__title">Song</div>
+                        <div className="album__tracks__heading__title">Song</div>
 
-                        <div className="tracks__heading__length">
+                        <div className="album__tracks__heading__length">
 
                             <i className="far fa-clock"/>
 
@@ -35,7 +35,7 @@ class AlbumSongs extends React.Component {
 
                         </div>
 
-                        <div className="track__length">1:11</div>
+                        <div className="track__length"><i className="far fa-clock"/> 1:11</div>
 
                     </div>
 
@@ -51,7 +51,7 @@ class AlbumSongs extends React.Component {
 
                         </div>
 
-                        <div className="track__length">3:00</div>
+                        <div className="track__length"><i className="far fa-clock"/> 3:00</div>
 
                     </div>
 
@@ -72,7 +72,7 @@ class AlbumSongs extends React.Component {
 
                         </div>
 
-                        <div className="track__length">4:11</div>
+                        <div className="track__length"><i className="far fa-clock"/> 4:11</div>
 
                     </div>
 
@@ -93,7 +93,7 @@ class AlbumSongs extends React.Component {
 
                         </div>
 
-                        <div className="track__length">3:20</div>
+                        <div className="track__length"><i className="far fa-clock"/> 3:20</div>
 
                     </div>
 
@@ -115,7 +115,7 @@ class AlbumSongs extends React.Component {
 
                         </div>
 
-                        <div className="track__length">4:33</div>
+                        <div className="track__length"><i className="far fa-clock"/> 4:33</div>
 
                     </div>
 

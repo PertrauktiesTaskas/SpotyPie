@@ -2,7 +2,6 @@ import React from "react";
 
 class FilesList extends React.Component {
 
-
     render() {
         return (
             <div  style={{height: "100%"}}>
@@ -13,7 +12,7 @@ class FilesList extends React.Component {
 
                         <div className="tracks__heading__number">#</div>
 
-                        <div className="tracks__heading__artist" style={{marginLeft: "110px"}}>File</div>
+                        <div className="tracks__heading__file">File</div>
 
                         <div className="tracks__heading__length" style={{marginRight: "5px"}}> FORMAT</div>
 

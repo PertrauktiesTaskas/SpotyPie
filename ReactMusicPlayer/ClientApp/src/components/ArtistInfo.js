@@ -45,21 +45,15 @@ class ArtistInfo extends React.Component {
 
                     <div className="tracks">
 
-                        <div className="tracks__heading">
+                        <div className="artist__album__tracks__heading">
 
-                            <div className="tracks__heading__number">#</div>
+                            <div className="artist__album__tracks__heading__number">#</div>
 
-                            <div className="tracks__heading__title">Song</div>
+                            <div className="artist__album__tracks__heading__title">Song</div>
 
-                            <div className="tracks__heading__length">
+                            <div className="artist__album__tracks__heading__length">
 
-                                <i className="ion-ios-stopwatch-outline"></i>
-
-                            </div>
-
-                            <div className="tracks__heading__popularity">
-
-                                <i className="ion-thumbsup"></i>
+                                <i className="far fa-clock"/>
 
                             </div>
 
@@ -69,12 +63,6 @@ class ArtistInfo extends React.Component {
 
                             <div className="track__number">1</div>
 
-                            <div className="track__added">
-
-                                <i className="ion-checkmark-round added"></i>
-
-                            </div>
-
                             <div className="track__title">Intro</div>
 
                             <div className="track__explicit">
@@ -83,25 +71,13 @@ class ArtistInfo extends React.Component {
 
                             </div>
 
-                            <div className="track__length">1:11</div>
-
-                            <div className="track__popularity">
-
-                                <i className="ion-arrow-graph-up-right"></i>
-
-                            </div>
+                            <div className="track__length"><i className="far fa-clock"/> 1:11</div>
 
                         </div>
 
                         <div className="track">
 
                             <div className="track__number">2</div>
-
-                            <div className="track__added">
-
-                                <i className="ion-checkmark-round added"></i>
-
-                            </div>
 
                             <div className="track__title">Random</div>
 
@@ -111,25 +87,13 @@ class ArtistInfo extends React.Component {
 
                             </div>
 
-                            <div className="track__length">3:00</div>
-
-                            <div className="track__popularity">
-
-                                <i className="ion-arrow-graph-up-right"></i>
-
-                            </div>
+                            <div className="track__length"><i className="far fa-clock"/> 3:00</div>
 
                         </div>
 
                         <div className="track">
 
                             <div className="track__number">3</div>
-
-                            <div className="track__added">
-
-                                <i className="ion-checkmark-round added"></i>
-
-                            </div>
 
                             <div className="track__title featured">
 
@@ -144,25 +108,14 @@ class ArtistInfo extends React.Component {
 
                             </div>
 
-                            <div className="track__length">4:11</div>
+                            <div className="track__length"><i className="far fa-clock"/> 4:11</div>
 
-                            <div className="track__popularity">
-
-                                <i className="ion-arrow-graph-up-right"></i>
-
-                            </div>
 
                         </div>
 
                         <div className="track">
 
                             <div className="track__number">4</div>
-
-                            <div className="track__added">
-
-                                <i className="ion-checkmark-round added"></i>
-
-                            </div>
 
                             <div className="track__title featured">
 
@@ -177,25 +130,13 @@ class ArtistInfo extends React.Component {
 
                             </div>
 
-                            <div className="track__length">3:20</div>
-
-                            <div className="track__popularity">
-
-                                <i className="ion-arrow-graph-down-right"></i>
-
-                            </div>
+                            <div className="track__length"><i className="far fa-clock"/> 3:20</div>
 
                         </div>
 
                         <div className="track">
 
                             <div className="track__number">5</div>
-
-                            <div className="track__added">
-
-                                <i className="ion-checkmark-round added"></i>
-
-                            </div>
 
                             <div className="track__title featured">
 
@@ -211,25 +152,13 @@ class ArtistInfo extends React.Component {
 
                             </div>
 
-                            <div className="track__length">4:33</div>
-
-                            <div className="track__popularity">
-
-                                <i className="ion-arrow-graph-up-right"></i>
-
-                            </div>
+                            <div className="track__length"><i className="far fa-clock"/> 4:33</div>
 
                         </div>
 
                         <div className="track">
 
                             <div className="track__number">6</div>
-
-                            <div className="track__added">
-
-                                <i className="ion-checkmark-round added"></i>
-
-                            </div>
 
                             <div className="track__title featured">
 
@@ -244,25 +173,13 @@ class ArtistInfo extends React.Component {
 
                             </div>
 
-                            <div className="track__length">3:34</div>
-
-                            <div className="track__popularity">
-
-                                <i className="ion-arrow-graph-up-right"></i>
-
-                            </div>
+                            <div className="track__length"><i className="far fa-clock"/> 3:34</div>
 
                         </div>
 
                         <div className="track">
 
                             <div className="track__number">7</div>
-
-                            <div className="track__added">
-
-                                <i className="ion-checkmark-round added"></i>
-
-                            </div>
 
                             <div className="track__title featured">
 
@@ -277,25 +194,13 @@ class ArtistInfo extends React.Component {
 
                             </div>
 
-                            <div className="track__length">3:29</div>
-
-                            <div className="track__popularity">
-
-                                <i className="ion-arrow-graph-up-right"></i>
-
-                            </div>
+                            <div className="track__length"><i className="far fa-clock"/> 3:29</div>
 
                         </div>
 
                         <div className="track">
 
                             <div className="track__number">8</div>
-
-                            <div className="track__added">
-
-                                <i className="ion-checkmark-round added"></i>
-
-                            </div>
 
                             <div className="track__title">
 
@@ -309,25 +214,13 @@ class ArtistInfo extends React.Component {
 
                             </div>
 
-                            <div className="track__length">2:07</div>
-
-                            <div className="track__popularity">
-
-                                <i className="ion-arrow-graph-up-right"></i>
-
-                            </div>
+                            <div className="track__length"><i className="far fa-clock"/> 2:07</div>
 
                         </div>
 
                         <div className="track">
 
                             <div className="track__number">9</div>
-
-                            <div className="track__added">
-
-                                <i className="ion-plus not-added"></i>
-
-                            </div>
 
                             <div className="track__title featured">
 
@@ -342,25 +235,13 @@ class ArtistInfo extends React.Component {
 
                             </div>
 
-                            <div className="track__length">3:11</div>
-
-                            <div className="track__popularity">
-
-                                <i className="ion-arrow-graph-down-right"></i>
-
-                            </div>
+                            <div className="track__length"><i className="far fa-clock"/> 3:11</div>
 
                         </div>
 
                         <div className="track">
 
                             <div className="track__number">10</div>
-
-                            <div className="track__added">
-
-                                <i className="ion-checkmark-round added"></i>
-
-                            </div>
 
                             <div className="track__title">
 
@@ -374,25 +255,13 @@ class ArtistInfo extends React.Component {
 
                             </div>
 
-                            <div className="track__length">3:28</div>
-
-                            <div className="track__popularity">
-
-                                <i className="ion-arrow-graph-up-right"></i>
-
-                            </div>
+                            <div className="track__length"><i className="far fa-clock"/> 3:28</div>
 
                         </div>
 
                         <div className="track">
 
                             <div className="track__number">11</div>
-
-                            <div className="track__added">
-
-                                <i className="ion-checkmark-round added"></i>
-
-                            </div>
 
                             <div className="track__title featured">
 
@@ -407,25 +276,13 @@ class ArtistInfo extends React.Component {
 
                             </div>
 
-                            <div className="track__length">4:13</div>
-
-                            <div className="track__popularity">
-
-                                <i className="ion-arrow-graph-up-right"></i>
-
-                            </div>
+                            <div className="track__length"><i className="far fa-clock"/> 4:13</div>
 
                         </div>
 
                         <div className="track">
 
                             <div className="track__number">12</div>
-
-                            <div className="track__added">
-
-                                <i className="ion-checkmark-round added"></i>
-
-                            </div>
 
                             <div className="track__title">
 
@@ -439,25 +296,13 @@ class ArtistInfo extends React.Component {
 
                             </div>
 
-                            <div className="track__length">3:23</div>
-
-                            <div className="track__popularity">
-
-                                <i className="ion-arrow-graph-up-right"></i>
-
-                            </div>
+                            <div className="track__length"><i className="far fa-clock"/> 3:23</div>
 
                         </div>
 
                         <div className="track">
 
                             <div className="track__number">13</div>
-
-                            <div className="track__added">
-
-                                <i className="ion-checkmark-round added"></i>
-
-                            </div>
 
                             <div className="track__title featured">
 
@@ -472,25 +317,13 @@ class ArtistInfo extends React.Component {
 
                             </div>
 
-                            <div className="track__length">3:42</div>
-
-                            <div className="track__popularity">
-
-                                <i className="ion-arrow-graph-up-right"></i>
-
-                            </div>
+                            <div className="track__length"><i className="far fa-clock"/> 3:42</div>
 
                         </div>
 
                         <div className="track">
 
                             <div className="track__number">14</div>
-
-                            <div className="track__added">
-
-                                <i className="ion-checkmark-round added"></i>
-
-                            </div>
 
                             <div className="track__title featured">
 
@@ -505,25 +338,14 @@ class ArtistInfo extends React.Component {
 
                             </div>
 
-                            <div className="track__length">2:59</div>
+                            <div className="track__length"><i className="far fa-clock"/> 2:59</div>
 
-                            <div className="track__popularity">
-
-                                <i className="ion-arrow-graph-up-right"></i>
-
-                            </div>
 
                         </div>
 
                         <div className="track">
 
                             <div className="track__number">15</div>
-
-                            <div className="track__added">
-
-                                <i className="ion-checkmark-round added"></i>
-
-                            </div>
 
                             <div className="track__title featured">
 
@@ -538,25 +360,13 @@ class ArtistInfo extends React.Component {
 
                             </div>
 
-                            <div className="track__length">5:11</div>
-
-                            <div className="track__popularity">
-
-                                <i className="ion-arrow-graph-up-right"></i>
-
-                            </div>
+                            <div className="track__length"><i className="far fa-clock"/> 5:11</div>
 
                         </div>
 
                         <div className="track">
 
                             <div className="track__number">16</div>
-
-                            <div className="track__added">
-
-                                <i className="ion-checkmark-round added"></i>
-
-                            </div>
 
                             <div className="track__title featured">
 
@@ -571,25 +381,13 @@ class ArtistInfo extends React.Component {
 
                             </div>
 
-                            <div className="track__length">4:11</div>
-
-                            <div className="track__popularity">
-
-                                <i className="ion-arrow-graph-up-right"></i>
-
-                            </div>
+                            <div className="track__length"><i className="far fa-clock"/> 4:11</div>
 
                         </div>
 
                         <div className="track">
 
                             <div className="track__number">17</div>
-
-                            <div className="track__added">
-
-                                <i className="ion-checkmark-round added"></i>
-
-                            </div>
 
                             <div className="track__title featured">
 
@@ -605,13 +403,7 @@ class ArtistInfo extends React.Component {
 
                             </div>
 
-                            <div className="track__length">5:30</div>
-
-                            <div className="track__popularity">
-
-                                <i className="ion-arrow-graph-up-right"></i>
-
-                            </div>
+                            <div className="track__length"><i className="far fa-clock"/> 5:30</div>
 
                         </div>
 
