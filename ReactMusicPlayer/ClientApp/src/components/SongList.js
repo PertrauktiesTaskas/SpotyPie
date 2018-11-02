@@ -43,7 +43,7 @@ class SongList extends React.Component {
 
                         </div>
 
-                        <div className="track__length">1:11</div>
+                        <div className="track__length"><i className="far fa-clock"/> 1:11</div>
 
                     </div>
 
@@ -63,7 +63,7 @@ class SongList extends React.Component {
 
                         </div>
 
-                        <div className="track__length">3:00</div>
+                        <div className="track__length"><i className="far fa-clock"/> 3:00</div>
 
                     </div>
 
@@ -88,7 +88,7 @@ class SongList extends React.Component {
 
                         </div>
 
-                        <div className="track__length">4:11</div>
+                        <div className="track__length"><i className="far fa-clock"/> 4:11</div>
 
                     </div>
 
@@ -113,7 +113,7 @@ class SongList extends React.Component {
 
                         </div>
 
-                        <div className="track__length">3:20</div>
+                        <div className="track__length"><i className="far fa-clock"/> 3:20</div>
 
                     </div>
 
@@ -139,7 +139,7 @@ class SongList extends React.Component {
 
                         </div>
 
-                        <div className="track__length">4:33</div>
+                        <div className="track__length"><i className="far fa-clock"/> 4:33</div>
 
                     </div>
 
