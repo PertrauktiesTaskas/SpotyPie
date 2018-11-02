@@ -45,8 +45,7 @@ namespace UploadMusic.Controllers
                     multiContent.Add(new ByteArrayContent(buffer), "file", file.FileName);
                 }
 
-                var response = await client.PostAsync($"http://localhost:51924/api/upload/", multiContent);
-                //return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var response = await client.PostAsync($"http://spotypie.deveim.com/api/upload/", multiContent);
                 ViewBag.Message = "File(s) uploaded succesfully!";
                 return View();
             }
