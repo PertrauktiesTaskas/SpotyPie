@@ -53,11 +53,16 @@ namespace Services
         {
             try
             {
-                var audioDb = await _ctx.Items.FirstOrDefaultAsync(x => x.Name.Contains(name));
-                _ctx.Update(audioDb);
-                audioDb.LocalUrl = path;
-                _ctx.SaveChanges();
-                return true;
+                //var nameSplit = name.Split(new char[] { '-', '_', ':' });
+                var audioDb = await _ctx.Items.FirstOrDefaultAsync(x => x.Name.Contains(Path.GetFileNameWithoutExtension(name)));
+                if (audioDb != null)
+                {
+                    _ctx.Update(audioDb);
+                    audioDb.LocalUrl = path;
+                    _ctx.SaveChanges();
+                    return true;
+                }
+                return false;
             }
             catch (Exception ex)
             {

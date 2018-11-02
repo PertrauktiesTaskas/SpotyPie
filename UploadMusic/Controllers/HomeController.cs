@@ -1,5 +1,4 @@
-﻿using Database;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,19 +12,11 @@ namespace UploadMusic.Controllers
 {
     public class HomeController : Controller
     {
-
-        private readonly SpotyPieIDbContext _ctx;
-        private readonly CancellationTokenSource cts;
         private CancellationToken ct;
-        private readonly IDb _ctd;
         private HttpClient client;
 
-        public HomeController(SpotyPieIDbContext ctx, IDb ctd)
+        public HomeController()
         {
-            _ctx = ctx;
-            _ctd = ctd;
-            cts = new CancellationTokenSource();
-            ct = cts.Token;
             client = new HttpClient();
         }
 
@@ -51,11 +42,10 @@ namespace UploadMusic.Controllers
                     for (int totalBytesCopied = 0; totalBytesCopied < fileStream.Length;)
                         totalBytesCopied += fileStream.Read(buffer, totalBytesCopied, Convert.ToInt32(fileStream.Length) - totalBytesCopied);
 
-                    multiContent.Add(new ByteArrayContent(buffer), "files", file.FileName);
+                    multiContent.Add(new ByteArrayContent(buffer), "file", file.FileName);
                 }
 
-                var response = await client.PostAsync($"music.pertrauktiestaskas.lt/upload/", multiContent).ConfigureAwait(false);
-                //return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var response = await client.PostAsync($"http://spotypie.deveim.com/api/upload/", multiContent);
                 ViewBag.Message = "File(s) uploaded succesfully!";
                 return View();
             }
