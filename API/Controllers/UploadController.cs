@@ -1,7 +1,8 @@
 ﻿using Database;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Models.BackEnd;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,30 +26,52 @@ namespace API.Controllers
             ct = cts.Token;
         }
 
+        [DisableFormValueModelBinding]
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Item info, IFormFile file)
+        public async Task<IActionResult> Post(/*IList<IFormFile> files*/)
         {
             try
             {
-                var filePath = @"/root/Music/" + Path.GetRandomFileName();
-                info.LocalUrl = filePath;
-
-                if (file.Length > 0)
+                if (Request.HasFormContentType)
                 {
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+
+                    var form = Request.Form;
+                    foreach (var formFile in form.Files)
                     {
-                        await file.CopyToAsync(stream).ContinueWith((o) =>
+
+                        var filePath = @"/root/Music/" + formFile.FileName;
+
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
                         {
-                            _ctd.AddAudioToLibrary(filePath, file.FileName, info);
-                        });
+                            await formFile.CopyToAsync(fileStream);
+                        }
+
+                        if (System.IO.File.Exists(filePath))
+                        {
+                            await _ctd.AddAudioToLibrary(filePath, formFile.FileName, null);
+                        }
                     }
                 }
-
-                return Ok(new { file.Length, filePath });
+                return Ok("Visk gera");
             }
             catch (System.Exception ex)
             {
                 return BadRequest(ex);
+            }
+        }
+
+        [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+        public class DisableFormValueModelBindingAttribute : Attribute, IResourceFilter
+        {
+            public void OnResourceExecuting(ResourceExecutingContext context)
+            {
+                var factories = context.ValueProviderFactories;
+                factories.RemoveType<FormValueProviderFactory>();
+                factories.RemoveType<JQueryFormValueProviderFactory>();
+            }
+
+            public void OnResourceExecuted(ResourceExecutedContext context)
+            {
             }
         }
     }
