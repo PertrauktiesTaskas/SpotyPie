@@ -73,13 +73,12 @@ namespace SpotyPie.Helpers
             }
             else
             {
-                View EmptyTime = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.big_rv_list, parent, false);
+                View BoxView = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.big_rv_list, parent, false);
+                TextView mTitle = BoxView.FindViewById<TextView>(Resource.Id.textView10);
+                TextView mSubTitle = BoxView.FindViewById<TextView>(Resource.Id.textView11);
+                ImageView mImage = BoxView.FindViewById<ImageView>(Resource.Id.imageView5);
 
-                TextView mTitle = EmptyTime.FindViewById<TextView>(Resource.Id.textView10);
-                TextView mSubTitle = EmptyTime.FindViewById<TextView>(Resource.Id.textView11);
-                ImageView mImage = EmptyTime.FindViewById<ImageView>(Resource.Id.imageView5);
-
-                BlockImage view = new BlockImage(EmptyTime)
+                BlockImage view = new BlockImage(BoxView)
                 {
                     Image = mImage,
                     SubTitile = mSubTitle,
