@@ -107,7 +107,7 @@ namespace API.Controllers
             {
                 var data = await _ctx.Albums
                     .Include(x => x.Images)
-                    .OrderBy(x => x.LastActiveTime)
+                    .OrderByDescending(x => x.LastActiveTime)
                     .Take(6).ToListAsync();
 
                 return Ok(data);
@@ -127,7 +127,29 @@ namespace API.Controllers
             {
                 var data = await _ctx.Albums
                     .Include(x => x.Images)
-                    .OrderBy(x => x.Popularity)
+                    .OrderByDescending(x => x.Popularity)
+                    .Take(6).ToListAsync();
+
+                return Ok(data);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+
+        //Return 6 oldes albums
+        [Route("Old")]
+        [HttpGet]
+        public async Task<IActionResult> GetOldAlbums()
+        {
+            try
+            {
+                var data = await _ctx.Albums
+                    .Include(x => x.Images)
+                    .Where(x => x.Popularity >= 1)
+                    .OrderByDescending(x => x.LastActiveTime)
                     .Take(6).ToListAsync();
 
                 return Ok(data);

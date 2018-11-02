@@ -107,13 +107,28 @@ namespace API.Controllers
             }
         }
 
+        [Route("Popular/")]
+        [HttpGet]
+        public async Task<IActionResult> GetPopularArtists()
+        {
+            try
+            {
+                var data = await _ctx.Artists.Include(x => x.Images).OrderByDescending(x => x.Popularity).Take(6).ToListAsync();
+                return Ok(data);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [Route("{id}/Albums")]
         [HttpGet]
         public async Task<IActionResult> GetArtistAlbums(int id)
         {
             try
             {
-                var data = await _ctx.Artists.Include(x => x.Albums).ThenInclude(x => x.Images).FirstOrDefaultAsync(x => x.Id == id);
+                var data = await _ctx.Artists.Include(x => x.Images).Include(x => x.Albums).ThenInclude(x => x.Images).FirstOrDefaultAsync(x => x.Id == id);
                 return Ok(data);
             }
             catch (Exception e)

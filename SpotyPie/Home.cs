@@ -1,18 +1,16 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Support.Design.Widget;
-using Android.Support.V4.Widget;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
+using Newtonsoft.Json;
+using RestSharp;
 using SpotyPie.Helpers;
+using SpotyPie.Models;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using SupportFragment = Android.Support.V4.App.Fragment;
 
@@ -24,25 +22,31 @@ namespace SpotyPie
         View RootView;
 
         //Recent albums
-        public static RecycleViewList<string> RecentAlbums = new RecycleViewList<string>();
+        public static RecycleViewList<BlockWithImage> RecentAlbums = new RecycleViewList<BlockWithImage>();
         private RecyclerView.LayoutManager RecentAlbumsLayoutManager;
         private static RecyclerView.Adapter RecentAlbumsAdapter;
         private static RecyclerView RecentAlbumsRecyclerView;
 
         //Best albums
-        public static RecycleViewList<string> BestAlbums = new RecycleViewList<string>();
+        public static RecycleViewList<BlockWithImage> BestAlbums = new RecycleViewList<BlockWithImage>();
         private RecyclerView.LayoutManager BestAlbumsLayoutManager;
         private static RecyclerView.Adapter BestAlbumsAdapter;
         private static RecyclerView BestAlbumsRecyclerView;
 
+        //Best artists
+        public static RecycleViewList<BlockWithImage> BestArtists = new RecycleViewList<BlockWithImage>();
+        private RecyclerView.LayoutManager BestArtistsLayoutManager;
+        private static RecyclerView.Adapter BestArtistsAdapter;
+        private static RecyclerView BestArtistsRecyclerView;
+
         //Jump back albums
-        public static RecycleViewList<string> JumpBack = new RecycleViewList<string>();
+        public static RecycleViewList<BlockWithImage> JumpBack = new RecycleViewList<BlockWithImage>();
         private RecyclerView.LayoutManager JumpBackLayoutManager;
         private static RecyclerView.Adapter JumpBackAdapter;
         private static RecyclerView JumpBackRecyclerView;
 
         //Top playlist
-        public static RecycleViewList<string> TopPlaylist = new RecycleViewList<string>();
+        public static RecycleViewList<BlockWithImage> TopPlaylist = new RecycleViewList<BlockWithImage>();
         private RecyclerView.LayoutManager TopPlaylistLayoutManager;
         private static RecyclerView.Adapter TopPlaylistAdapter;
         private static RecyclerView TopPlaylistRecyclerView;
@@ -51,62 +55,189 @@ namespace SpotyPie
         {
             RootView = inflater.Inflate(Resource.Layout.home_layout, container, false);
 
+            //RECENT ALBUMS
             RecentAlbumsLayoutManager = new LinearLayoutManager(this.Activity, LinearLayoutManager.Horizontal, false);
             RecentAlbumsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.recent_rv);
             RecentAlbumsRecyclerView.SetLayoutManager(RecentAlbumsLayoutManager);
-            RecentAlbumsAdapter = new HorizontalRV(RecentAlbums, RecentAlbumsRecyclerView);
+            RecentAlbumsAdapter = new HorizontalRV(RecentAlbums, RecentAlbumsRecyclerView, this.Context);
             RecentAlbums.Adapter = RecentAlbumsAdapter;
             RecentAlbumsRecyclerView.SetAdapter(RecentAlbumsAdapter);
 
-            RecentAlbums.Add("das");
-            RecentAlbums.Add("das");
-            RecentAlbums.Add("das");
-
-
+            //MOST POLULAR ALL TIME ALBUMS
             BestAlbumsLayoutManager = new LinearLayoutManager(this.Activity, LinearLayoutManager.Horizontal, false);
-            BestAlbumsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.best_artists_rv);
+            BestAlbumsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.best_albums_rv);
             BestAlbumsRecyclerView.SetLayoutManager(BestAlbumsLayoutManager);
-            BestAlbumsAdapter = new HorizontalRV(BestAlbums, BestAlbumsRecyclerView);
+            BestAlbumsAdapter = new HorizontalRV(BestAlbums, BestAlbumsRecyclerView, this.Context);
             BestAlbums.Adapter = BestAlbumsAdapter;
             BestAlbumsRecyclerView.SetAdapter(BestAlbumsAdapter);
 
-            BestAlbums.Add("das");
-            BestAlbums.Add("das");
-            BestAlbums.Add("das");
+            //MOST POPULAR ARTISTS
+            BestArtistsLayoutManager = new LinearLayoutManager(this.Activity, LinearLayoutManager.Horizontal, false);
+            BestArtistsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.best_artists_rv);
+            BestArtistsRecyclerView.SetLayoutManager(BestArtistsLayoutManager);
+            BestArtistsAdapter = new HorizontalRV(BestArtists, BestArtistsRecyclerView, this.Context);
+            BestArtists.Adapter = BestArtistsAdapter;
+            BestArtistsRecyclerView.SetAdapter(BestArtistsAdapter);
 
-
+            //OLD ALBUMS AND SONGS
             JumpBackLayoutManager = new LinearLayoutManager(this.Activity, LinearLayoutManager.Horizontal, false);
             JumpBackRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.albums_old_rv);
             BestAlbumsRecyclerView.SetLayoutManager(JumpBackLayoutManager);
-            JumpBackAdapter = new HorizontalRV(JumpBack, JumpBackRecyclerView);
+            JumpBackAdapter = new HorizontalRV(JumpBack, JumpBackRecyclerView, this.Context);
             JumpBack.Adapter = JumpBackAdapter;
             JumpBackRecyclerView.SetAdapter(JumpBackAdapter);
 
-            JumpBack.Add("das");
-            JumpBack.Add("das");
-            JumpBack.Add("das");
-
-
+            //MOST POLUPAR USER PLAYLISTS
             TopPlaylistLayoutManager = new LinearLayoutManager(this.Activity, LinearLayoutManager.Horizontal, false);
             TopPlaylistRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.playlist_rv);
             BestAlbumsRecyclerView.SetLayoutManager(TopPlaylistLayoutManager);
-            TopPlaylistAdapter = new HorizontalRV(TopPlaylist, TopPlaylistRecyclerView);
+            TopPlaylistAdapter = new HorizontalRV(TopPlaylist, TopPlaylistRecyclerView, this.Context);
             TopPlaylist.Adapter = TopPlaylistAdapter;
             TopPlaylistRecyclerView.SetAdapter(TopPlaylistAdapter);
 
-            TopPlaylist.Add("das");
-            TopPlaylist.Add("das");
-            TopPlaylist.Add("das");
-
-
+            Task.Run(() => GetRecentAlbumsAsync(this.Context));
+            Task.Run(() => GetPolularAlbumsAsync(this.Context));
+            Task.Run(() => GetPolularArtistsAsync(this.Context));
+            Task.Run(() => GetOldAlbumsAsync(this.Context));
             return RootView;
         }
 
-        public void GetRecentAlbums()
+        public async Task GetRecentAlbumsAsync(Context cnt)
         {
             try
             {
+                RestClient Client = new RestClient("http://spotypie.deveim.com/api/album/Recent");
+                var request = new RestRequest(Method.GET);
+                IRestResponse response = await Client.ExecuteGetTaskAsync(request);
+                if (response.IsSuccessful)
+                {
+                    List<Album> album = JsonConvert.DeserializeObject<List<Album>>(response.Content);
+                    Application.SynchronizationContext.Post(_ =>
+                    {
+                        foreach (var x in album)
+                        {
+                            RecentAlbums.Add(new BlockWithImage(x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name, x.Images.First().Url));
+                        }
+                    }, null);
+                }
+                else
+                {
+                    Application.SynchronizationContext.Post(_ =>
+                    {
+                        Toast.MakeText(this.Context, "Recent Albums API error", ToastLength.Short).Show();
+                    }, null);
+                }
+            }
+            catch (Exception e)
+            {
 
+            }
+        }
+
+        public async Task GetPolularAlbumsAsync(Context cnt)
+        {
+            try
+            {
+                RestClient Client = new RestClient("http://spotypie.deveim.com/api/album/popular");
+                var request = new RestRequest(Method.GET);
+                IRestResponse response = await Client.ExecuteGetTaskAsync(request);
+                if (response.IsSuccessful)
+                {
+                    List<Album> album = JsonConvert.DeserializeObject<List<Album>>(response.Content);
+                    Application.SynchronizationContext.Post(_ =>
+                    {
+                        foreach (var x in album)
+                        {
+                            BestAlbums.Add(new BlockWithImage(x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name, x.Images.First().Url));
+                        }
+                    }, null);
+                }
+                else
+                {
+                    Application.SynchronizationContext.Post(_ =>
+                    {
+                        Toast.MakeText(this.Context, "Recent Albums API error", ToastLength.Short).Show();
+                    }, null);
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+
+        public async Task GetPolularArtistsAsync(Context cnt)
+        {
+            try
+            {
+                RestClient Client = new RestClient("http://spotypie.deveim.com/api/artist/popular");
+                var request = new RestRequest(Method.GET);
+                IRestResponse response = await Client.ExecuteGetTaskAsync(request);
+                if (response.IsSuccessful)
+                {
+                    List<Artist> artists = JsonConvert.DeserializeObject<List<Artist>>(response.Content);
+                    Application.SynchronizationContext.Post(_ =>
+                    {
+                        foreach (var x in artists)
+                        {
+                            string DisplayGenre;
+                            var genres = JsonConvert.DeserializeObject<List<string>>(x.Genres);
+                            if (genres.Count > 1)
+                            {
+                                Random ran = new Random();
+                                int index = ran.Next(0, genres.Count - 1);
+                                DisplayGenre = genres[index];
+                            }
+                            else if (genres.Count == 1)
+                            {
+                                DisplayGenre = genres[0];
+                            }
+                            else
+                                DisplayGenre = string.Empty;
+
+                            BestArtists.Add(new BlockWithImage(x.Name, DisplayGenre, x.Images.First().Url));
+                        }
+                    }, null);
+                }
+                else
+                {
+                    Application.SynchronizationContext.Post(_ =>
+                    {
+                        Toast.MakeText(this.Context, "Recent Albums API error", ToastLength.Short).Show();
+                    }, null);
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+
+        public async Task GetOldAlbumsAsync(Context cnt)
+        {
+            try
+            {
+                RestClient Client = new RestClient("http://spotypie.deveim.com/api/album/old");
+                var request = new RestRequest(Method.GET);
+                IRestResponse response = await Client.ExecuteGetTaskAsync(request);
+                if (response.IsSuccessful)
+                {
+                    List<Album> album = JsonConvert.DeserializeObject<List<Album>>(response.Content);
+                    Application.SynchronizationContext.Post(_ =>
+                    {
+                        foreach (var x in album)
+                        {
+                            JumpBack.Add(new BlockWithImage(x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name, x.Images.First().Url));
+                        }
+                    }, null);
+                }
+                else
+                {
+                    Application.SynchronizationContext.Post(_ =>
+                    {
+                        Toast.MakeText(this.Context, "Recent Albums API error", ToastLength.Short).Show();
+                    }, null);
+                }
             }
             catch (Exception e)
             {

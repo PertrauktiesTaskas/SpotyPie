@@ -1,0 +1,283 @@
+@media (max-width: 1400px) {
+    .content__left {
+        width: 20%;
+    }
+
+    .content__middle {
+        width: 80%;
+    }
+
+    .content__right {
+        display: none;
+    }
+
+    .current-track__actions {
+        width: 10%;
+    }
+
+    .current-track__progress {
+        width: 50%;
+    }
+
+    .current-track__options {
+        width: 40%;
+    }
+}
+
+@media (max-width: 1199px) {
+    .tracks__heading__title {
+        width: auto;
+    }
+
+    .tracks__heading__popularity {
+        display: none;
+    }
+
+    .tracks .track__title {
+        width: auto !important;
+    }
+
+    .tracks .track__explicit {
+        display: none;
+    }
+
+    .tracks .track__popularity {
+        display: none;
+    }
+
+    .album .tracks .track {
+        height: auto;
+        padding: 10px 0;
+    }
+
+    .media-cards .media-card {
+        width: calc((100% / 3) - 30px);
+    }
+}
+
+@media (max-width: 1024px) {
+    .artist__content .overview__artist {
+        width: 100%;
+    }
+
+    .artist__content .overview__related {
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .related-artists {
+        flex-flow: row wrap;
+    }
+
+    .related-artists .related-artist {
+        margin: 10px;
+        width: calc((100% / 3) - 20px);
+    }
+}
+
+@media (max-width: 991px) {
+    body {
+        padding-top: 0;
+    }
+
+    .current-track__actions {
+        width: 10%;
+    }
+
+    .current-track__progress {
+        width: 40%;
+    }
+
+    .current-track__options {
+        width: 50%;
+    }
+}
+
+@media (max-width: 767px) {
+    .content__left {
+        width: 100%;
+    }
+
+    .content__middle {
+        width: 100%;
+    }
+
+    .navigation {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-around;
+    }
+
+    .navigation__list {
+        margin-bottom: 0;
+        width: calc(100% / 3);
+        text-align: center;
+    }
+
+    .navigation__list__item {
+        width: 100%;
+        text-align: center;
+    }
+
+    .navigation__list__item i {
+        display: none;
+    }
+
+    .navigation__list__item span {
+        margin: 0 auto;
+    }
+
+    .navigation__list__item:hover {
+        border: none;
+    }
+
+    .playlist {
+        display: none;
+    }
+
+    .playing {
+        border-top: 1px solid #181818;
+    }
+
+    .current-track__actions {
+        width: 25%;
+    }
+
+    .current-track__progress {
+        width: 75%;
+    }
+
+    .current-track__options {
+        width: 100%;
+    }
+
+    .current-track__action {
+        padding-top: 15px;
+    }
+
+    .artist__content .overview__artist {
+        padding-right: 0;
+    }
+
+    .artist {
+        overflow-y: auto;
+    }
+
+    .related-artists .related-artist {
+        margin: 5px;
+        width: calc((100% / 2) - 10px);
+    }
+
+    .media-cards .media-card {
+        width: calc((100% / 2) - 30px);
+    }
+}
+
+@media (max-width: 650px) {
+    .header .window__actions {
+        width: 15%;
+    }
+
+    .header .page-flows {
+        width: 20%;
+        margin: 0;
+    }
+
+    .header .search {
+        width: 65%;
+        margin: 0;
+    }
+
+    .header .search input {
+        width: 100%;
+        background-size: 7%;
+    }
+
+    .header .user {
+        width: 100%;
+        margin-top: 15px;
+        justify-content: space-around;
+    }
+}
+
+@media (max-width: 575px) {
+
+}
+
+@media (max-width: 522px) {
+    .artist__header {
+        height: auto;
+        flex-flow: column wrap;
+    }
+
+    .artist__header .artist__info {
+        margin-top: 0;
+        width: 100%;
+        display: flex;
+        flex-flow: column wrap;
+        align-items: center;
+        text-align: center;
+    }
+
+    .artist__header .artist__info .profile__img {
+        margin-right: 0;
+    }
+
+    .artist__header .artist__info__type {
+        margin-top: 10px;
+    }
+
+    .artist__header .artist__listeners {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .content__middle {
+        width: 100%;
+        display: block;
+        margin-bottom: 40%;
+    }
+
+    .player_content {
+        position: fixed;
+    }
+
+    .current-track__actions {
+        width: 100%;
+        justify-content: space-around;
+        padding: 5px 0;
+    }
+
+    .current-track__progress {
+        width: 100%;
+        padding: 5px 0;
+    }
+
+    .current-track__options {
+        width: 100%;
+        padding: 5px 0;
+    }
+
+    .related-artists .related-artist {
+        margin: 5px;
+        width: 20%;
+        background: none;
+    }
+
+    .related-artists .related-artist:hover {
+        background: none;
+        opacity: 0.6;
+    }
+
+    .related-artists .related-artist__name {
+        display: none;
+    }
+
+    .media-cards .media-card {
+        margin: 15px 0;
+        width: 100%;
+    }
+}
+

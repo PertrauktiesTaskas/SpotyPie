@@ -10,18 +10,22 @@ using Android.Runtime;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
+using SpotyPie.Models;
+using Square.Picasso;
 
 namespace SpotyPie.Helpers
 {
     public class HorizontalRV : RecyclerView.Adapter
     {
-        private RecycleViewList<string> Paskaitos;
+        private RecycleViewList<BlockWithImage> Dataset;
         private readonly RecyclerView mRecyclerView;
+        private Context Context;
 
-        public HorizontalRV(RecycleViewList<string> paskaitos, RecyclerView recyclerView)
+        public HorizontalRV(RecycleViewList<BlockWithImage> data, RecyclerView recyclerView, Context context)
         {
-            Paskaitos = paskaitos;
+            Dataset = data;
             mRecyclerView = recyclerView;
+            Context = context;
         }
 
         public class Loading : RecyclerView.ViewHolder
@@ -32,15 +36,22 @@ namespace SpotyPie.Helpers
             { }
         }
 
-        public class EmptyTime : RecyclerView.ViewHolder
+        public class BlockImage : RecyclerView.ViewHolder
         {
             public View EmptyTimeView { get; set; }
-            public EmptyTime(View view) : base(view) { }
+
+            public TextView Title { get; set; }
+
+            public TextView SubTitile { get; set; }
+
+            public ImageView Image { get; set; }
+
+            public BlockImage(View view) : base(view) { }
         }
 
         public override int GetItemViewType(int position)
         {
-            if (Paskaitos[position] == null)
+            if (Dataset[position] == null)
             {
                 return Resource.Layout.Loading;
             }
@@ -64,7 +75,17 @@ namespace SpotyPie.Helpers
             {
                 View EmptyTime = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.big_rv_list, parent, false);
 
-                EmptyTime view = new EmptyTime(EmptyTime) { };
+                TextView mTitle = EmptyTime.FindViewById<TextView>(Resource.Id.textView10);
+                TextView mSubTitle = EmptyTime.FindViewById<TextView>(Resource.Id.textView11);
+                ImageView mImage = EmptyTime.FindViewById<ImageView>(Resource.Id.imageView5);
+
+                BlockImage view = new BlockImage(EmptyTime)
+                {
+                    Image = mImage,
+                    SubTitile = mSubTitle,
+                    Title = mTitle,
+                    IsRecyclable = false
+                };
 
                 return view;
             }
@@ -76,15 +97,19 @@ namespace SpotyPie.Helpers
             {
                 ;
             }
-            else if (holder is EmptyTime)
+            else if (holder is BlockImage)
             {
-                ;
+                BlockImage view = holder as BlockImage;
+                view.Title.Text = Dataset[position].Title;
+                view.SubTitile.Text = Dataset[position].SubTitle;
+                Picasso.With(Context).Load(Dataset[position].Image).Into(view.Image);
+
             }
         }
 
         public override int ItemCount
         {
-            get { return Paskaitos.Count; }
+            get { return Dataset.Count; }
         }
     }
 }

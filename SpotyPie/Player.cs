@@ -1,20 +1,8 @@
-﻿using Android.App;
-using Android.Content;
-using Android.Media;
+﻿using Android.Media;
 using Android.OS;
-using Android.Runtime;
-using Android.Support.Design.Widget;
-using Android.Support.V4.Widget;
-using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using SupportFragment = Android.Support.V4.App.Fragment;
 
 namespace SpotyPie
@@ -48,10 +36,10 @@ namespace SpotyPie
             TotalSongTimeText = RootView.FindViewById<TextView>(Resource.Id.total_song_time);
             TotalSongTimeText.Visibility = ViewStates.Invisible;
 
-            //player = new MediaPlayer();
-            //player.Prepared += Player_Prepared;
-            //player.BufferingUpdate += Player_BufferingUpdate;
-            //MusicPlayer("");
+            player = new MediaPlayer();
+            player.Prepared += Player_Prepared;
+            player.BufferingUpdate += Player_BufferingUpdate;
+            MusicPlayer("");
 
             HidePlayerButton = RootView.FindViewById<ImageButton>(Resource.Id.back_button);
             PlayToggle = RootView.FindViewById<ImageButton>(Resource.Id.play_stop);
@@ -103,7 +91,7 @@ namespace SpotyPie
         public void MusicPlayer(string url)
         {
             player.SetAudioStreamType(Stream.Music);
-            player.SetDataSource("http://pertrauktiestaskas.lt/music");
+            player.SetDataSource("http://spotypie.deveim.com/api/stream/play/542");
             player.Prepare();
         }
 
