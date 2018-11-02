@@ -17,12 +17,12 @@ const SideMenuPanel = ({props}) => {
                 </div>
 
                 <div className="navigation__list">
-                    <div className="navigation__list__header" role="button" data-toggle="collapse" href="#yourMusic"
+                    <div className="navigation__list__header" role="button" data-toggle="collapse"
                          aria-expanded="true" aria-controls="yourMusic">
                         Your Music
                     </div>
                     <div className="collapse in" id="yourMusic">
-                        <a href="/songs" className="navigation__list__item">
+                        <a href="#" className="navigation__list__item">
                             <i className="fas fa-headphones"/>
                             <span>Songs</span>
                         </a>
@@ -42,7 +42,7 @@ const SideMenuPanel = ({props}) => {
                 </div>
 
                 <div className="navigation__list">
-                    <div className="navigation__list__header" role="button" data-toggle="collapse" href="#playlists"
+                    <div className="navigation__list__header" role="button" data-toggle="collapse"
                          aria-expanded="true" aria-controls="playlists">
                         Playlists
                     </div>
@@ -76,14 +76,11 @@ const SideMenuPanel = ({props}) => {
                     <span className="playing__song__artist"><i className="fas fa-user"/> Charlie Puth</span>
                     <span className="playing__song__album"><i className="fas fa-compact-disc"/> Album</span>
                 </div>
-                <div className="playing__add">
-                    <i className="ion-checkmark"></i>
-                </div>
 
             </section>
 
         </div>
     );
-}
+};
 
 export default SideMenuPanel;

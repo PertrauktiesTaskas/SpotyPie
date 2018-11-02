@@ -8,19 +8,10 @@ const HeaderBar = ({props}) => {
         <section className="header">
             <div className="page-flows">
                 <img className="logo" src={Spotipie} alt=""/>
-                <div href="/" className="page_title">SpotiPie</div>
+                <div className="page_title">SpotiPie</div>
             </div>
-
-            {/*<div className="user">
-
-                <div className="user__inbox">
-                    <i className="fas fa-download"/>
-                </div>
-
-            </div>*/}
-
         </section>
     </div>);
-}
+};
 
 export default HeaderBar;

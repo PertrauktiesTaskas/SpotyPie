@@ -35,7 +35,7 @@ body #root {
     align-items: center;
 }
 
-.logo{
+.logo {
     height: 50px;
 }
 
@@ -182,7 +182,7 @@ body #root {
     text-align: center;
 }
 
-.dashboard_section{
+.dashboard_section {
     color: #aaaaaa;
     border: solid 1px #aaaaaa;
     border-radius: 25px;
@@ -193,7 +193,7 @@ body #root {
     text-align: center;
 }
 
-.dashboard_section div{
+.dashboard_section div {
     font-size: 18px;
 }
 
@@ -930,7 +930,6 @@ body #root {
     padding-right: 10px;
 }
 
-
 .artist__album__tracks__heading {
     color: #aaaaaa;
     height: 42px;
@@ -1074,7 +1073,7 @@ body #root {
     margin-right: 5px;
 }
 
-.tracks .track__length i{
+.tracks .track__length i {
     display: none;
 }
 
@@ -1355,8 +1354,6 @@ body #root {
     border-radius: 4px;
     background: #373737;
 }
-
-
 
 .h1 {
     font-size: 36px;

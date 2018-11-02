@@ -10,10 +10,10 @@ class Dashboard extends React.Component {
     }
 
     componentDidMount() {
-        var ctx = document.getElementById('system').getContext('2d');
-        var ctx2 = document.getElementById('storage').getContext('2d');
-        var ctx3 = document.getElementById('temp').getContext('2d');
-        var chart = new Chart(ctx, {
+        let ctx = document.getElementById('system').getContext('2d');
+        let ctx2 = document.getElementById('storage').getContext('2d');
+        let ctx3 = document.getElementById('temp').getContext('2d');
+        let chart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: ["1", "2", "3", "4", "5", "6", "7"],
@@ -49,7 +49,7 @@ class Dashboard extends React.Component {
                 }
             }
         });
-        var chart2 = new Chart(ctx2, {
+        let chart2 = new Chart(ctx2, {
             type: 'doughnut',
             data: {
                 labels: ['used (60%)', 'free (40%)'],
@@ -68,7 +68,7 @@ class Dashboard extends React.Component {
                 }
             }
         });
-        var chart3 = new Chart(ctx3, {
+        let chart3 = new Chart(ctx3, {
             type: 'line',
             data: {
                 labels: ["1", "2", "3", "4", "5", "6", "7"],

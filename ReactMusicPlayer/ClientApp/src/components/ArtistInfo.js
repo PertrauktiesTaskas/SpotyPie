@@ -17,7 +17,6 @@ class ArtistInfo extends React.Component {
     }
 
     handleClick(event) {
-        console.log("Item clicked", event.target.innerText)
         switch (event.target.innerText) {
             case "VIEW":
                 this.setState({
@@ -454,12 +453,12 @@ class ArtistInfo extends React.Component {
                             <ul className="nav nav-tabs" role="tablist">
 
                                 <li role="presentation" className="active">
-                                    <a href="#artist-overview" aria-controls="artist-overview" role="tab"
+                                    <a href="#" aria-controls="artist-overview" role="tab"
                                        data-toggle="tab">Overview</a>
                                 </li>
 
                                 <li role="presentation">
-                                    <a href="#related-artists" aria-controls="related-artists" role="tab"
+                                    <a href="#" aria-controls="related-artists" role="tab"
                                        data-toggle="tab">Related
                                         Artists</a>
                                 </li>
@@ -546,12 +545,6 @@ class ArtistInfo extends React.Component {
 
                                                 <div className="track__number">1</div>
 
-                                                <div className="track__added">
-
-                                                    <i className="ion-checkmark-round added"></i>
-
-                                                </div>
-
                                                 <div className="track__title">Me, Myself & I</div>
 
                                                 <div className="track__explicit">
@@ -574,12 +567,6 @@ class ArtistInfo extends React.Component {
                                                 </div>
 
                                                 <div className="track__number">2</div>
-
-                                                <div className="track__added">
-
-                                                    <i className="ion-plus not-added"></i>
-
-                                                </div>
 
                                                 <div className="track__title">I Mean It</div>
 
@@ -605,12 +592,6 @@ class ArtistInfo extends React.Component {
 
                                                 <div className="track__number">3</div>
 
-                                                <div className="track__added">
-
-                                                    <i className="ion-checkmark-round added"></i>
-
-                                                </div>
-
                                                 <div className="track__title">Calm Down</div>
 
                                                 <div className="track__explicit">
@@ -635,12 +616,6 @@ class ArtistInfo extends React.Component {
 
                                                 <div className="track__number">4</div>
 
-                                                <div className="track__added">
-
-                                                    <i className="ion-plus not-added"></i>
-
-                                                </div>
-
                                                 <div className="track__title">Some Kind Of Drug</div>
 
                                                 <div className="track__explicit">
@@ -663,12 +638,6 @@ class ArtistInfo extends React.Component {
                                                 </div>
 
                                                 <div className="track__number">5</div>
-
-                                                <div className="track__added">
-
-                                                    <i className="ion-checkmark-round added"></i>
-
-                                                </div>
 
                                                 <div className="track__title">Let's Get Lost</div>
 
@@ -838,8 +807,6 @@ class ArtistInfo extends React.Component {
                                         <div className="media-card__image"
                                              style={{backgroundImage: "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/hoodie.jpg)"}}>
 
-                                            <i className="ion-ios-play"></i>
-
                                         </div>
 
                                         <a className="media-card__footer">Hoodie Allen</a>
@@ -850,8 +817,6 @@ class ArtistInfo extends React.Component {
 
                                         <div className="media-card__image"
                                              style={{backgroundImage: "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/mikestud_large.jpg)"}}>
-
-                                            <i className="ion-ios-play"></i>
 
                                         </div>
 
@@ -864,8 +829,6 @@ class ArtistInfo extends React.Component {
                                         <div className="media-card__image"
                                              style={{backgroundImage: "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/drake_large.jpg)"}}>
 
-                                            <i className="ion-ios-play"></i>
-
                                         </div>
 
                                         <a className="media-card__footer">Drake</a>
@@ -876,8 +839,6 @@ class ArtistInfo extends React.Component {
 
                                         <div className="media-card__image"
                                              style={{backgroundImage: "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/jcole_large.jpg)"}}>
-
-                                            <i className="ion-ios-play"></i>
 
                                         </div>
 
@@ -890,8 +851,6 @@ class ArtistInfo extends React.Component {
                                         <div className="media-card__image"
                                              style={{backgroundImage: "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/bigSean_large.jpg)"}}>
 
-                                            <i className="ion-ios-play"></i>
-
                                         </div>
 
                                         <a className="media-card__footer">Big Sean</a>
@@ -902,8 +861,6 @@ class ArtistInfo extends React.Component {
 
                                         <div className="media-card__image"
                                              style={{backgroundImage: "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/wiz.jpeg)"}}>
-
-                                            <i className="ion-ios-play"></i>
 
                                         </div>
 
@@ -916,8 +873,6 @@ class ArtistInfo extends React.Component {
                                         <div className="media-card__image"
                                              style={{backgroundImage: "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/yonas.jpg)"}}>
 
-                                            <i className="ion-ios-play"></i>
-
                                         </div>
 
                                         <a className="media-card__footer">Yonas</a>
@@ -929,7 +884,6 @@ class ArtistInfo extends React.Component {
                                         <div className="media-card__image"
                                              style={{backgroundImage: "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/childish.jpg)"}}>
 
-                                            <i className="ion-ios-play"></i>
 
                                         </div>
 

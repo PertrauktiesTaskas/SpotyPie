@@ -16,7 +16,6 @@ class AlbumList extends React.Component {
     }
 
     handleClick(event) {
-        console.log("Item clicked", event.target.id)
         switch (event.target.id) {
             case "back_btn":
                 this.setState({

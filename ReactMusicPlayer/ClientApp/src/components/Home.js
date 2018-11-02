@@ -176,7 +176,6 @@ class HomePage extends React.Component {
 
                         <div className="navigation__list">
                             <div className="navigation__list__header" role="button" data-toggle="collapse"
-                                 href="#yourMusic"
                                  aria-expanded="true" aria-controls="yourMusic">
                                 Your Music
                             </div>
@@ -206,7 +205,6 @@ class HomePage extends React.Component {
 
                         <div className="navigation__list">
                             <div className="navigation__list__header" role="button" data-toggle="collapse"
-                                 href="#playlists"
                                  aria-expanded="true" aria-controls="playlists">
                                 Playlists
                             </div>
@@ -237,9 +235,6 @@ class HomePage extends React.Component {
                             <span className="playing__song__name"><i className="fas fa-music"/> Some Type of Love</span>
                             <span className="playing__song__artist"><i className="fas fa-user"/> Charlie Puth</span>
                             <span className="playing__song__album"><i className="fas fa-compact-disc"/> Album</span>
-                        </div>
-                        <div className="playing__add">
-                            <i className="ion-checkmark"></i>
                         </div>
 
                     </section>
