@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace Models.BackEnd
 {
@@ -30,5 +27,10 @@ namespace Models.BackEnd
 
         public DateTime LastActiveTime { get; set; }
 
+        //public decimal Bitrate { get; set; }
+
+        //public int Frequency { get; set; }
+
+        //public int Channels { get; set; }
     }
 }

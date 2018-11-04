@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,19 +27,21 @@ namespace API.Controllers
             ct = cts.Token;
         }
 
+        [RequestSizeLimit(500000000)]
         [DisableFormValueModelBinding]
         [HttpPost]
-        public async Task<IActionResult> Post(/*IList<IFormFile> files*/)
+        public async Task<IActionResult> Post()
         {
             try
             {
+                Dictionary<string, string> results = new Dictionary<string, string>();
+
                 if (Request.HasFormContentType)
                 {
-
                     var form = Request.Form;
+
                     foreach (var formFile in form.Files)
                     {
-
                         var filePath = @"/root/Music/" + formFile.FileName;
 
                         using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -48,11 +51,16 @@ namespace API.Controllers
 
                         if (System.IO.File.Exists(filePath))
                         {
-                            await _ctd.AddAudioToLibrary(filePath, formFile.FileName, null);
+                            if (await _ctd.AddAudioToLibrary(filePath, formFile.FileName, null))
+                                results.Add(formFile.FileName, "Success");
+                            else
+                                results.Add(formFile.FileName, "Failed");
                         }
+                        else
+                            results.Add(formFile.FileName, "Failed");
                     }
                 }
-                return Ok("Visk gera");
+                return new JsonResult(results);
             }
             catch (System.Exception ex)
             {
