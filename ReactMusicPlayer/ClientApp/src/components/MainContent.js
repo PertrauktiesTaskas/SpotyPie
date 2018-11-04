@@ -108,6 +108,6 @@ const ContentMain = ({props}) => {
         </div>
 
     );
-}
+};
 
 export default ContentMain;

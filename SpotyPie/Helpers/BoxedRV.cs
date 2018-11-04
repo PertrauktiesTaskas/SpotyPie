@@ -15,13 +15,13 @@ using Square.Picasso;
 
 namespace SpotyPie.Helpers
 {
-    public class VerticalRV : RecyclerView.Adapter
+    public class BoxedRV : RecyclerView.Adapter
     {
-        private RecycleViewList<List> Dataset;
+        private RecycleViewList<BlockWithImage> Dataset;
         private readonly RecyclerView mRecyclerView;
         private Context Context;
 
-        public VerticalRV(RecycleViewList<List> data, RecyclerView recyclerView, Context context)
+        public BoxedRV(RecycleViewList<BlockWithImage> data, RecyclerView recyclerView, Context context)
         {
             Dataset = data;
             mRecyclerView = recyclerView;
@@ -40,11 +40,17 @@ namespace SpotyPie.Helpers
         {
             public View EmptyTimeView { get; set; }
 
-            public TextView Title { get; set; }
+            public TextView L_Title { get; set; }
 
-            public TextView SubTitile { get; set; }
+            public TextView L_SubTitile { get; set; }
 
-            public ImageButton Options { get; set; }
+            public ImageView L_Image { get; set; }
+
+            public TextView R_Title { get; set; }
+
+            public TextView R_SubTitile { get; set; }
+
+            public ImageView R_Image { get; set; }
 
             public BlockImage(View view) : base(view) { }
         }
@@ -57,7 +63,7 @@ namespace SpotyPie.Helpers
             }
             else
             {
-                return Resource.Layout.song_list_rv;
+                return Resource.Layout.boxed_rv_list_two;
             }
         }
 
@@ -73,17 +79,24 @@ namespace SpotyPie.Helpers
             }
             else
             {
-                View EmptyTime = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.song_list_rv, parent, false);
+                View EmptyTime = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.boxed_rv_list_two, parent, false);
 
-                TextView mTitle = EmptyTime.FindViewById<TextView>(Resource.Id.Title);
-                TextView mSubTitle = EmptyTime.FindViewById<TextView>(Resource.Id.subtitle);
-                ImageButton mImage = EmptyTime.FindViewById<ImageButton>(Resource.Id.option);
+                TextView mL_Title = EmptyTime.FindViewById<TextView>(Resource.Id.album_title_left);
+                TextView mL_SubTitle = EmptyTime.FindViewById<TextView>(Resource.Id.left_subtitle);
+                ImageView mL_Image = EmptyTime.FindViewById<ImageView>(Resource.Id.left_image);
+
+                TextView mR_Title = EmptyTime.FindViewById<TextView>(Resource.Id.album_title_right);
+                TextView mR_SubTitle = EmptyTime.FindViewById<TextView>(Resource.Id.right_subtitle);
+                ImageView mR_Image = EmptyTime.FindViewById<ImageView>(Resource.Id.right_image);
 
                 BlockImage view = new BlockImage(EmptyTime)
                 {
-                    Title = mTitle,
-                    SubTitile = mSubTitle,
-                    Options = mImage,
+                    L_Title = mL_Title,
+                    L_SubTitile = mL_SubTitle,
+                    L_Image = mL_Image,
+                    R_Title = mR_Title,
+                    R_SubTitile = mR_SubTitle,
+                    R_Image = mR_Image,
                     IsRecyclable = false
                 };
 
@@ -100,10 +113,9 @@ namespace SpotyPie.Helpers
             else if (holder is BlockImage)
             {
                 BlockImage view = holder as BlockImage;
-                view.Title.Text = Dataset[position].Title;
-                view.SubTitile.Text = Dataset[position].Subtitle;
-                //Picasso.With(Context).Load(Dataset[position].Image).Into(view.Image);
-
+                //view.L_Title.Text = Dataset[position].Title;
+                //view.L_SubTitile.Text = Dataset[position].SubTitle;
+                //Picasso.With(Context).Load(Dataset[position].Image).Into(view.L_Image);
             }
         }
 

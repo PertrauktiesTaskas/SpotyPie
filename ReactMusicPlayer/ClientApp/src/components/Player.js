@@ -19,7 +19,7 @@ class MusicPlayer extends React.Component {
             played_percentage: 0,
             playbackRate: 1.0,
             loop: false,
-        }
+        };
 
         this.handleClick = this.handleClick.bind(this);
         this.handleVolume = this.handleVolume.bind(this);
@@ -122,7 +122,7 @@ class MusicPlayer extends React.Component {
 
     SetSongInfo() {
         let length = Math.round(this.player.getDuration());
-        let minutes = Math.round(length / 60);
+        let minutes = Math.floor(length / 60);
         let seconds = length - 60 * minutes;
         console.log("Minutes", minutes);
         console.log("Seconds", seconds);
@@ -162,7 +162,7 @@ class MusicPlayer extends React.Component {
 
     ref = player => {
         this.player = player
-    }
+    };
 
     render() {
 
@@ -215,8 +215,8 @@ class MusicPlayer extends React.Component {
 
                         <span className="controls">
                            {loop_enabled}
-                            <span href="#"
-                                  className="control volume">{volume_icon(this.state, this.handleMute.bind(this))}<Slider
+                            <span
+                                className="control volume">{volume_icon(this.state, this.handleMute.bind(this))}<Slider
                                 min={0}
                                 max={100}
                                 defaultValue={(this.state.volume * 100)}

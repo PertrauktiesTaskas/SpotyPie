@@ -34,6 +34,7 @@ namespace SpotyPie
         private static RecyclerView BestAlbumsRecyclerView;
 
         //Best artists
+        public static List<Artist> BestArtistList;
         public static RecycleViewList<BlockWithImage> BestArtists = new RecycleViewList<BlockWithImage>();
         private RecyclerView.LayoutManager BestArtistsLayoutManager;
         private static RecyclerView.Adapter BestArtistsAdapter;
@@ -63,6 +64,19 @@ namespace SpotyPie
             RecentAlbums.Adapter = RecentAlbumsAdapter;
             RecentAlbumsRecyclerView.SetAdapter(RecentAlbumsAdapter);
 
+            RecentAlbumsRecyclerView.SetItemClickListener((rv, position, view) =>
+            {
+                if (RecentAlbumsRecyclerView != null && RecentAlbumsRecyclerView.ChildCount != 0)
+                {
+                    Current_state.ClickedInRVH = RecentAlbums[position];
+                    FragmentManager.BeginTransaction()
+                    .Replace(Resource.Id.content_frame, MainActivity.Album)
+                    .Commit();
+                }
+            });
+
+
+
             //MOST POLULAR ALL TIME ALBUMS
             BestAlbumsLayoutManager = new LinearLayoutManager(this.Activity, LinearLayoutManager.Horizontal, false);
             BestAlbumsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.best_albums_rv);
@@ -70,6 +84,19 @@ namespace SpotyPie
             BestAlbumsAdapter = new HorizontalRV(BestAlbums, BestAlbumsRecyclerView, this.Context);
             BestAlbums.Adapter = BestAlbumsAdapter;
             BestAlbumsRecyclerView.SetAdapter(BestAlbumsAdapter);
+
+            BestAlbumsRecyclerView.SetItemClickListener((rv, position, view) =>
+            {
+                if (BestAlbumsRecyclerView != null && BestAlbumsRecyclerView.ChildCount != 0)
+                {
+                    Current_state.ClickedInRVH = BestAlbums[position];
+                    FragmentManager.BeginTransaction()
+                    .Replace(Resource.Id.content_frame, MainActivity.Album)
+                    .Commit();
+                }
+            });
+
+
 
             //MOST POPULAR ARTISTS
             BestArtistsLayoutManager = new LinearLayoutManager(this.Activity, LinearLayoutManager.Horizontal, false);
@@ -79,6 +106,17 @@ namespace SpotyPie
             BestArtists.Adapter = BestArtistsAdapter;
             BestArtistsRecyclerView.SetAdapter(BestArtistsAdapter);
 
+            BestArtistsRecyclerView.SetItemClickListener((rv, position, view) =>
+            {
+                if (BestArtistsRecyclerView != null && BestArtistsRecyclerView.ChildCount != 0)
+                {
+                    Current_state.Current_Artist = BestArtistList[position];
+                    FragmentManager.BeginTransaction()
+                    .Replace(Resource.Id.content_frame, MainActivity.Artist)
+                    .Commit();
+                }
+            });
+
             //OLD ALBUMS AND SONGS
             JumpBackLayoutManager = new LinearLayoutManager(this.Activity, LinearLayoutManager.Horizontal, false);
             JumpBackRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.albums_old_rv);
@@ -86,6 +124,18 @@ namespace SpotyPie
             JumpBackAdapter = new HorizontalRV(JumpBack, JumpBackRecyclerView, this.Context);
             JumpBack.Adapter = JumpBackAdapter;
             JumpBackRecyclerView.SetAdapter(JumpBackAdapter);
+
+            JumpBackRecyclerView.SetItemClickListener((rv, position, view) =>
+            {
+                if (JumpBackRecyclerView != null && JumpBackRecyclerView.ChildCount != 0)
+                {
+                    Current_state.ClickedInRVH = JumpBack[position];
+                    FragmentManager.BeginTransaction()
+                    .Replace(Resource.Id.content_frame, MainActivity.Album)
+                    .Commit();
+                }
+            });
+
 
             //MOST POLUPAR USER PLAYLISTS
             TopPlaylistLayoutManager = new LinearLayoutManager(this.Activity, LinearLayoutManager.Horizontal, false);
@@ -95,11 +145,50 @@ namespace SpotyPie
             TopPlaylist.Adapter = TopPlaylistAdapter;
             TopPlaylistRecyclerView.SetAdapter(TopPlaylistAdapter);
 
+            TopPlaylistRecyclerView.SetItemClickListener((rv, position, view) =>
+            {
+                if (TopPlaylistRecyclerView != null && TopPlaylistRecyclerView.ChildCount != 0)
+                {
+                    Toast.MakeText(this.Context, "Dar nesukurta playlist", ToastLength.Short).Show();
+                }
+            });
+
+
             Task.Run(() => GetRecentAlbumsAsync(this.Context));
             Task.Run(() => GetPolularAlbumsAsync(this.Context));
             Task.Run(() => GetPolularArtistsAsync(this.Context));
             Task.Run(() => GetOldAlbumsAsync(this.Context));
+
             return RootView;
+        }
+
+        public override void OnDestroyView()
+        {
+            RecentAlbums = new RecycleViewList<BlockWithImage>();
+            BestAlbums = new RecycleViewList<BlockWithImage>();
+            BestArtists = new RecycleViewList<BlockWithImage>();
+            JumpBack = new RecycleViewList<BlockWithImage>();
+            TopPlaylist = new RecycleViewList<BlockWithImage>();
+            base.OnDestroyView();
+        }
+
+        public override void OnResume()
+        {
+            base.OnResume();
+            if (RecentAlbums == null || RecentAlbums.Count == 0)
+                Task.Run(() => GetRecentAlbumsAsync(this.Context));
+
+            if (BestAlbums == null || BestAlbums.Count == 0)
+                Task.Run(() => GetPolularAlbumsAsync(this.Context));
+
+            if (BestArtists == null || BestArtists.Count == 0)
+                Task.Run(() => GetPolularArtistsAsync(this.Context));
+
+            if (JumpBack == null || JumpBack.Count == 0)
+                Task.Run(() => GetOldAlbumsAsync(this.Context));
+
+            //if (TopPlaylist == null || TopPlaylist.Count == 0)
+            //Todo add playlist call
         }
 
         public async Task GetRecentAlbumsAsync(Context cnt)
@@ -116,7 +205,7 @@ namespace SpotyPie
                     {
                         foreach (var x in album)
                         {
-                            RecentAlbums.Add(new BlockWithImage(x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name, x.Images.First().Url));
+                            RecentAlbums.Add(new BlockWithImage(x.Id, RvType.Album, x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name, x.Images.First().Url));
                         }
                     }, null);
                 }
@@ -148,7 +237,7 @@ namespace SpotyPie
                     {
                         foreach (var x in album)
                         {
-                            BestAlbums.Add(new BlockWithImage(x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name, x.Images.First().Url));
+                            BestAlbums.Add(new BlockWithImage(x.Id, RvType.Album, x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name, x.Images.First().Url));
                         }
                     }, null);
                 }
@@ -178,6 +267,7 @@ namespace SpotyPie
                     List<Artist> artists = JsonConvert.DeserializeObject<List<Artist>>(response.Content);
                     Application.SynchronizationContext.Post(_ =>
                     {
+                        BestArtistList = artists;
                         foreach (var x in artists)
                         {
                             string DisplayGenre;
@@ -195,7 +285,7 @@ namespace SpotyPie
                             else
                                 DisplayGenre = string.Empty;
 
-                            BestArtists.Add(new BlockWithImage(x.Name, DisplayGenre, x.Images.First().Url));
+                            BestArtists.Add(new BlockWithImage(x.Id, RvType.Artist, x.Name, DisplayGenre, x.Images.First().Url));
                         }
                     }, null);
                 }
@@ -227,7 +317,7 @@ namespace SpotyPie
                     {
                         foreach (var x in album)
                         {
-                            JumpBack.Add(new BlockWithImage(x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name, x.Images.First().Url));
+                            JumpBack.Add(new BlockWithImage(x.Id, RvType.Album, x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name, x.Images.First().Url));
                         }
                     }, null);
                 }

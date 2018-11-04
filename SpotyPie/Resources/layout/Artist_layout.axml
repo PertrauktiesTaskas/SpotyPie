@@ -16,9 +16,9 @@
         app:layout_constraintTop_toTopOf="parent"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <include layout="@layout/album_song_list" />
+        <include layout="@layout/artist_song_list" />
 
-        <include layout="@layout/album_scrolled_content" />
+        <include layout="@layout/artist_scrolled_content" />
     </FrameLayout>
 
 

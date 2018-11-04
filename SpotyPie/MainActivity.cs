@@ -24,13 +24,16 @@ namespace SpotyPie
         SupportFragment Search;
         SupportFragment Library;
         SupportFragment Player;
-        SupportFragment Album;
+        public static SupportFragment Album;
+        public static SupportFragment Artist;
 
         BottomNavigationView bottomNavigation;
         ImageButton PlayToggle;
 
         TextView ArtistName;
         TextView SongTitle;
+        public static ImageButton BackHeaderButton;
+        public static ImageButton OptionsHeaderButton;
 
         public static int widthInDp = 0;
         public static bool PlayerVisible = false;
@@ -55,8 +58,7 @@ namespace SpotyPie
             Library = new Library();
             Player = new Player();
             Album = new AlbumFragment();
-            //SupportFragmentManager.BeginTransaction()
-            //    .Replace(Resource.Id.player_frame, Player).Commit();
+            Artist = new ArtistFragment();
 
             PlayToggle = FindViewById<ImageButton>(Resource.Id.play_stop);
             bottomNavigation = FindViewById<BottomNavigationView>(Resource.Id.NavBot);
@@ -64,16 +66,38 @@ namespace SpotyPie
             MiniPlayer = FindViewById<ConstraintLayout>(Resource.Id.PlayerContainer);
             ArtistName = FindViewById<TextView>(Resource.Id.artist_name);
             SongTitle = FindViewById<TextView>(Resource.Id.song_name);
+            BackHeaderButton = FindViewById<ImageButton>(Resource.Id.back);
+            OptionsHeaderButton = FindViewById<ImageButton>(Resource.Id.options);
 
             if (Current_state.IsPlaying)
                 PlayToggle.SetImageResource(Resource.Drawable.pause);
             else
                 PlayToggle.SetImageResource(Resource.Drawable.play_button);
 
+            BackHeaderButton.Click += BackHeaderButton_Click;
+
             MiniPlayer.Click += MiniPlayer_Click;
             PlayToggle.Click += PlayToggle_Click;
             bottomNavigation.NavigationItemSelected += BottomNavigation_NavigationItemSelected;
             LoadFragment(Resource.Id.home);
+        }
+
+        private void BackHeaderButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                HideHeaderNavigationButtons();
+                SupportFragmentManager.BeginTransaction()
+                    .Replace(Resource.Id.content_frame, Current_state.BackFragment)
+                    .Commit();
+            }
+            catch (System.Exception ex)
+            {
+                Home = new Home();
+                SupportFragmentManager.BeginTransaction()
+                    .Replace(Resource.Id.content_frame, Home)
+                    .Commit();
+            }
         }
 
         protected override void OnResume()
@@ -167,7 +191,7 @@ namespace SpotyPie
             switch (id)
             {
                 case Resource.Id.home:
-                    fragment = Album;
+                    fragment = Home;
                     ActionName.Text = "Home";
                     break;
                 case Resource.Id.browse:
@@ -187,9 +211,23 @@ namespace SpotyPie
             if (fragment == null)
                 return;
 
+            Current_state.BackFragment = fragment;
+
             SupportFragmentManager.BeginTransaction()
                 .Replace(Resource.Id.content_frame, fragment)
                 .Commit();
+        }
+
+        public static void ShowHeaderNavigationButtons()
+        {
+            BackHeaderButton.Visibility = ViewStates.Visible;
+            OptionsHeaderButton.Visibility = ViewStates.Visible;
+        }
+
+        public static void HideHeaderNavigationButtons()
+        {
+            BackHeaderButton.Visibility = ViewStates.Gone;
+            OptionsHeaderButton.Visibility = ViewStates.Gone;
         }
     }
 }
