@@ -1,5 +1,7 @@
-﻿using Database;
+﻿using Config.Net;
+using Database;
 using Microsoft.AspNetCore.Mvc;
+using Service.Settings;
 using System;
 using System.IO;
 using System.Net.Http.Headers;
@@ -16,6 +18,7 @@ namespace API.Controllers
         private readonly CancellationTokenSource cts;
         private CancellationToken ct;
         private readonly IDb _ctd;
+        private ISettings settings;
 
         public StreamController(SpotyPieIDbContext ctx, IDb ctd)
         {
@@ -23,6 +26,9 @@ namespace API.Controllers
             _ctd = ctd;
             cts = new CancellationTokenSource();
             ct = cts.Token;
+            settings = new ConfigurationBuilder<ISettings>()
+                .UseJsonFile(Environment.CurrentDirectory + @"/settings.json")
+                .Build();
         }
 
         [HttpGet("test")]
@@ -67,7 +73,7 @@ namespace API.Controllers
                 t.ThrowIfCancellationRequested();
                 //"C:\Users\lukas\Source\Repos\SpotyPie\API\music.flac"
                 //"/root/Music/" + file + ".flac"
-                return _ctd.OpenFile(@"/root/Music/" + file + ".flac", out FileStream fs)
+                return _ctd.OpenFile(settings.AudioStoragePath + file + ".flac", out FileStream fs)
                     ? File(fs, new MediaTypeHeaderValue("audio/mpeg").MediaType, true)
                     : (IActionResult)BadRequest();
             }
