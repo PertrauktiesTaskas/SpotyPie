@@ -13,10 +13,12 @@ class FormInput extends React.Component {
 
     render() {
         // An error message is returned only if the component is invalid
+        console.log("Checked", this.props.getValue());
+
         const errorMessage = this.props.getErrorMessage();
         let checkbox = this.props.getValue() ?
-            <i id="chk_subscribe_icon" className="checkbox-checkmark"></i> :
-            <i id="chk_subscribe_icon" className="checkbox-checkmark" style={{background: "silver"}}></i>;
+            <i id="checked" name="checked" className="checkbox-checkmark"/> :
+            <i id="unchecked" name="unchecked" className="checkbox-checkmark" style={{background: "silver"}}/>;
         return (
             <div>
                 <label className="checkbox-container" style={{marginBottom: 0}}>

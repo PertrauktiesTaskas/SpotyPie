@@ -11,6 +11,7 @@ import ArtistList from "./ArtistList";
 import FilesList from "./FilesList";
 import NewPlaylist from "./NewPlaylist";
 import Dashboard from "./Dashboard";
+import UploadSong from "./UploadSong";
 
 class HomePage extends React.Component {
     constructor(props) {
@@ -24,7 +25,8 @@ class HomePage extends React.Component {
             show_artist_list: false,
             show_files_list: false,
             show_playlist_add: false,
-            show_dashboard: false
+            show_dashboard: false,
+            upload_song: false
         };
 
         this.handleClick = this.handleClick.bind(this);
@@ -42,7 +44,8 @@ class HomePage extends React.Component {
                     show_artist_list: false,
                     show_files_list: false,
                     show_playlist_add: false,
-                    show_dashboard: false
+                    show_dashboard: false,
+                    upload_song: false
                 });
                 break;
             case "songs":
@@ -53,7 +56,8 @@ class HomePage extends React.Component {
                     show_artist_list: false,
                     show_files_list: false,
                     show_playlist_add: false,
-                    show_dashboard: false
+                    show_dashboard: false,
+                    upload_song: false
                 });
                 break;
             case "albums":
@@ -64,7 +68,8 @@ class HomePage extends React.Component {
                     show_artist_list: false,
                     show_files_list: false,
                     show_playlist_add: false,
-                    show_dashboard: false
+                    show_dashboard: false,
+                    upload_song: false
                 });
                 break;
             case "artists":
@@ -75,7 +80,8 @@ class HomePage extends React.Component {
                     show_artist_list: true,
                     show_files_list: false,
                     show_playlist_add: false,
-                    show_dashboard: false
+                    show_dashboard: false,
+                    upload_song: false
                 });
                 break;
             case "files":
@@ -86,7 +92,8 @@ class HomePage extends React.Component {
                     show_artist_list: false,
                     show_files_list: true,
                     show_playlist_add: false,
-                    show_dashboard: false
+                    show_dashboard: false,
+                    upload_song: false
                 });
                 break;
             case "playlist":
@@ -97,7 +104,8 @@ class HomePage extends React.Component {
                     show_artist_list: false,
                     show_files_list: false,
                     show_playlist_add: true,
-                    show_dashboard: false
+                    show_dashboard: false,
+                    upload_song: false
                 });
                 break;
             case "dashboard":
@@ -108,7 +116,20 @@ class HomePage extends React.Component {
                     show_artist_list: false,
                     show_files_list: false,
                     show_playlist_add: false,
-                    show_dashboard: true
+                    show_dashboard: true,
+                    upload_song: false
+                });
+                break;
+            case "upload":
+                this.setState({
+                    show_main_page: false,
+                    show_song_list: false,
+                    show_album_list: false,
+                    show_artist_list: false,
+                    show_files_list: false,
+                    show_playlist_add: false,
+                    show_dashboard: false,
+                    upload_song: true
                 });
                 break;
             default:
@@ -119,7 +140,8 @@ class HomePage extends React.Component {
                     show_artist_list: false,
                     show_files_list: false,
                     show_playlist_add: false,
-                    show_dashboard: false
+                    show_dashboard: false,
+                    upload_song: false
                 });
         }
     }
@@ -148,6 +170,9 @@ class HomePage extends React.Component {
             else if (props.show_dashboard) {
                 return <Dashboard/>;
             }
+            else if (props.upload_song) {
+                return <UploadSong/>;
+            }
         };
 
 
@@ -169,6 +194,10 @@ class HomePage extends React.Component {
                                 <a href="#" className="navigation__list__item" onClick={this.handleClick.bind(this)}>
                                     <i className=" fas fa-tachometer-alt"/>
                                     <span id="dashboard">Dashboard</span>
+                                </a>
+                                <a href="#" className="navigation__list__item" onClick={this.handleClick.bind(this)}>
+                                    <i className="fas fa-upload"/>
+                                    <span id="upload">Upload song</span>
                                 </a>
                             </div>
 
@@ -208,7 +237,7 @@ class HomePage extends React.Component {
                                  aria-expanded="true" aria-controls="playlists">
                                 Playlists
                             </div>
-                            <div className="collapse in" id="playlists">
+                            <div className="collapse in">
                                 <a href="#" className="navigation__list__item">
                                     <i className="fas fa-music"/>
                                     <span>Doo Wop</span>
@@ -217,10 +246,10 @@ class HomePage extends React.Component {
                                     <i className="fas fa-music"/>
                                     <span>Pop Classics</span>
                                 </a>
-                                <a href="#" id="playlist" className="navigation__list__item"
+                                <a id="playlist" href="#" className="navigation__list__item"
                                    onClick={this.handleClick.bind(this)}>
                                     <i className="fas fa-plus"/>
-                                    <span>New Playlist</span>
+                                    <span id="playlist">New Playlist</span>
                                 </a>
                             </div>
                         </div>

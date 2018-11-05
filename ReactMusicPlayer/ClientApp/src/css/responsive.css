@@ -75,6 +75,14 @@
     .artist__album__tracks__heading__title {
         margin-left: 11.5%;
     }
+
+    .dashboard_section div:first-child{
+        width: 100%;
+    }
+
+    .dashboard_section div{
+        width: 50%;
+    }
 }
 
 @media (max-width: 1024px) {
@@ -128,9 +136,7 @@
         padding-left: 5px;
     }
 
-    .dashboard_graph{
 
-    }
 }
 
 @media (max-width: 767px) {
@@ -257,6 +263,14 @@
     .artist__album__tracks__heading__title {
         margin-left: 14.5%;
     }
+
+    .dashboard_section div:first-child{
+        width: 100%;
+    }
+
+    .dashboard_section div{
+        width: 100%;
+    }
 }
 
 @media (max-width: 650px) {
@@ -314,7 +328,13 @@
 }
 
 @media (max-width: 575px) {
+    .tracks .track__artist{
+        margin-left: 5px;
+    }
 
+    .tracks__heading__artist{
+        margin-left: 10px;
+    }
 }
 
 @media (max-width: 522px) {

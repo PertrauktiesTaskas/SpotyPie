@@ -1,12 +1,16 @@
 ﻿using Database;
+using IdSharp.Tagging.VorbisComment;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.BackEnd;
 using Newtonsoft.Json;
+using Services.TagHelpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Spotify = Models.Spotify;
 
@@ -53,13 +57,42 @@ namespace Services
         {
             try
             {
-                //var nameSplit = name.Split(new char[] { '-', '_', ':' });
-                var audioDb = await _ctx.Items.FirstOrDefaultAsync(x => x.Name.Contains(Path.GetFileNameWithoutExtension(name)));
+                Item audioDb = null;
+                IAudioFile audio = AudioFile.Create(path, false);
+
+                if (audio != null && audio.FileType == AudioFileType.Flac)
+                {
+                    VorbisComment flacTag = new VorbisComment(path);
+
+                    if (string.IsNullOrWhiteSpace(flacTag.Title) || string.IsNullOrWhiteSpace(flacTag.Artist))
+                        audioDb = await _ctx.Items
+                            .FirstOrDefaultAsync(x =>
+                            x.Name.Equals(Path.GetFileNameWithoutExtension(name), StringComparison.InvariantCultureIgnoreCase));
+                    else
+                    {
+                        var replaced = flacTag.Title.Replace("'", "’");
+                        var replacedArtist = flacTag.Artist.Replace("'", "’");
+                        audioDb = await _ctx.Items
+                            .FirstOrDefaultAsync(x => x.Name.Equals(replaced, StringComparison.InvariantCultureIgnoreCase)
+                            && x.Artists.Contains(replacedArtist));
+                    }
+                }
+                else
+                    audioDb = await _ctx.Items.FirstOrDefaultAsync(x => x.Name.Equals(Path.GetFileNameWithoutExtension(name), StringComparison.InvariantCultureIgnoreCase));
+
                 if (audioDb != null)
                 {
                     _ctx.Update(audioDb);
                     audioDb.LocalUrl = path;
+
+                    if (audio != null)
+                    {
+                        audioDb.DurationMs = (long)audio.TotalSeconds * 1000;
+                    }
+
                     _ctx.SaveChanges();
+                    audio = null;
+
                     return true;
                 }
                 return false;
@@ -141,6 +174,50 @@ namespace Services
             {
                 return null;
             }
+        }
+
+        public void RemoveCache()
+        {
+            DirectoryInfo di = new DirectoryInfo("/var/www/cache");
+            foreach (FileInfo file in di.EnumerateFiles())
+            {
+                file.Delete();
+            }
+        }
+
+        public async Task<string> CacheImages()
+        {
+            HttpClient client = new HttpClient();
+            var rgx = new Regex(@"^(http|https)://");
+            var imgList = await _ctx.Images.Where(x => rgx.IsMatch(x.Url)).ToListAsync();
+            int savedCount = 0;
+
+            foreach (var img in imgList)
+            {
+                var response = await client.GetAsync(img.Url);
+
+                var filename = Path.GetRandomFileName();
+                var path = @"/var/www/cache/" + filename;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    using (FileStream stream = new FileStream(path, FileMode.Create))
+                    {
+                        var content = await response.Content.ReadAsByteArrayAsync();
+                        await stream.WriteAsync(content);
+                    }
+
+                    if (File.Exists(path))
+                    {
+                        _ctx.Update(img);
+                        img.Url = "http://cdn.spotypie.deveim.com/" + filename;
+                        if (_ctx.SaveChanges() == 1)
+                            savedCount++;
+                    }
+                }
+            }
+
+            return string.Format("{0}/{1}", savedCount, imgList.Count);
         }
 
         public void Start()
