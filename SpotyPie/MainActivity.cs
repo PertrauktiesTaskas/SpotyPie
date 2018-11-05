@@ -103,6 +103,13 @@ namespace SpotyPie
         protected override void OnResume()
         {
             base.OnResume();
+            if (!Current_state.IsPlayerLoaded)
+            {
+                SupportFragmentManager.BeginTransaction()
+                    .Replace(Resource.Id.player_frame, Player)
+                    .Commit();
+                PlayerContainer.TranslationX = 10000;
+            }
             Task.Run(() => API_data.GetSong());
         }
 

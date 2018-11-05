@@ -68,7 +68,7 @@ namespace SpotyPie
             {
                 if (RecentAlbumsRecyclerView != null && RecentAlbumsRecyclerView.ChildCount != 0)
                 {
-                    Current_state.ClickedInRVH = RecentAlbums[position];
+                    Current_state.SetAlbum(RecentAlbums[position]);
                     FragmentManager.BeginTransaction()
                     .Replace(Resource.Id.content_frame, MainActivity.Album)
                     .Commit();
@@ -89,7 +89,7 @@ namespace SpotyPie
             {
                 if (BestAlbumsRecyclerView != null && BestAlbumsRecyclerView.ChildCount != 0)
                 {
-                    Current_state.ClickedInRVH = BestAlbums[position];
+                    Current_state.SetAlbum(BestAlbums[position]);
                     FragmentManager.BeginTransaction()
                     .Replace(Resource.Id.content_frame, MainActivity.Album)
                     .Commit();
@@ -110,7 +110,7 @@ namespace SpotyPie
             {
                 if (BestArtistsRecyclerView != null && BestArtistsRecyclerView.ChildCount != 0)
                 {
-                    Current_state.Current_Artist = BestArtistList[position];
+                    Current_state.SetArtist(BestArtistList[position]);
                     FragmentManager.BeginTransaction()
                     .Replace(Resource.Id.content_frame, MainActivity.Artist)
                     .Commit();
@@ -129,7 +129,7 @@ namespace SpotyPie
             {
                 if (JumpBackRecyclerView != null && JumpBackRecyclerView.ChildCount != 0)
                 {
-                    Current_state.ClickedInRVH = JumpBack[position];
+                    Current_state.SetAlbum(JumpBack[position]);
                     FragmentManager.BeginTransaction()
                     .Replace(Resource.Id.content_frame, MainActivity.Album)
                     .Commit();

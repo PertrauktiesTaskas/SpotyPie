@@ -13,12 +13,21 @@ namespace SpotyPie
         ImageButton HidePlayerButton;
         ImageButton PlayToggle;
         public static MediaPlayer player;
-        TextView CurretSongTimeText;
+
+        public static TextView CurretSongTimeText;
         TextView TotalSongTimeText;
+
         TimeSpan CurrentTime = new TimeSpan(0, 0, 0, 0);
         TimeSpan TotalSongTime = new TimeSpan(0, 0, 0, 0);
 
+        public static Android.Content.Context contextStatic;
+
         public ProgressBar SongProgress;
+
+        public static ImageView Player_Image;
+        public static TextView Player_song_name;
+        public static TextView Player_artist_name;
+        public static TextView Player_playlist_name; //July talk - Touch
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -30,6 +39,12 @@ namespace SpotyPie
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             RootView = inflater.Inflate(Resource.Layout.player, container, false);
+            contextStatic = this.Context;
+
+            Player_Image = RootView.FindViewById<ImageView>(Resource.Id.album_image);
+            Player_song_name = RootView.FindViewById<TextView>(Resource.Id.song_name);
+            Player_artist_name = RootView.FindViewById<TextView>(Resource.Id.artist_name);
+            Player_playlist_name = RootView.FindViewById<TextView>(Resource.Id.playlist_name);
 
             SongProgress = RootView.FindViewById<ProgressBar>(Resource.Id.song_progress);
             CurretSongTimeText = RootView.FindViewById<TextView>(Resource.Id.current_song_time);
@@ -39,7 +54,7 @@ namespace SpotyPie
             player = new MediaPlayer();
             player.Prepared += Player_Prepared;
             player.BufferingUpdate += Player_BufferingUpdate;
-            MusicPlayer("");
+            MusicPlayer();
 
             HidePlayerButton = RootView.FindViewById<ImageButton>(Resource.Id.back_button);
             PlayToggle = RootView.FindViewById<ImageButton>(Resource.Id.play_stop);
@@ -59,6 +74,11 @@ namespace SpotyPie
             TotalSongTimeText.Visibility = ViewStates.Visible;
             TimeSpan Time = new TimeSpan(0, 0, (int)player.Duration / 1000);
             TotalSongTimeText.Text = Time.Minutes + ":" + (Time.Seconds > 9 ? Time.Seconds.ToString() : "0" + Time.Seconds);
+
+            if (Current_state.Start_music)
+            {
+                player.Start();
+            }
         }
 
         private void Player_BufferingUpdate(object sender, MediaPlayer.BufferingUpdateEventArgs e)
@@ -88,11 +108,22 @@ namespace SpotyPie
             //player.Reset();
         }
 
-        public void MusicPlayer(string url)
+        public static void MusicPlayer()
         {
-            player.SetAudioStreamType(Stream.Music);
-            player.SetDataSource("http://spotypie.deveim.com/api/stream/play/542");
-            player.Prepare();
+            try
+            {
+                if (Current_state.Start_music)
+                {
+                    player.Reset();
+                    player.SetAudioStreamType(Stream.Music);
+                    player.SetDataSource("http://spotypie.deveim.com/api/stream/play/" + Current_state.Current_Song.Id);
+                    player.Prepare();
+                }
+            }
+            catch (Exception e)
+            {
+                Toast.MakeText(contextStatic, "Cant play " + Current_state.Current_Song.Id.ToString(), ToastLength.Short).Show();
+            }
         }
 
         private void PlayToggle_Click(object sender, EventArgs e)

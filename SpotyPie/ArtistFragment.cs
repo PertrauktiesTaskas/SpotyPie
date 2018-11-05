@@ -150,7 +150,7 @@ namespace SpotyPie
                     {
                         foreach (var x in songs.OrderByDescending(x => x.LastActiveTime).Take(6))
                         {
-                            ArtistTopSongs.Add(new List(x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name));
+                            ArtistTopSongs.Add(new List(x.Id, x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name));
                         }
                         List<string> Genres = JsonConvert.DeserializeObject<List<string>>(Current_state.Current_Artist.Genres);
                         Copyrights.Text = string.Join("\n", Genres);
