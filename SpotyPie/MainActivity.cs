@@ -66,8 +66,8 @@ namespace SpotyPie
             ActionName = FindViewById<TextView>(Resource.Id.textView);
             MiniPlayer = FindViewById<ConstraintLayout>(Resource.Id.PlayerContainer);
             ArtistName = FindViewById<TextView>(Resource.Id.artist_name);
-            Animation marquee = AnimationUtils.LoadAnimation(this, Resource.Drawable.marquee);
-            ArtistName.StartAnimation(marquee);
+            //Animation marquee = AnimationUtils.LoadAnimation(this, Resource.Drawable.marquee);
+            //ArtistName.StartAnimation(marquee);
 
             SongTitle = FindViewById<TextView>(Resource.Id.song_name);
             BackHeaderButton = FindViewById<ImageButton>(Resource.Id.back);

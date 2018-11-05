@@ -32,7 +32,13 @@ namespace SpotyPie
         public static TextView Player_playlist_name; //July talk - Touch
 
         ImageButton Repeat;
-        int Repeat_state = 0;
+        int Repeat_state = 1;
+        bool RepetedOnce = false;
+        ImageButton Shuffle;
+        bool Shuffle_state = false;
+
+        ImageView Save_to_songs;
+        bool saved_to_songs = false;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -48,6 +54,10 @@ namespace SpotyPie
 
             Repeat = RootView.FindViewById<ImageButton>(Resource.Id.repeat);
             Repeat.Click += Repeat_Click;
+            Shuffle = RootView.FindViewById<ImageButton>(Resource.Id.shuffle);
+            Shuffle.Click += Shuffle_Click;
+            Save_to_songs = RootView.FindViewById<ImageView>(Resource.Id.save_to_songs);
+            Save_to_songs.Click += Save_to_songs_Click;
 
             Player_Image = RootView.FindViewById<ImageView>(Resource.Id.album_image);
             Player_song_name = RootView.FindViewById<TextView>(Resource.Id.song_name);
@@ -62,6 +72,7 @@ namespace SpotyPie
             player = new MediaPlayer();
             player.Prepared += Player_Prepared;
             player.BufferingUpdate += Player_BufferingUpdate;
+            player.Completion += Player_Completion;
             StartPlayMusic();
 
             HidePlayerButton = RootView.FindViewById<ImageButton>(Resource.Id.back_button);
@@ -154,32 +165,69 @@ namespace SpotyPie
             Toast.MakeText(this.Context, "Player error", ToastLength.Short).Show();
             //player.Reset();
         }
+
+        private void Player_Completion(object sender, EventArgs e)
+        {
+            if (!RepetedOnce)
+            {
+                if (Repeat_state == 2)
+                {
+                    RepetedOnce = true;
+                    player.SeekTo(0);
+                    player.Start();
+                }
+            }
+        }
         #endregion
 
 
         private void Repeat_Click(object sender, EventArgs e)
         {
+            RepetedOnce = false;
             switch (Repeat_state)
             {
                 case 0:
                     {
-                        Repeat.SetBackgroundResource(Resource.Drawable.repeat);
+                        Repeat.SetImageResource(Resource.Drawable.repeat);
                         Repeat_state = 1;
+                        player.Looping = true;
                         break;
                     }
                 case 1:
                     {
-                        Repeat.SetBackgroundResource(Resource.Drawable.repeat_once);
+                        Repeat.SetImageResource(Resource.Drawable.repeat_once);
                         Repeat_state = 2;
                         break;
                     }
                 case 2:
                     {
-                        Repeat.SetBackgroundResource(Resource.Drawable.repeat_off);
+                        Repeat.SetImageResource(Resource.Drawable.repeat_off);
                         Repeat_state = 0;
                         break;
                     }
             }
+        }
+
+        private void Shuffle_Click(object sender, EventArgs e)
+        {
+            if (Shuffle_state)
+                Shuffle.SetImageResource(Resource.Drawable.shuffle_disabled);
+            else
+                Shuffle.SetImageResource(Resource.Drawable.shuffle_variant);
+
+
+            Shuffle_state = !Shuffle_state;
+        }
+
+        private void Save_to_songs_Click(object sender, EventArgs e)
+        {
+            if (saved_to_songs)
+                Save_to_songs.SetImageResource(Resource.Drawable.check);
+            else
+                Save_to_songs.SetImageResource(Resource.Drawable.@checked);
+
+
+            saved_to_songs = !saved_to_songs;
         }
 
     }
