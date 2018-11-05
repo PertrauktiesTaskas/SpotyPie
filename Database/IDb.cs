@@ -12,6 +12,8 @@ namespace Database
         Task<string> GetAudioPathById(int id);
         Task<bool> AddAudioToLibrary(string path, string name, Item file);
         bool SetAudioPlaying(int id);
+        void RemoveCache();
+        Task<string> CacheImages();
         Task<string> GetSongList();
         Task<string> GetArtistList();
         Task<List<Album>> GetAlbumsByArtist(int id);
