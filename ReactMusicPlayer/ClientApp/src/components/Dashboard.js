@@ -25,7 +25,7 @@ class Dashboard extends React.Component {
                 },
                     {
                         label: 'RAM usage',
-                        borderColor: "red",
+                        borderColor: "#aaaaaa",
                         data: [1, 15, 20, 35, 50, 70, 10],
                     }]
             },

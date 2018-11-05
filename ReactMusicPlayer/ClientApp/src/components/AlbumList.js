@@ -1,5 +1,6 @@
 import React from "react";
 import AlbumSongs from "./AlbumSongs";
+import {itemService} from "../Service";
 
 class AlbumList extends React.Component {
     constructor(props) {
@@ -13,6 +14,12 @@ class AlbumList extends React.Component {
         };
 
         this.handleClick = this.handleClick.bind(this);
+    }
+
+    componentDidMount() {
+        /*itemService.getAlbums().then((data) => {
+            console.log('Loading album:', data);
+        });*/
     }
 
     handleClick(event) {

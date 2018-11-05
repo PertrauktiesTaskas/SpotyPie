@@ -29,6 +29,22 @@ namespace API.Controllers
             ct = cts.Token;
         }
 
+        // Get artist list
+        [HttpGet("Artists")]
+        public async Task<IActionResult> GetArtists()
+        {
+            try
+            {
+                var artists = await _ctx.Artists.Include(x => x.Images).ToListAsync();
+
+                return Ok(artists);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         //Get only artist info and images
         [HttpGet("{id}")]
         public async Task<IActionResult> GetArtist(int id)

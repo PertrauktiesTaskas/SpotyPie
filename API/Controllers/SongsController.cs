@@ -28,6 +28,20 @@ namespace API.Controllers
             ct = cts.Token;
         }
 
+        [HttpGet("Songs")]
+        public async Task<IActionResult> GetSongs()
+        {
+            try
+            {
+                var songs = await _ctx.Items.AsNoTracking().ToListAsync();
+                return Ok(songs);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {

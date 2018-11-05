@@ -58,6 +58,25 @@ namespace API.Controllers
             }
         }
 
+        //Returns album list
+        [HttpGet("Albums")]
+        public async Task<IActionResult> GetAlbums()
+        {
+            try
+            {
+                var albums = await _ctx.Albums
+                    .AsNoTracking()
+                    .Include(x => x.Images)
+                    .ToListAsync();
+
+                return Ok(albums);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         //Updated albums used time and popularity
         [Route("Update/{id}")]
         [HttpGet]
