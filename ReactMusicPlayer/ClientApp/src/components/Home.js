@@ -237,7 +237,7 @@ class HomePage extends React.Component {
                                  aria-expanded="true" aria-controls="playlists">
                                 Playlists
                             </div>
-                            <div className="collapse in" id="playlists">
+                            <div className="collapse in">
                                 <a href="#" className="navigation__list__item">
                                     <i className="fas fa-music"/>
                                     <span>Doo Wop</span>
@@ -246,10 +246,10 @@ class HomePage extends React.Component {
                                     <i className="fas fa-music"/>
                                     <span>Pop Classics</span>
                                 </a>
-                                <a href="#" id="playlist" className="navigation__list__item"
+                                <a id="playlist" href="#" className="navigation__list__item"
                                    onClick={this.handleClick.bind(this)}>
                                     <i className="fas fa-plus"/>
-                                    <span>New Playlist</span>
+                                    <span id="playlist">New Playlist</span>
                                 </a>
                             </div>
                         </div>

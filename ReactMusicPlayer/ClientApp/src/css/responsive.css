@@ -328,7 +328,13 @@
 }
 
 @media (max-width: 575px) {
+    .tracks .track__artist{
+        margin-left: 5px;
+    }
 
+    .tracks__heading__artist{
+        margin-left: 10px;
+    }
 }
 
 @media (max-width: 522px) {

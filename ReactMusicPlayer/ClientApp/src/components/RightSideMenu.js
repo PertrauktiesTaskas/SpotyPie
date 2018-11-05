@@ -39,7 +39,7 @@ class SideMenuPanel2 extends React.Component {
                     }],
                     xAxes: [{
                         ticks: {
-                            fontColor: '#aaaaaa'
+                            fontColor: '#181818'
                         }
                     }]
                 },
@@ -89,7 +89,7 @@ class SideMenuPanel2 extends React.Component {
                     }],
                     xAxes: [{
                         ticks: {
-                            fontColor: '#aaaaaa'
+                            fontColor: '#181818'
                         }
                     }]
                 },
