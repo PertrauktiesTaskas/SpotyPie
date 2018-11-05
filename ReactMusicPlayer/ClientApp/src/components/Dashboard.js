@@ -38,7 +38,7 @@ class Dashboard extends React.Component {
                     }],
                     xAxes: [{
                         ticks: {
-                            fontColor: '#aaaaaa'
+                            fontColor: '#181818'
                         }
                     }]
                 },
@@ -88,7 +88,7 @@ class Dashboard extends React.Component {
                     }],
                     xAxes: [{
                         ticks: {
-                            fontColor: '#aaaaaa'
+                            fontColor: '#181818'
                         }
                     }]
                 },
