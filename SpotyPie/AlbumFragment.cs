@@ -32,6 +32,9 @@ namespace SpotyPie
         Button PlayableButton;
         TextView AlbumByText;
 
+        TextView ButtonBackGround;
+        TextView ButtonBackGround2;
+
         //Album Songs
         public static RecycleViewList<List> AlbumSongs = new RecycleViewList<List>();
         private RecyclerView.LayoutManager AlbumSongsLayoutManager;
@@ -61,6 +64,9 @@ namespace SpotyPie
             AlbumTitle = RootView.FindViewById<TextView>(Resource.Id.album_title);
             PlayableButton = RootView.FindViewById<Button>(Resource.Id.playable_button);
             AlbumByText = RootView.FindViewById<TextView>(Resource.Id.album_by_title);
+
+            ButtonBackGround = RootView.FindViewById<TextView>(Resource.Id.backgroundHalf);
+            ButtonBackGround2 = RootView.FindViewById<TextView>(Resource.Id.backgroundHalfInner);
 
             Picasso.With(Context).Load(Current_state.ClickedInRVH.Image).Into(AlbumPhoto);
             AlbumTitle.Text = Current_state.ClickedInRVH.Title;
@@ -149,6 +155,7 @@ namespace SpotyPie
             if (scrolled < Height) //761 mazdaug
             {
                 MainActivity.ActionName.Alpha = (float)((scrolled * 100) / Height) / 100;
+                ButtonBackGround.Alpha = (float)((scrolled * 100) / Height) / 100;
                 relative.Visibility = ViewStates.Invisible;
             }
             else

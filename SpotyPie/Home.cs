@@ -164,11 +164,11 @@ namespace SpotyPie
 
         public override void OnDestroyView()
         {
-            RecentAlbums = new RecycleViewList<BlockWithImage>();
-            BestAlbums = new RecycleViewList<BlockWithImage>();
-            BestArtists = new RecycleViewList<BlockWithImage>();
-            JumpBack = new RecycleViewList<BlockWithImage>();
-            TopPlaylist = new RecycleViewList<BlockWithImage>();
+            //RecentAlbums = new RecycleViewList<BlockWithImage>();
+            //BestAlbums = new RecycleViewList<BlockWithImage>();
+            //BestArtists = new RecycleViewList<BlockWithImage>();
+            //JumpBack = new RecycleViewList<BlockWithImage>();
+            //TopPlaylist = new RecycleViewList<BlockWithImage>();
             base.OnDestroyView();
         }
 

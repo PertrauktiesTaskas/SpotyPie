@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Spotify = Models.Spotify;
 
@@ -172,6 +174,50 @@ namespace Services
             {
                 return null;
             }
+        }
+
+        public void RemoveCache()
+        {
+            DirectoryInfo di = new DirectoryInfo("/var/www/cache");
+            foreach (FileInfo file in di.EnumerateFiles())
+            {
+                file.Delete();
+            }
+        }
+
+        public async Task<string> CacheImages()
+        {
+            HttpClient client = new HttpClient();
+            var rgx = new Regex(@"^(http|https)://");
+            var imgList = await _ctx.Images.Where(x => rgx.IsMatch(x.Url)).ToListAsync();
+            int savedCount = 0;
+
+            foreach (var img in imgList)
+            {
+                var response = await client.GetAsync(img.Url);
+
+                var filename = Path.GetRandomFileName();
+                var path = @"/var/www/cache/" + filename;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    using (FileStream stream = new FileStream(path, FileMode.Create))
+                    {
+                        var content = await response.Content.ReadAsByteArrayAsync();
+                        await stream.WriteAsync(content);
+                    }
+
+                    if (File.Exists(path))
+                    {
+                        _ctx.Update(img);
+                        img.Url = "http://cdn.spotypie.deveim.com/" + filename;
+                        if (_ctx.SaveChanges() == 1)
+                            savedCount++;
+                    }
+                }
+            }
+
+            return string.Format("{0}/{1}", savedCount, imgList.Count);
         }
 
         public void Start()

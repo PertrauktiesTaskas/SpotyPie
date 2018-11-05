@@ -1,5 +1,4 @@
 ﻿using Android.App;
-using Android.Content;
 using Android.OS;
 using Android.Support.Constraints;
 using Android.Support.V4.Widget;
@@ -31,6 +30,10 @@ namespace SpotyPie
         TextView AlbumTitle;
         Button PlayableButton;
         TextView AlbumByText;
+        TextView Background;
+
+        TextView ButtonBackGround;
+        TextView ButtonBackGround2;
 
         //Artist Songs
         public static RecycleViewList<List> ArtistTopSongs = new RecycleViewList<List>();
@@ -39,7 +42,7 @@ namespace SpotyPie
         private static RecyclerView ArtistSongsRecyclerView;
 
         //Artist Albums
-        public static RecycleViewList<BlockWithImage> Albums = new RecycleViewList<BlockWithImage>();
+        public static RecycleViewList<TwoBlockWithImage> Albums = new RecycleViewList<TwoBlockWithImage>();
         private RecyclerView.LayoutManager AlbumsLayoutManager;
         private static RecyclerView.Adapter AlbumsAdapter;
         private static RecyclerView AlbumsRecyclerView;
@@ -67,6 +70,11 @@ namespace SpotyPie
             AlbumTitle = RootView.FindViewById<TextView>(Resource.Id.album_title);
             PlayableButton = RootView.FindViewById<Button>(Resource.Id.playable_button);
             AlbumByText = RootView.FindViewById<TextView>(Resource.Id.album_by_title);
+            Background = RootView.FindViewById<TextView>(Resource.Id.view);
+            Background.Alpha = 0.0f;
+
+            ButtonBackGround = RootView.FindViewById<TextView>(Resource.Id.backgroundHalf);
+            ButtonBackGround2 = RootView.FindViewById<TextView>(Resource.Id.backgroundHalfInner);
 
             Picasso.With(Context).Load(Current_state.Current_Artist.Images[0].Url).Into(Photo);
             AlbumTitle.Text = Current_state.Current_Artist.Name;
@@ -88,6 +96,7 @@ namespace SpotyPie
             Height = backViewContainer.LayoutParameters.Height;
             ScrollFather.ScrollChange += Scroll_ScrollChange;
 
+
             //Artist song list
             ArtistSongsLayoutManager = new LinearLayoutManager(this.Activity);
             ArtistSongsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.song_list);
@@ -106,11 +115,8 @@ namespace SpotyPie
             AlbumsRecyclerView.SetAdapter(AlbumsAdapter);
             AlbumsRecyclerView.NestedScrollingEnabled = false;
 
-            Albums.Add(new BlockWithImage());
-            Albums.Add(new BlockWithImage());
-            Albums.Add(new BlockWithImage());
-
             Task.Run(() => GetSongsAsync(Current_state.Current_Artist.Id));
+            Task.Run(() => GetArtistAlbums(Current_state.Current_Artist.Id));
 
             return RootView;
         }
@@ -142,7 +148,7 @@ namespace SpotyPie
                     List<Item> songs = JsonConvert.DeserializeObject<List<Item>>(response.Content);
                     Application.SynchronizationContext.Post(_ =>
                     {
-                        foreach (var x in songs)
+                        foreach (var x in songs.OrderByDescending(x => x.LastActiveTime).Take(6))
                         {
                             ArtistTopSongs.Add(new List(x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name));
                         }
@@ -164,12 +170,77 @@ namespace SpotyPie
             }
         }
 
+        public async Task GetArtistAlbums(int id)
+        {
+            try
+            {
+                RestClient Client = new RestClient("http://spotypie.deveim.com/api/artist/" + id + "/Albums");
+                var request = new RestRequest(Method.GET);
+                IRestResponse response = await Client.ExecuteGetTaskAsync(request);
+                if (response.IsSuccessful)
+                {
+                    Artist ArtistWithAlbums = JsonConvert.DeserializeObject<Artist>(response.Content);
+                    Application.SynchronizationContext.Post(_ =>
+                    {
+                        for (int i = 0; i < ArtistWithAlbums.Albums.Count; i = i + 2)
+                        {
+                            if (ArtistWithAlbums.Albums.Count - i == 1)
+                            {
+                                var x = ArtistWithAlbums.Albums[i];
+                                Albums.Add(new TwoBlockWithImage(
+                                new BlockWithImage(
+                                    x.Id,
+                                    RvType.Album,
+                                    x.Name,
+                                    x.Label,
+                                    x.Images.First().Url)));
+                            }
+                            else
+                            {
+                                var x = ArtistWithAlbums.Albums[i];
+                                var y = ArtistWithAlbums.Albums[i + 1];
+                                Albums.Add(new TwoBlockWithImage(
+                                    new BlockWithImage(
+                                        x.Id,
+                                        RvType.Album,
+                                        x.Name,
+                                        x.Label,
+                                        x.Images.First().Url),
+                                        new BlockWithImage(
+                                        y.Id,
+                                        RvType.Album,
+                                        y.Name,
+                                        x.Label,
+                                        y.Images.First().Url)));
+                            }
+                        }
+                        List<string> Genres = JsonConvert.DeserializeObject<List<string>>(Current_state.Current_Artist.Genres);
+                        Copyrights.Text = string.Join("\n", Genres);
+                    }, null);
+                }
+                else
+                {
+                    Application.SynchronizationContext.Post(_ =>
+                    {
+                        Toast.MakeText(this.Context, "GetArtistAlbums API call error", ToastLength.Short).Show();
+                    }, null);
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+
         private void Scroll_ScrollChange(object sender, NestedScrollView.ScrollChangeEventArgs e)
         {
             scrolled = ScrollFather.ScrollY;
             if (scrolled < Height) //761 mazdaug
             {
                 MainActivity.ActionName.Alpha = (float)((scrolled * 100) / Height) / 100;
+                Background.Alpha = (float)((scrolled * 100) / Height) / 100;
+                ButtonBackGround.Alpha = (float)((scrolled * 100) / Height) / 100;
+                ButtonBackGround2.Alpha = (float)((scrolled * 100) / Height) / 100;
                 relative.Visibility = ViewStates.Invisible;
             }
             else
