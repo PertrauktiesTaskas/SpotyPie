@@ -82,7 +82,7 @@ namespace SpotyPie
             //TODO error if genres is null
             AlbumByText.Text = JsonConvert.DeserializeObject<List<string>>(Current_state.Current_Artist.Genres)[0];
 
-            MainActivity.ShowHeaderNavigationButtons();
+            Current_state.ShowHeaderNavigationButtons();
 
             download = RootView.FindViewById<TextView>(Resource.Id.download_text);
             Copyrights = RootView.FindViewById<TextView>(Resource.Id.copyrights);
@@ -115,9 +115,6 @@ namespace SpotyPie
             AlbumsRecyclerView.SetAdapter(AlbumsAdapter);
             AlbumsRecyclerView.NestedScrollingEnabled = false;
 
-            Task.Run(() => GetSongsAsync(Current_state.Current_Artist.Id));
-            Task.Run(() => GetArtistAlbums(Current_state.Current_Artist.Id));
-
             return RootView;
         }
 
@@ -130,9 +127,11 @@ namespace SpotyPie
         public override void OnResume()
         {
             if (ArtistTopSongs == null || ArtistTopSongs.Count == 0)
-            {
-                Task.Run(() => GetSongsAsync(Current_state.ClickedInRVH.Id));
-            }
+                Task.Run(() => GetSongsAsync(Current_state.Current_Artist.Id));
+
+            if (Albums == null || Albums.Count == 0)
+                Task.Run(() => GetArtistAlbums(Current_state.Current_Artist.Id));
+
             base.OnResume();
         }
 

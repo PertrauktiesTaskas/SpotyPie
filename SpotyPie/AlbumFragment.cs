@@ -73,7 +73,7 @@ namespace SpotyPie
             AlbumTitle.Text = Current_state.ClickedInRVH.Title;
             AlbumByText.Text = Current_state.ClickedInRVH.SubTitle;
 
-            MainActivity.ShowHeaderNavigationButtons();
+            Current_state.ShowHeaderNavigationButtons();
 
             download = RootView.FindViewById<TextView>(Resource.Id.download_text);
             Copyrights = RootView.FindViewById<TextView>(Resource.Id.copyrights);
@@ -102,8 +102,6 @@ namespace SpotyPie
                     Current_state.SetSong(AlbumSongsItem[position]);
                 }
             });
-
-            Task.Run(() => GetSongsAsync(Current_state.ClickedInRVH.Id));
 
             return RootView;
         }

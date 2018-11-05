@@ -1,8 +1,10 @@
-﻿using Android.Media;
+﻿using Android.App;
+using Android.Media;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
 using System;
+using System.Threading.Tasks;
 using SupportFragment = Android.Support.V4.App.Fragment;
 
 namespace SpotyPie
@@ -11,7 +13,7 @@ namespace SpotyPie
     {
         View RootView;
         ImageButton HidePlayerButton;
-        ImageButton PlayToggle;
+        public static ImageButton PlayToggle;
         public static MediaPlayer player;
 
         public static TextView CurretSongTimeText;
@@ -29,6 +31,9 @@ namespace SpotyPie
         public static TextView Player_artist_name;
         public static TextView Player_playlist_name; //July talk - Touch
 
+        ImageButton Repeat;
+        int Repeat_state = 0;
+
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -40,6 +45,9 @@ namespace SpotyPie
         {
             RootView = inflater.Inflate(Resource.Layout.player, container, false);
             contextStatic = this.Context;
+
+            Repeat = RootView.FindViewById<ImageButton>(Resource.Id.repeat);
+            Repeat.Click += Repeat_Click;
 
             Player_Image = RootView.FindViewById<ImageView>(Resource.Id.album_image);
             Player_song_name = RootView.FindViewById<TextView>(Resource.Id.song_name);
@@ -54,7 +62,7 @@ namespace SpotyPie
             player = new MediaPlayer();
             player.Prepared += Player_Prepared;
             player.BufferingUpdate += Player_BufferingUpdate;
-            MusicPlayer();
+            StartPlayMusic();
 
             HidePlayerButton = RootView.FindViewById<ImageButton>(Resource.Id.back_button);
             PlayToggle = RootView.FindViewById<ImageButton>(Resource.Id.play_stop);
@@ -69,6 +77,44 @@ namespace SpotyPie
             return RootView;
         }
 
+        public static void StartPlayMusic()
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    if (Current_state.Start_music)
+                    {
+                        Application.SynchronizationContext.Post(_ =>
+                            {
+                                player.Reset();
+                                player.SetAudioStreamType(Stream.Music);
+                                player.SetDataSource("http://spotypie.deveim.com/api/stream/play/" + Current_state.Current_Song.Id);
+                                player.Prepare();
+                            }, null);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Application.SynchronizationContext.Post(_ =>
+                    {
+                        Toast.MakeText(contextStatic, "Cant play " + Current_state.Current_Song.Id.ToString(), ToastLength.Short).Show();
+                    }, null);
+                }
+            });
+        }
+
+        private void PlayToggle_Click(object sender, EventArgs e)
+        {
+            Current_state.Music_play_toggle();
+        }
+
+        private void HidePlayerButton_Click(object sender, EventArgs e)
+        {
+            Current_state.Player_visiblibity_toggle();
+        }
+
+        #region Player events
         private void Player_Prepared(object sender, EventArgs e)
         {
             TotalSongTimeText.Visibility = ViewStates.Visible;
@@ -77,6 +123,7 @@ namespace SpotyPie
 
             if (Current_state.Start_music)
             {
+                PlayToggle.SetImageResource(Resource.Drawable.pause);
                 player.Start();
             }
         }
@@ -107,45 +154,32 @@ namespace SpotyPie
             Toast.MakeText(this.Context, "Player error", ToastLength.Short).Show();
             //player.Reset();
         }
+        #endregion
 
-        public static void MusicPlayer()
+
+        private void Repeat_Click(object sender, EventArgs e)
         {
-            try
+            switch (Repeat_state)
             {
-                if (Current_state.Start_music)
-                {
-                    player.Reset();
-                    player.SetAudioStreamType(Stream.Music);
-                    player.SetDataSource("http://spotypie.deveim.com/api/stream/play/" + Current_state.Current_Song.Id);
-                    player.Prepare();
-                }
+                case 0:
+                    {
+                        Repeat.SetBackgroundResource(Resource.Drawable.repeat);
+                        Repeat_state = 1;
+                        break;
+                    }
+                case 1:
+                    {
+                        Repeat.SetBackgroundResource(Resource.Drawable.repeat_once);
+                        Repeat_state = 2;
+                        break;
+                    }
+                case 2:
+                    {
+                        Repeat.SetBackgroundResource(Resource.Drawable.repeat_off);
+                        Repeat_state = 0;
+                        break;
+                    }
             }
-            catch (Exception e)
-            {
-                Toast.MakeText(contextStatic, "Cant play " + Current_state.Current_Song.Id.ToString(), ToastLength.Short).Show();
-            }
-        }
-
-        private void PlayToggle_Click(object sender, EventArgs e)
-        {
-            Current_state.IsPlaying = !Current_state.IsPlaying;
-
-            if (Current_state.IsPlaying)
-            {
-                PlayToggle.SetImageResource(Resource.Drawable.pause);
-                player.Start();
-            }
-            else
-            {
-                PlayToggle.SetImageResource(Resource.Drawable.play_button);
-                player.Pause();
-            }
-        }
-
-        private void HidePlayerButton_Click(object sender, EventArgs e)
-        {
-            PlayToggle_Click(null, null);
-            MainActivity.PlayerContainer.TranslationX = MainActivity.widthInDp;
         }
 
     }

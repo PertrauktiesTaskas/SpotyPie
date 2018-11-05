@@ -153,12 +153,6 @@ namespace SpotyPie
                 }
             });
 
-
-            Task.Run(() => GetRecentAlbumsAsync(this.Context));
-            Task.Run(() => GetPolularAlbumsAsync(this.Context));
-            Task.Run(() => GetPolularArtistsAsync(this.Context));
-            Task.Run(() => GetOldAlbumsAsync(this.Context));
-
             return RootView;
         }
 
