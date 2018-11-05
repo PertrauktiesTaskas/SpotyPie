@@ -55,8 +55,8 @@ namespace API.Controllers
             {
                 //TODO add popularity option and order by that
                 var artist = await _ctx.Artists.Include(x => x.Images).Include(x => x.Songs)
-                    .Select(x => new { x.Id, x.Songs })
-                    .Take(15)
+                    .Select(x => new { x.Id, x.Songs, x.Popularity })
+                    .OrderByDescending(x => x.Popularity)
                     .FirstOrDefaultAsync(x => x.Id == id);
 
                 return Ok(artist.Songs);

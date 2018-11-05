@@ -25,6 +25,7 @@ namespace SpotyPie
         SupportFragment Library;
         SupportFragment Player;
         public static SupportFragment Album;
+        public static SupportFragment Artist;
 
         BottomNavigationView bottomNavigation;
         ImageButton PlayToggle;
@@ -57,6 +58,7 @@ namespace SpotyPie
             Library = new Library();
             Player = new Player();
             Album = new AlbumFragment();
+            Artist = new ArtistFragment();
 
             PlayToggle = FindViewById<ImageButton>(Resource.Id.play_stop);
             bottomNavigation = FindViewById<BottomNavigationView>(Resource.Id.NavBot);

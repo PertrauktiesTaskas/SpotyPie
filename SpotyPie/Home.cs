@@ -34,6 +34,7 @@ namespace SpotyPie
         private static RecyclerView BestAlbumsRecyclerView;
 
         //Best artists
+        public static List<Artist> BestArtistList;
         public static RecycleViewList<BlockWithImage> BestArtists = new RecycleViewList<BlockWithImage>();
         private RecyclerView.LayoutManager BestArtistsLayoutManager;
         private static RecyclerView.Adapter BestArtistsAdapter;
@@ -109,7 +110,10 @@ namespace SpotyPie
             {
                 if (BestArtistsRecyclerView != null && BestArtistsRecyclerView.ChildCount != 0)
                 {
-                    Toast.MakeText(this.Context, "Dar nesukurta artist", ToastLength.Short).Show();
+                    Current_state.Current_Artist = BestArtistList[position];
+                    FragmentManager.BeginTransaction()
+                    .Replace(Resource.Id.content_frame, MainActivity.Artist)
+                    .Commit();
                 }
             });
 
@@ -263,6 +267,7 @@ namespace SpotyPie
                     List<Artist> artists = JsonConvert.DeserializeObject<List<Artist>>(response.Content);
                     Application.SynchronizationContext.Post(_ =>
                     {
+                        BestArtistList = artists;
                         foreach (var x in artists)
                         {
                             string DisplayGenre;

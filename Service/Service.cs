@@ -1,8 +1,10 @@
 ﻿using Database;
+using IdSharp.Tagging.VorbisComment;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.BackEnd;
 using Newtonsoft.Json;
+using Services.TagHelpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -53,13 +55,42 @@ namespace Services
         {
             try
             {
-                //var nameSplit = name.Split(new char[] { '-', '_', ':' });
-                var audioDb = await _ctx.Items.FirstOrDefaultAsync(x => x.Name.Contains(Path.GetFileNameWithoutExtension(name)));
+                Item audioDb = null;
+                IAudioFile audio = AudioFile.Create(path, false);
+
+                if (audio != null && audio.FileType == AudioFileType.Flac)
+                {
+                    VorbisComment flacTag = new VorbisComment(path);
+
+                    if (string.IsNullOrWhiteSpace(flacTag.Title) || string.IsNullOrWhiteSpace(flacTag.Artist))
+                        audioDb = await _ctx.Items
+                            .FirstOrDefaultAsync(x =>
+                            x.Name.Equals(Path.GetFileNameWithoutExtension(name), StringComparison.InvariantCultureIgnoreCase));
+                    else
+                    {
+                        var replaced = flacTag.Title.Replace("'", "’");
+                        var replacedArtist = flacTag.Artist.Replace("'", "’");
+                        audioDb = await _ctx.Items
+                            .FirstOrDefaultAsync(x => x.Name.Equals(replaced, StringComparison.InvariantCultureIgnoreCase)
+                            && x.Artists.Contains(replacedArtist));
+                    }
+                }
+                else
+                    audioDb = await _ctx.Items.FirstOrDefaultAsync(x => x.Name.Equals(Path.GetFileNameWithoutExtension(name), StringComparison.InvariantCultureIgnoreCase));
+
                 if (audioDb != null)
                 {
                     _ctx.Update(audioDb);
                     audioDb.LocalUrl = path;
+
+                    if (audio != null)
+                    {
+                        audioDb.DurationMs = (long)audio.TotalSeconds * 1000;
+                    }
+
                     _ctx.SaveChanges();
+                    audio = null;
+
                     return true;
                 }
                 return false;
