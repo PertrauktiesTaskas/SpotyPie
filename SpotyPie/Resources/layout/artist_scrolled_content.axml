@@ -21,23 +21,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <TextView
-                android:id="@+id/view"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:background="@drawable/gradient_grey_trasparent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-            </TextView>
-
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/innerWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#222222"
                 app:layout_constraintTop_toBottomOf="@+id/view">
+
+                <include
+                    android:id="@+id/include2"
+                    layout="@layout/shuffle_sticky"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"></include>
 
                 <TextView
                     android:id="@+id/download_text3"
@@ -65,7 +61,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/include2" />
 
 
                 <android.support.v7.widget.RecyclerView
@@ -116,6 +112,17 @@
                     app:layout_constraintTop_toBottomOf="@+id/artist_albums_list" />
             </android.support.constraint.ConstraintLayout>
 
+            <TextView
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:background="@drawable/gradient_grey_trasparent2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </TextView>
+
         </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>
 
@@ -127,24 +134,30 @@
         android:background="#222222"
         android:gravity="center">
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/wrapper2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+        <TextView
+            android:id="@+id/backgroundHalfInner"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:background="@color/BottomNavBarColor"
+            android:alpha="0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/download_text2"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:background="#222222"
-                android:gravity="center"
-                android:paddingLeft="16dp"
-                android:text="Popular"
-                android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </android.support.constraint.ConstraintLayout>
+        <Button
+            android:id="@+id/button_text"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:background="@drawable/button_rounded"
+            android:padding="5dp"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:text="SHUFFLE PLAY"
+            android:textColor="@android:color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

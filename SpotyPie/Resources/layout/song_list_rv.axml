@@ -39,6 +39,7 @@
         android:layout_marginBottom="8dp"
         android:singleLine="true"
         android:text="July Talk"
+		        android:textColor="@android:color/white"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/option"

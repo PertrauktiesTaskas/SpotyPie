@@ -17,11 +17,11 @@ namespace SpotyPie.Helpers
 {
     public class BoxedRV : RecyclerView.Adapter
     {
-        private RecycleViewList<BlockWithImage> Dataset;
+        private RecycleViewList<TwoBlockWithImage> Dataset;
         private readonly RecyclerView mRecyclerView;
         private Context Context;
 
-        public BoxedRV(RecycleViewList<BlockWithImage> data, RecyclerView recyclerView, Context context)
+        public BoxedRV(RecycleViewList<TwoBlockWithImage> data, RecyclerView recyclerView, Context context)
         {
             Dataset = data;
             mRecyclerView = recyclerView;
@@ -113,9 +113,21 @@ namespace SpotyPie.Helpers
             else if (holder is BlockImage)
             {
                 BlockImage view = holder as BlockImage;
-                //view.L_Title.Text = Dataset[position].Title;
-                //view.L_SubTitile.Text = Dataset[position].SubTitle;
-                //Picasso.With(Context).Load(Dataset[position].Image).Into(view.L_Image);
+                view.L_Title.Text = Dataset[position].Left.Title;
+                view.L_SubTitile.Text = Dataset[position].Left.SubTitle;
+                Picasso.With(Context).Load(Dataset[position].Left.Image).Into(view.L_Image);
+                if (Dataset[position].Right != null)
+                {
+                    view.R_Title.Text = Dataset[position].Right.Title;
+                    view.R_SubTitile.Text = Dataset[position].Right.SubTitle;
+                    Picasso.With(Context).Load(Dataset[position].Right.Image).Into(view.R_Image);
+                }
+                else
+                {
+                    view.R_Title.Visibility = ViewStates.Gone;
+                    view.R_SubTitile.Visibility = ViewStates.Gone;
+                    view.R_Image.Visibility = ViewStates.Gone;
+                }
             }
         }
 
