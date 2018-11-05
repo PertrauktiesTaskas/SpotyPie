@@ -1,5 +1,6 @@
 ﻿using Database;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.IO;
 using System.Net.Http.Headers;
 using System.Threading;
@@ -27,7 +28,7 @@ namespace API.Controllers
         [HttpGet("test")]
         public IActionResult Test(CancellationToken t)
         {
-            return Ok("Gerai");
+            return Ok(Environment.CurrentDirectory);
         }
 
         [HttpGet("play/{id}")]
