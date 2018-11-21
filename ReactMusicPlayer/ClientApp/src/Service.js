@@ -1,4 +1,4 @@
-const apiEnd = 'http://spotypie.deveim.com/api';
+const apiEnd = 'https://localhost:9876/api';
 
 export const itemService = {
     getAlbums,
@@ -10,7 +10,7 @@ function getAlbums() {
     const requestOptions = {
         method: 'GET'
     };
-    return fetch(apiEnd + '/Albums', requestOptions)
+    return fetch(apiEnd + '/album/Albums', requestOptions)
         .then(handleResponse);
 }
 
