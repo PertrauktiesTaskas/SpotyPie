@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+	android:clickable="true"
     android:background="@drawable/gradient_grey_reverse">
 
     <ImageButton
@@ -15,7 +16,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/pause"
+        app:srcCompat="@drawable/play_button"
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"
         tools:ignore="VectorDrawableCompat" />
@@ -38,14 +39,14 @@
 
     <ImageButton
         android:id="@+id/repeat"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="@+id/play_stop"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.75"
-        app:layout_constraintStart_toEndOf="@+id/play_stop"
         app:layout_constraintTop_toTopOf="@+id/play_stop"
         app:srcCompat="@drawable/repeat" />
 
@@ -58,7 +59,7 @@
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="@+id/play_stop"
         app:layout_constraintEnd_toStartOf="@+id/play_stop"
-        app:layout_constraintHorizontal_bias="0.66"
+        app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toEndOf="@+id/shuffle"
         app:layout_constraintTop_toTopOf="@+id/play_stop"
         app:srcCompat="@drawable/next" />
@@ -71,27 +72,23 @@
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="@+id/play_stop"
         app:layout_constraintEnd_toStartOf="@+id/repeat"
-        app:layout_constraintHorizontal_bias="0.33"
+        app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toEndOf="@+id/play_stop"
         app:layout_constraintTop_toTopOf="@+id/play_stop"
         app:srcCompat="@drawable/next" />
 
     <ImageButton
         android:id="@+id/shuffle"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="@+id/play_stop"
-        app:layout_constraintEnd_toStartOf="@+id/play_stop"
-        app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/play_stop"
-        app:srcCompat="@drawable/shuffle" />
+        app:srcCompat="@drawable/shuffle_disabled" />
 
     <TextView
         android:id="@+id/current_song_time"
@@ -101,7 +98,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:text="0:00"
+        android:text="1:55"
         android:textColor="@android:color/white"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         app:layout_constraintBottom_toBottomOf="@+id/song_progress"
@@ -118,7 +115,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:text="0:00"
+        android:text="2:37"
         android:textColor="@android:color/white"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         app:layout_constraintBottom_toBottomOf="@+id/song_progress"
@@ -227,7 +224,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/artist_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/song_name"
-        app:srcCompat="@drawable/checked" />
+        app:srcCompat="@drawable/check" />
 
     <ImageView
         android:id="@+id/add_to_playlist"
@@ -253,7 +250,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="24dp"
-        android:progress="60"
+        android:progress="0"
         android:progressBackgroundTint="#FFF"
         android:progressTint="@android:color/white"
         app:layout_constraintBottom_toTopOf="@+id/play_stop"

@@ -1,7 +1,9 @@
-﻿using Database;
+﻿using Config.Net;
+using Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Service.Settings;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,6 +20,7 @@ namespace API.Controllers
         private readonly CancellationTokenSource cts;
         private CancellationToken ct;
         private readonly IDb _ctd;
+        private ISettings settings;
 
         public UploadController(SpotyPieIDbContext ctx, IDb ctd)
         {
@@ -25,6 +28,9 @@ namespace API.Controllers
             _ctd = ctd;
             cts = new CancellationTokenSource();
             ct = cts.Token;
+            settings = new ConfigurationBuilder<ISettings>()
+                .UseJsonFile(Environment.CurrentDirectory + @"/settings.json")
+                .Build();
         }
 
         [RequestSizeLimit(500000000)]
@@ -42,7 +48,7 @@ namespace API.Controllers
 
                     foreach (var formFile in form.Files)
                     {
-                        var filePath = @"/root/Music/" + formFile.FileName;
+                        var filePath = settings.AudioStoragePath + formFile.FileName;
 
                         using (var fileStream = new FileStream(filePath, FileMode.Create))
                         {

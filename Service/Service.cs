@@ -1,9 +1,11 @@
-﻿using Database;
+﻿using Config.Net;
+using Database;
 using IdSharp.Tagging.VorbisComment;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.BackEnd;
 using Newtonsoft.Json;
+using Service.Settings;
 using Services.TagHelpers;
 using System;
 using System.Collections.Generic;
@@ -19,11 +21,13 @@ namespace Services
     public class Service : IDb
     {
         private readonly SpotyPieIDbContext _ctx;
-
+        private ISettings settings;
         public Service(SpotyPieIDbContext ctx)
         {
             _ctx = ctx;
-            //Start();
+            settings = new ConfigurationBuilder<ISettings>()
+                .UseJsonFile(Environment.CurrentDirectory + @"/settings.json")
+                .Build();
         }
 
         public bool OpenFile(string path, out FileStream fs)
@@ -178,7 +182,7 @@ namespace Services
 
         public void RemoveCache()
         {
-            DirectoryInfo di = new DirectoryInfo("/var/www/cache");
+            DirectoryInfo di = new DirectoryInfo(settings.CachePath);
             foreach (FileInfo file in di.EnumerateFiles())
             {
                 file.Delete();
@@ -197,7 +201,7 @@ namespace Services
                 var response = await client.GetAsync(img.Url);
 
                 var filename = Path.GetRandomFileName();
-                var path = @"/var/www/cache/" + filename;
+                var path = settings.CachePath + filename;
 
                 if (response.IsSuccessStatusCode)
                 {

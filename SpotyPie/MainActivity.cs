@@ -6,6 +6,7 @@ using Android.Support.V4.App;
 using Android.Support.V4.View;
 using Android.Support.V7.App;
 using Android.Views;
+using Android.Views.Animations;
 using Android.Widget;
 using Java.Lang;
 using System;
@@ -28,10 +29,10 @@ namespace SpotyPie
         public static SupportFragment Artist;
 
         BottomNavigationView bottomNavigation;
-        ImageButton PlayToggle;
+        public static ImageButton PlayToggle;
 
-        TextView ArtistName;
-        TextView SongTitle;
+        public static TextView ArtistName;
+        public static TextView SongTitle;
         public static ImageButton BackHeaderButton;
         public static ImageButton OptionsHeaderButton;
 
@@ -50,7 +51,7 @@ namespace SpotyPie
             PlayerContainer = FindViewById<FrameLayout>(Resource.Id.player_frame);
 
             widthInDp = Resources.DisplayMetrics.WidthPixels;
-            PlayerContainer.TranslationX = 10000;
+            PlayerContainer.TranslationX = widthInDp;
 
             Home = new Home();
             Browse = new Browse();
@@ -65,6 +66,9 @@ namespace SpotyPie
             ActionName = FindViewById<TextView>(Resource.Id.textView);
             MiniPlayer = FindViewById<ConstraintLayout>(Resource.Id.PlayerContainer);
             ArtistName = FindViewById<TextView>(Resource.Id.artist_name);
+            //Animation marquee = AnimationUtils.LoadAnimation(this, Resource.Drawable.marquee);
+            //ArtistName.StartAnimation(marquee);
+
             SongTitle = FindViewById<TextView>(Resource.Id.song_name);
             BackHeaderButton = FindViewById<ImageButton>(Resource.Id.back);
             OptionsHeaderButton = FindViewById<ImageButton>(Resource.Id.options);
@@ -82,11 +86,21 @@ namespace SpotyPie
             LoadFragment(Resource.Id.home);
         }
 
+        public override void OnBackPressed()
+        {
+            if (Current_state.PlayerIsVisible)
+            {
+                PlayerContainer.TranslationX = widthInDp;
+                return;
+            }
+            base.OnBackPressed();
+        }
+
         private void BackHeaderButton_Click(object sender, EventArgs e)
         {
             try
             {
-                HideHeaderNavigationButtons();
+                Current_state.HideHeaderNavigationButtons();
                 SupportFragmentManager.BeginTransaction()
                     .Replace(Resource.Id.content_frame, Current_state.BackFragment)
                     .Commit();
@@ -103,23 +117,24 @@ namespace SpotyPie
         protected override void OnResume()
         {
             base.OnResume();
+            if (!Current_state.IsPlayerLoaded)
+            {
+                SupportFragmentManager.BeginTransaction()
+                    .Replace(Resource.Id.player_frame, Player)
+                    .Commit();
+                PlayerContainer.TranslationX = widthInDp;
+            }
             Task.Run(() => API_data.GetSong());
         }
 
         private void PlayToggle_Click(object sender, EventArgs e)
         {
-            Current_state.IsPlaying = !Current_state.IsPlaying;
-
-            if (Current_state.IsPlaying)
-                PlayToggle.SetImageResource(Resource.Drawable.pause);
-            else
-                PlayToggle.SetImageResource(Resource.Drawable.play_button);
+            Current_state.Music_play_toggle();
         }
 
         private void MiniPlayer_Click(object sender, EventArgs e)
         {
-            PlayToggle_Click(null, null);
-            PlayerContainer.TranslationX = 0;
+            Current_state.Player_visiblibity_toggle();
         }
 
         private void BottomNavigation_NavigationItemSelected(object sender, BottomNavigationView.NavigationItemSelectedEventArgs e)
@@ -135,12 +150,6 @@ namespace SpotyPie
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            //int id = item.ItemId;
-            //if (id == Resource.Id.action_settings)
-            //{
-            //    return true;
-            //}
-
             return base.OnOptionsItemSelected(item);
         }
 
@@ -216,18 +225,6 @@ namespace SpotyPie
             SupportFragmentManager.BeginTransaction()
                 .Replace(Resource.Id.content_frame, fragment)
                 .Commit();
-        }
-
-        public static void ShowHeaderNavigationButtons()
-        {
-            BackHeaderButton.Visibility = ViewStates.Visible;
-            OptionsHeaderButton.Visibility = ViewStates.Visible;
-        }
-
-        public static void HideHeaderNavigationButtons()
-        {
-            BackHeaderButton.Visibility = ViewStates.Gone;
-            OptionsHeaderButton.Visibility = ViewStates.Gone;
         }
     }
 }

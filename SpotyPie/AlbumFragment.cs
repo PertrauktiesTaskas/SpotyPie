@@ -36,6 +36,7 @@ namespace SpotyPie
         TextView ButtonBackGround2;
 
         //Album Songs
+        public static List<Item> AlbumSongsItem = new List<Item>();
         public static RecycleViewList<List> AlbumSongs = new RecycleViewList<List>();
         private RecyclerView.LayoutManager AlbumSongsLayoutManager;
         private static RecyclerView.Adapter AlbumSongsAdapter;
@@ -72,7 +73,7 @@ namespace SpotyPie
             AlbumTitle.Text = Current_state.ClickedInRVH.Title;
             AlbumByText.Text = Current_state.ClickedInRVH.SubTitle;
 
-            MainActivity.ShowHeaderNavigationButtons();
+            Current_state.ShowHeaderNavigationButtons();
 
             download = RootView.FindViewById<TextView>(Resource.Id.download_text);
             Copyrights = RootView.FindViewById<TextView>(Resource.Id.copyrights);
@@ -81,7 +82,6 @@ namespace SpotyPie
             relative = RootView.FindViewById<RelativeLayout>(Resource.Id.hide);
 
             ScrollFather = RootView.FindViewById<NestedScrollView>(Resource.Id.fatherScrool);
-            //ScrollFather.SetOnTouchListener(this);
             backViewContainer = RootView.FindViewById<ConstraintLayout>(Resource.Id.backViewContainer);
             Height = backViewContainer.LayoutParameters.Height;
             ScrollFather.ScrollChange += Scroll_ScrollChange;
@@ -95,7 +95,13 @@ namespace SpotyPie
             AlbumSongsRecyclerView.SetAdapter(AlbumSongsAdapter);
             AlbumSongsRecyclerView.NestedScrollingEnabled = false;
 
-            Task.Run(() => GetSongsAsync(Current_state.ClickedInRVH.Id));
+            AlbumSongsRecyclerView.SetItemClickListener((rv, position, view) =>
+            {
+                if (AlbumSongsRecyclerView != null && AlbumSongsRecyclerView.ChildCount != 0)
+                {
+                    Current_state.SetSong(AlbumSongsItem[position]);
+                }
+            });
 
             return RootView;
         }
@@ -127,9 +133,10 @@ namespace SpotyPie
                     Album album = JsonConvert.DeserializeObject<Album>(response.Content);
                     Application.SynchronizationContext.Post(_ =>
                     {
+                        AlbumSongsItem = album.Songs;
                         foreach (var x in album.Songs)
                         {
-                            AlbumSongs.Add(new List(x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name));
+                            AlbumSongs.Add(new List(x.Id, x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name));
                         }
                         List<Copyright> Copyright = JsonConvert.DeserializeObject<List<Copyright>>(album.Copyrights);
                         Copyrights.Text = string.Join("\n", Copyright.Select(x => x.Text));

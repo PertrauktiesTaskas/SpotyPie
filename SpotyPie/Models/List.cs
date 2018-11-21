@@ -20,7 +20,7 @@ namespace SpotyPie.Models
 
         public List() { }
 
-        public List(string title, string subtitle)
+        public List(int id, string title, string subtitle)
         {
             Title = title;
             Subtitle = subtitle;
