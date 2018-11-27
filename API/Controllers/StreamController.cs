@@ -61,7 +61,7 @@ namespace API.Controllers
             }
             catch (System.Exception ex)
             {
-                return BadRequest(ex.InnerException);
+                return StatusCode(500, ex.InnerException);
             }
         }
 
@@ -73,7 +73,8 @@ namespace API.Controllers
                 t.ThrowIfCancellationRequested();
                 //"C:\Users\lukas\Source\Repos\SpotyPie\API\music.flac"
                 //"/root/Music/" + file + ".flac"
-                return _ctd.OpenFile(settings.AudioStoragePath + file + ".flac", out FileStream fs)
+                string aPath = settings != null ? settings.AudioStoragePath : "/root/Music/";
+                return _ctd.OpenFile(aPath + file + ".flac", out FileStream fs)
                     ? File(fs, new MediaTypeHeaderValue("audio/mpeg").MediaType, true)
                     : (IActionResult)BadRequest();
             }

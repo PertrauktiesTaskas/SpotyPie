@@ -10,16 +10,19 @@ class AlbumList extends React.Component {
         this.state = {
             show_album_list: true,
             show_album_songs: false,
-            selected_album: ""
+            selected_album: "",
+            albums: []
         };
 
         this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount() {
-        /*itemService.getAlbums().then((data) => {
-            console.log('Loading album:', data);
-        });*/
+        itemService.getAlbums().then((data) => {
+            console.log('Loading albums:', data);
+
+            this.setState({albums: data});
+        });
     }
 
     handleClick(event) {
@@ -32,10 +35,11 @@ class AlbumList extends React.Component {
                 });
                 break;
             default:
+                console.log("Clicked item", this.state.albums[event.target.id-1]);
                 this.setState({
                     show_album_list: false,
                     show_album_songs: true,
-                    selected_album: event.target.id
+                    selected_album: this.state.albums[event.target.id-1]
                 });
                 break;
         }
@@ -43,43 +47,49 @@ class AlbumList extends React.Component {
     }
 
     render() {
-        if (this.state.show_album_list) {
-            return (
-                <div style={{height: "100%"}}>
+        function DisplayAlbum(props, func) {
 
-                    <div className="album__info" style={{borderBottom: "solid 1px"}}>
+            var dateFormat = require('dateformat');
 
-                        <div className="album__info__art">
+            return (<div className="album__info" style={{borderBottom: "solid 1px"}}>
+                    <div className="album__info__art">
 
-                            <img
-                                src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/whenDarkOut.jpg"
-                                alt="When It's Dark Out"/>
-
-                        </div>
-
-                        <div className="album__info__meta">
-
-                            <div className="album__artist">G-Eazy</div>
-
-                            <div className="album__name">When It's Dark Out</div>
-
-                            <div className="album__year">2015</div>
-
-                            <div className="album__actions">
-
-                                <button id="When It's Dark Out" className="button-light save"
-                                        onClick={this.handleClick.bind(this)}>View
-                                </button>
-
-                            </div>
-
-                        </div>
+                        <img
+                            src={props.props.images[0].url}
+                            alt=""/>
 
                     </div>
 
-                </div>
+                    <div className="album__info__meta">
 
+                        <div className="album__artist">{JSON.parse(props.props.artists)[0].Name}</div>
+
+                        <div className="album__name">{props.props.name}</div>
+
+                        <div className="album__year">{dateFormat(props.props.releaseDate, "yyyy")}</div>
+
+                        <div className="album__actions">
+
+                            <button id={props.props.id} className="button-light save"
+                                    onClick={props.func}>View
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
             );
+        }
+
+        let album = this.state.albums.map(album => <DisplayAlbum props={album} func={this.handleClick.bind(this)}/>);
+
+        if (this.state.show_album_list) {
+            return (
+                <div style={{height: "100%", overflow: "scroll"}}>
+
+
+                    {album}
+
+                </div>);
         }
         else {
             return (<div style={{padding: "10px"}}>
@@ -87,8 +97,8 @@ class AlbumList extends React.Component {
                             onClick={this.handleClick.bind(this)}><i id="back_btn" onClick={this.handleClick.bind(this)}
                                                                      className="fas fa-arrow-left"/>
                     </button>
-                    <div className="album_title">{this.state.selected_album}</div>
-                    <AlbumSongs/>
+                    <div className="album_title">{this.state.selected_album.name}</div>
+                    <AlbumSongs props={this.state.selected_album}/>
                 </div>
             );
         }

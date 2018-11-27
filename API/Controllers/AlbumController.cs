@@ -1,4 +1,5 @@
 ﻿using Database;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.BackEnd;
@@ -37,6 +38,7 @@ namespace API.Controllers
 
         //Returns full Album info without songs
         [HttpGet("{id}")]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetAlbum(int id)
         {
             try
@@ -60,6 +62,7 @@ namespace API.Controllers
 
         //Returns album list
         [HttpGet("Albums")]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetAlbums()
         {
             try
@@ -101,6 +104,7 @@ namespace API.Controllers
         //Return album with songs
         [Route("{id}/tracks")]
         [HttpGet]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetAlbumTracks(int id)
         {
             try
@@ -120,6 +124,7 @@ namespace API.Controllers
         //Return 6 most recent albums
         [Route("Recent")]
         [HttpGet]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetRecentAlbums()
         {
             try
@@ -140,6 +145,7 @@ namespace API.Controllers
         //Return 6 most popular albums
         [Route("Popular")]
         [HttpGet]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetPopularAlbums()
         {
             try
@@ -161,6 +167,7 @@ namespace API.Controllers
         //Return 6 oldes albums
         [Route("Old")]
         [HttpGet]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetOldAlbums()
         {
             try
@@ -180,6 +187,7 @@ namespace API.Controllers
         }
 
         [HttpGet("artist/{id}")]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetAlbumsByArtist(int id)
         {
             try

@@ -1,9 +1,9 @@
 import React from "react";
 
-class AlbumSongs extends React.Component {
+const AlbumSongs = ({props}) => {
 
+    console.log("Album songs", props);
 
-    render() {
         return (
             <div>
 
@@ -39,92 +39,12 @@ class AlbumSongs extends React.Component {
 
                     </div>
 
-                    <div className="track">
-
-                        <div className="track__number">2</div>
-
-                        <div className="track__title">Random</div>
-
-                        <div className="track__explicit">
-
-                            <span className="label">Explicit</span>
-
-                        </div>
-
-                        <div className="track__length"><i className="far fa-clock"/> 3:00</div>
-
-                    </div>
-
-                    <div className="track">
-
-                        <div className="track__number">3</div>
-
-                        <div className="track__title featured">
-
-                            <span className="title">Me, Myself & I</span>
-                            <span className="feature">Bebe Rexha</span>
-
-                        </div>
-
-                        <div className="track__explicit">
-
-                            <span className="label">Explicit</span>
-
-                        </div>
-
-                        <div className="track__length"><i className="far fa-clock"/> 4:11</div>
-
-                    </div>
-
-                    <div className="track">
-
-                        <div className="track__number">4</div>
-
-                        <div className="track__title featured">
-
-                            <span className="title">One Of Them</span>
-                            <span className="feature">Big Sean</span>
-
-                        </div>
-
-                        <div className="track__explicit">
-
-                            <span className="label">Explicit</span>
-
-                        </div>
-
-                        <div className="track__length"><i className="far fa-clock"/> 3:20</div>
-
-                    </div>
-
-                    <div className="track">
-
-                        <div className="track__number">5</div>
-
-                        <div className="track__title featured">
-
-                            <span className="title">Drifting</span>
-                            <span className="feature">Chris Brown</span>
-                            <span className="feature">Tory Lanez</span>
-
-                        </div>
-
-                        <div className="track__explicit">
-
-                            <span className="label">Explicit</span>
-
-                        </div>
-
-                        <div className="track__length"><i className="far fa-clock"/> 4:33</div>
-
-                    </div>
-
                 </div>
 
             </div>
 
         );
-    }
+
 
 }
 

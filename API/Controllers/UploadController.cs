@@ -48,7 +48,11 @@ namespace API.Controllers
 
                     foreach (var formFile in form.Files)
                     {
-                        var filePath = settings.AudioStoragePath + formFile.FileName;
+                        string filePath;
+                        if (settings != null)
+                            filePath = settings.AudioStoragePath + formFile.FileName;
+                        else
+                            filePath = @"/root/Music/" + formFile.FileName;
 
                         using (var fileStream = new FileStream(filePath, FileMode.Create))
                         {
