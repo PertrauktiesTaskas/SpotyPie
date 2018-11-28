@@ -1,4 +1,5 @@
 ﻿using Database;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.BackEnd;
@@ -31,6 +32,7 @@ namespace API.Controllers
 
         // Get artist list
         [HttpGet("Artists")]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetArtists()
         {
             try
@@ -47,6 +49,7 @@ namespace API.Controllers
 
         //Get only artist info and images
         [HttpGet("{id}")]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetArtist(int id)
         {
             try
@@ -65,6 +68,7 @@ namespace API.Controllers
         //Return artist top 15 tracks
         [Route("{id}/top-tracks")]
         [HttpGet]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetArtistTopTracks(int id)
         {
             try
@@ -85,6 +89,7 @@ namespace API.Controllers
 
         [Route("Related/{id}")]
         [HttpGet]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetRelatedArtists(int id)
         {
             try
@@ -110,6 +115,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetAllArtists()
         {
             try
@@ -140,6 +146,7 @@ namespace API.Controllers
 
         [Route("{id}/Albums")]
         [HttpGet]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetArtistAlbums(int id)
         {
             try

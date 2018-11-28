@@ -1,6 +1,8 @@
 import React from 'react';
 import '../css/main_styles.css';
 import '../css/responsive.css';
+import {itemService} from "../Service";
+import ArtistDefault from "../img/artist_default.png";
 
 class ArtistInfo extends React.Component {
     constructor(props) {
@@ -9,27 +11,117 @@ class ArtistInfo extends React.Component {
 
         this.state = {
             show_album_songs: false,
-            selected_album: "",
-            button_text: "view"
+            selected_album_id: "",
+            selected_album_tracks: [],
+            artist_info: "",
+            artist_images: [],
+            artist_top_tracks: [],
+            related_artists: [],
+            artist_albums: [],
+            top_track_albums: []
         };
 
         this.handleClick = this.handleClick.bind(this);
     }
 
+    async componentDidMount() {
+
+        function removeDuplicateRelated(arr) {
+
+            if (arr != null) {
+
+                let unique_ids = [];
+                let unique_artists = [];
+                for (let i = 0; i < arr.length; i++) {
+                    if (unique_ids.indexOf(arr[i].id) === -1) {
+
+                        unique_ids.push(arr[i].id);
+                        unique_artists.push(arr[i]);
+                    }
+                }
+                return unique_artists;
+            }
+            else {
+                return null;
+            }
+        }
+
+        let artist_information = await itemService.getArtistInfo(this.props.props);
+        let artist_img = artist_information.images[0].url;
+
+        let artist_top_tracks = [];
+        let top_track_albums = [];
+
+        await itemService.getArtistTopTracks(this.props.props).then((data) => {
+            console.log('Loading artist top tracks:', data.slice(0, 5));
+
+            artist_top_tracks = data.slice(0, 5);
+
+            let top_tracks = data.slice(0, 5);
+            let top_tracks_albums = [];
+
+            top_tracks.map((track) => {
+                itemService.getSongAlbum(track.id).then((data) => {
+                    top_tracks_albums.push(data.images[0].url);
+                });
+            });
+
+            console.log("Top tracks albums", top_tracks_albums);
+            top_track_albums = top_tracks_albums;
+        });
+
+        let albums = [];
+
+        itemService.getArtistAlbums(this.props.props).then((data) => {
+            console.log('Loading artist albums:', data);
+
+            albums = data.albums;
+        });
+
+        let related_artists_arr = [];
+
+        itemService.getRelatedArtists(this.props.props).then((data) => {
+            console.log('Loading related artists:', data);
+
+            let related = removeDuplicateRelated(data);
+
+            related_artists_arr = related;
+            this.setState({
+                artist_info: artist_information,
+                artist_images: artist_img,
+                artist_top_tracks: artist_top_tracks,
+                related_artists: related_artists_arr,
+                artist_albums: albums,
+                top_track_albums: top_track_albums
+            });
+        });
+
+
+    }
+
     handleClick(event) {
         switch (event.target.innerText) {
             case "VIEW":
+                console.log("Selecting album", event.target.id);
                 this.setState({
                     show_album_songs: true,
-                    selected_album: event.target.id,
-                    button_text: "hide"
+                    selected_album_id: event.target.id
                 });
+
+                itemService.getAlbumSongs(event.target.id).then((data) => {
+                    console.log("Loading selected album songs: ", data.songs);
+
+                    this.setState({
+                        selected_album_tracks: data.songs
+                    });
+                });
+
                 break;
             default:
                 this.setState({
                     show_album_songs: false,
-                    selected_album: "",
-                    button_text: "view"
+                    selected_album_id: "",
+                    selected_album_tracks: []
                 });
                 break;
         }
@@ -38,415 +130,207 @@ class ArtistInfo extends React.Component {
 
     render() {
 
-        function AlbumTracks(props) {
-            return (
-                <div className="album__tracks">
+        function TopTracks(props) {
 
-                    <div className="tracks">
+            return (<div className="track">
 
-                        <div className="artist__album__tracks__heading">
+                <div className="track__art">
 
-                            <div className="artist__album__tracks__heading__number">#</div>
+                    <img
+                        src={props.props2[props.index]}
+                        alt=""/>
 
-                            <div className="artist__album__tracks__heading__title">Song</div>
+                </div>
 
-                            <div className="artist__album__tracks__heading__length">
+                <div className="track__number">{props.index + 1}</div>
 
-                                <i className="far fa-clock"/>
+                <div className="track__title">{props.props.name}</div>
 
-                            </div>
+                {/*  <div className="track__explicit">
 
-                        </div>
+                    <span className="label">Explicit</span>
 
-                        <div className="track">
+                </div>*/}
 
-                            <div className="track__number">1</div>
 
-                            <div className="track__title">Intro</div>
+            </div>);
+        }
 
-                            <div className="track__explicit">
+        function Albums(props) {
 
-                                <span className="label">Explicit</span>
+            let show_tracks = props.props.id == props.selected ?
+                <AlbumTracks props={props.props.id} tracks={props.tracks} function={props.function}/> : null;
 
-                            </div>
+            let button_text = props.props.id == props.selected ? "Hide" : "View";
 
-                            <div className="track__length"><i className="far fa-clock"/> 1:11</div>
+            var dateFormat = require('dateformat');
 
-                        </div>
+            return (<div>
+                    <div className="album__info">
 
-                        <div className="track">
+                        <div className="album__info__art">
 
-                            <div className="track__number">2</div>
-
-                            <div className="track__title">Random</div>
-
-                            <div className="track__explicit">
-
-                                <span className="label">Explicit</span>
-
-                            </div>
-
-                            <div className="track__length"><i className="far fa-clock"/> 3:00</div>
+                            <img
+                                src={props.props.images[0].url}
+                                alt=""/>
 
                         </div>
 
-                        <div className="track">
+                        <div className="album__info__meta">
 
-                            <div className="track__number">3</div>
+                            <div className="album__year">{dateFormat(props.props.releaseDate, "yyyy")}</div>
 
-                            <div className="track__title featured">
+                            <div className="album__name">{props.props.name}</div>
 
-                                <span className="title">Me, Myself & I</span>
-                                <span className="feature">Bebe Rexha</span>
+                            <div className="album__actions">
 
-                            </div>
-
-                            <div className="track__explicit">
-
-                                <span className="label">Explicit</span>
+                                <button id={props.props.id} className="button-light save"
+                                        onClick={props.func}>{button_text}
+                                </button>
 
                             </div>
-
-                            <div className="track__length"><i className="far fa-clock"/> 4:11</div>
-
-
-                        </div>
-
-                        <div className="track">
-
-                            <div className="track__number">4</div>
-
-                            <div className="track__title featured">
-
-                                <span className="title">One Of Them</span>
-                                <span className="feature">Big Sean</span>
-
-                            </div>
-
-                            <div className="track__explicit">
-
-                                <span className="label">Explicit</span>
-
-                            </div>
-
-                            <div className="track__length"><i className="far fa-clock"/> 3:20</div>
-
-                        </div>
-
-                        <div className="track">
-
-                            <div className="track__number">5</div>
-
-                            <div className="track__title featured">
-
-                                <span className="title">Drifting</span>
-                                <span className="feature">Chris Brown</span>
-                                <span className="feature">Tory Lanez</span>
-
-                            </div>
-
-                            <div className="track__explicit">
-
-                                <span className="label">Explicit</span>
-
-                            </div>
-
-                            <div className="track__length"><i className="far fa-clock"/> 4:33</div>
-
-                        </div>
-
-                        <div className="track">
-
-                            <div className="track__number">6</div>
-
-                            <div className="track__title featured">
-
-                                <span className="title">Of All Things</span>
-                                <span className="feature">Too $hort</span>
-
-                            </div>
-
-                            <div className="track__explicit">
-
-                                <span className="label">Explicit</span>
-
-                            </div>
-
-                            <div className="track__length"><i className="far fa-clock"/> 3:34</div>
-
-                        </div>
-
-                        <div className="track">
-
-                            <div className="track__number">7</div>
-
-                            <div className="track__title featured">
-
-                                <span className="title">Order More</span>
-                                <span className="feature">Starrah</span>
-
-                            </div>
-
-                            <div className="track__explicit">
-
-                                <span className="label">Explicit</span>
-
-                            </div>
-
-                            <div className="track__length"><i className="far fa-clock"/> 3:29</div>
-
-                        </div>
-
-                        <div className="track">
-
-                            <div className="track__number">8</div>
-
-                            <div className="track__title">
-
-                                <span>Calm Down</span>
-
-                            </div>
-
-                            <div className="track__explicit">
-
-                                <span className="label">Explicit</span>
-
-                            </div>
-
-                            <div className="track__length"><i className="far fa-clock"/> 2:07</div>
-
-                        </div>
-
-                        <div className="track">
-
-                            <div className="track__number">9</div>
-
-                            <div className="track__title featured">
-
-                                <span className="title">Don't Let Me Go</span>
-                                <span className="feature">Grace</span>
-
-                            </div>
-
-                            <div className="track__explicit">
-
-                                <span className="label">Explicit</span>
-
-                            </div>
-
-                            <div className="track__length"><i className="far fa-clock"/> 3:11</div>
-
-                        </div>
-
-                        <div className="track">
-
-                            <div className="track__number">10</div>
-
-                            <div className="track__title">
-
-                                <span>You Got Me</span>
-
-                            </div>
-
-                            <div className="track__explicit">
-
-                                <span className="label">Explicit</span>
-
-                            </div>
-
-                            <div className="track__length"><i className="far fa-clock"/> 3:28</div>
-
-                        </div>
-
-                        <div className="track">
-
-                            <div className="track__number">11</div>
-
-                            <div className="track__title featured">
-
-                                <span className="title">What If</span>
-                                <span className="feature">Gizzle</span>
-
-                            </div>
-
-                            <div className="track__explicit">
-
-                                <span className="label">Explicit</span>
-
-                            </div>
-
-                            <div className="track__length"><i className="far fa-clock"/> 4:13</div>
-
-                        </div>
-
-                        <div className="track">
-
-                            <div className="track__number">12</div>
-
-                            <div className="track__title">
-
-                                <span>Sad Boy</span>
-
-                            </div>
-
-                            <div className="track__explicit">
-
-                                <span className="label">Explicit</span>
-
-                            </div>
-
-                            <div className="track__length"><i className="far fa-clock"/> 3:23</div>
-
-                        </div>
-
-                        <div className="track">
-
-                            <div className="track__number">13</div>
-
-                            <div className="track__title featured">
-
-                                <span className="title">Some Kind Of Drug</span>
-                                <span className="feature">Marc E. Bassy</span>
-
-                            </div>
-
-                            <div className="track__explicit">
-
-                                <span className="label">Explicit</span>
-
-                            </div>
-
-                            <div className="track__length"><i className="far fa-clock"/> 3:42</div>
-
-                        </div>
-
-                        <div className="track">
-
-                            <div className="track__number">14</div>
-
-                            <div className="track__title featured">
-
-                                <span className="title">Think About You</span>
-                                <span className="feature">Quin</span>
-
-                            </div>
-
-                            <div className="track__explicit">
-
-                                <span className="label">Explicit</span>
-
-                            </div>
-
-                            <div className="track__length"><i className="far fa-clock"/> 2:59</div>
-
-
-                        </div>
-
-                        <div className="track">
-
-                            <div className="track__number">15</div>
-
-                            <div className="track__title featured">
-
-                                <span className="title">Everything Will Be OK</span>
-                                <span className="feature">Kehlani</span>
-
-                            </div>
-
-                            <div className="track__explicit">
-
-                                <span className="label">Explicit</span>
-
-                            </div>
-
-                            <div className="track__length"><i className="far fa-clock"/> 5:11</div>
-
-                        </div>
-
-                        <div className="track">
-
-                            <div className="track__number">16</div>
-
-                            <div className="track__title featured">
-
-                                <span className="title">For This</span>
-                                <span className="feature">Iamnobodi</span>
-
-                            </div>
-
-                            <div className="track__explicit">
-
-                                <span className="label">Explicit</span>
-
-                            </div>
-
-                            <div className="track__length"><i className="far fa-clock"/> 4:11</div>
-
-                        </div>
-
-                        <div className="track">
-
-                            <div className="track__number">17</div>
-
-                            <div className="track__title featured">
-
-                                <span className="title">Nothing to Me</span>
-                                <span className="feature">Keyshia Cole</span>
-                                <span className="feature">E-40</span>
-
-                            </div>
-
-                            <div className="track__explicit">
-
-                                <span className="label">Explicit</span>
-
-                            </div>
-
-                            <div className="track__length"><i className="far fa-clock"/> 5:30</div>
 
                         </div>
 
                     </div>
 
-                </div>
-
-
+                    {show_tracks}</div>
             );
         }
 
-        let album_songs = this.state.show_album_songs ? <AlbumTracks/> : null;
+        function AlbumTracks(props) {
+
+
+            if (props.props != null && props.tracks != null) {
+
+
+                let tracks = props.tracks.map((track) => <AlbumSingleTrack props={track} function={props.function}/>);
+
+
+                return (
+                    <div className="album__tracks">
+
+                        <div className="tracks">
+
+                            <div className="artist__album__tracks__heading">
+
+                                <div className="artist__album__tracks__heading__number">#</div>
+
+                                <div className="artist__album__tracks__heading__title">Song</div>
+
+                                <div className="artist__album__tracks__heading__length">
+
+                                    <i className="far fa-clock"/>
+
+                                </div>
+
+                            </div>
+
+                            {tracks}
+
+
+                        </div>
+
+                    </div>
+
+
+                );
+            }
+            else {
+                return null;
+            }
+        }
+
+        function AlbumSingleTrack(props) {
+
+            let explicit = props.props.explicit ? <div id={props.props.id - 1} className="track__explicit">
+
+                <span className="label">Explicit</span>
+
+            </div> : null;
+
+            let duration = props.props.durationMs / 1000;
+            let minutes = Math.floor(duration / 60);
+            let seconds = Math.floor(duration - minutes * 60);
+
+            let disp_duration = seconds >= 10 ?
+                <div className="track__length"><i className="far fa-clock"/> {minutes + ':' + seconds}</div> :
+                <div className="track__length"><i className="far fa-clock"/> {minutes + ':0' + seconds}</div>;
+
+            return (
+                <div id={props.props.id - 1} className="track" onClick={props.function}>
+
+                    <div id={props.props.id - 1} className="track__number">{props.props.trackNumber}</div>
+
+                    <div id={props.props.id - 1} className="track__title"
+                         style={{marginLeft: "100px"}}>{props.props.name}</div>
+
+                    {explicit}
+
+                    <div id={props.props.id - 1} className="track__length"><i
+                        className="far fa-clock"/>{disp_duration}</div>
+
+                </div>);
+        }
+
+        function RelatedArtists(props) {
+
+            let artist_img = props.props.images.length > 0 ? props.props.images[0].url : ArtistDefault;
+
+            return (
+                <a href="#" className="related-artist">
+
+                    <span className="related-artist__img">
+
+                      <img src={artist_img} alt=""/>
+
+                    </span>
+
+                    <span className="related-artist__name">{props.props.name}</span>
+
+                </a>
+            );
+        }
+
+        let album_songs = this.state.show_album_songs ? <AlbumTracks function={this.props.function}/> : null;
+
+        let artist_img = this.state.artist_images != null ? this.state.artist_images : ArtistDefault;
+
+        let top_tracks = this.state.artist_top_tracks.map((top_track, index) => <TopTracks props={top_track}
+                                                                                           props2={this.state.top_track_albums}
+                                                                                           index={index}/>);
+
+        let related_artists = this.state.related_artists != null ? this.state.related_artists.map(rel_artist =>
+            <RelatedArtists props={rel_artist}/>) : null;
+
+        let albums = this.state.artist_albums.map(album => <Albums props={album} func={this.handleClick.bind(this)}
+                                                                   selected={this.state.selected_album_id}
+                                                                   tracks={this.state.selected_album_tracks}
+                                                                   function={this.props.function}/>);
 
         return (
             <div style={{height: "100%"}}>
 
                 <div className="artist">
 
-                    <div className="artist__header">
+                    <div className="artist__header" style={{backgroundImage: "url(" + artist_img + ")"}}>
 
                         <div className="artist__info">
 
                             <div className="profile__img">
 
-                                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/g_eazy_propic.jpg"
-                                     alt="G-Eazy"/>
+                                <img src={artist_img}
+                                     alt=""/>
 
                             </div>
 
                             <div className="artist__info__meta">
 
-                                <div className="artist__info__name">G-Eazy</div>
+                                <div className="artist__info__name">{this.state.artist_info.name}</div>
 
                             </div>
 
                         </div>
-
-                        {/*<div className="artist__listeners">
-
-                            <div className="artist__listeners__count">15,662,810</div>
-
-                            <div className="artist__listeners__label">Monthly Listeners</div>
-
-                        </div>*/}
 
                         <div className="artist__navigation">
 
@@ -498,9 +382,9 @@ class ArtistInfo extends React.Component {
                                     <div className="overview__artist">
 
 
-                                        <div className="section-title">Latest Release</div>
+                                        {/*<div className="section-title">Latest Release</div>*/}
 
-                                        <div className="latest-release">
+                                        {/*<div className="latest-release">
 
                                             <div className="latest-release__art">
 
@@ -527,129 +411,13 @@ class ArtistInfo extends React.Component {
 
                                             </div>
 
-                                        </div>
+                                        </div>*/}
 
-                                        <div className="section-title">Popular</div>
+                                        <div className="section-title">Top 5 songs</div>
 
                                         <div className="tracks">
 
-                                            <div className="track">
-
-                                                <div className="track__art">
-
-                                                    <img
-                                                        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/whenDarkOut.jpg"
-                                                        alt="When It's Dark Out"/>
-
-                                                </div>
-
-                                                <div className="track__number">1</div>
-
-                                                <div className="track__title">Me, Myself & I</div>
-
-                                                <div className="track__explicit">
-
-                                                    <span className="label">Explicit</span>
-
-                                                </div>
-
-                                                <div className="track__plays">147,544,165</div>
-
-                                            </div>
-
-                                            <div className="track">
-
-                                                <div className="track__art">
-
-                                                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/tth.jpg"
-                                                         alt="These Things Happen"/>
-
-                                                </div>
-
-                                                <div className="track__number">2</div>
-
-                                                <div className="track__title">I Mean It</div>
-
-                                                <div className="track__explicit">
-
-                                                    <span className="label">Explicit</span>
-
-                                                </div>
-
-                                                <div className="track__plays">74,568,782</div>
-
-                                            </div>
-
-                                            <div className="track">
-
-                                                <div className="track__art">
-
-                                                    <img
-                                                        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/whenDarkOut.jpg"
-                                                        alt="When It's Dark Out"/>
-
-                                                </div>
-
-                                                <div className="track__number">3</div>
-
-                                                <div className="track__title">Calm Down</div>
-
-                                                <div className="track__explicit">
-
-                                                    <span className="label">Explicit</span>
-
-                                                </div>
-
-                                                <div className="track__plays">13,737,506</div>
-
-                                            </div>
-
-                                            <div className="track">
-
-                                                <div className="track__art">
-
-                                                    <img
-                                                        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/whenDarkOut.jpg"
-                                                        alt="When It's Dark Out"/>
-
-                                                </div>
-
-                                                <div className="track__number">4</div>
-
-                                                <div className="track__title">Some Kind Of Drug</div>
-
-                                                <div className="track__explicit">
-
-                                                    <span className="label">Explicit</span>
-
-                                                </div>
-
-                                                <div className="track__plays">12,234,881</div>
-
-                                            </div>
-
-                                            <div className="track">
-
-                                                <div className="track__art">
-
-                                                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/tth.jpg"
-                                                         alt="These Things Happen"/>
-
-                                                </div>
-
-                                                <div className="track__number">5</div>
-
-                                                <div className="track__title">Let's Get Lost</div>
-
-                                                <div className="track__explicit">
-
-                                                    <span className="label">Explicit</span>
-
-                                                </div>
-
-                                                <div className="track__plays">40,882,954</div>
-
-                                            </div>
+                                            {top_tracks}
 
                                         </div>
 
@@ -661,89 +429,7 @@ class ArtistInfo extends React.Component {
 
                                         <div className="related-artists">
 
-                                            <a href="#" className="related-artist">
-                  
-                    <span className="related-artist__img">
-                    
-                      <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/hoodie.jpg" alt="Hoodie Allen"/>
-                      
-                    </span>
-
-                                                <span className="related-artist__name">Hoodie Allen</span>
-
-                                            </a>
-
-                                            <a href="#" className="related-artist">
-                  
-                    <span className="related-artist__img">
-                    
-                      <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/mikestud.jpg" alt="Mike Stud"/>
-                      
-                    </span>
-
-                                                <span className="related-artist__name">Mike Stud</span>
-
-                                            </a>
-
-                                            <a href="#" className="related-artist">
-                  
-                    <span className="related-artist__img">
-                    
-                      <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/drake.jpeg" alt="Drake"/>
-                      
-                    </span>
-
-                                                <span className="related-artist__name">Drake</span>
-
-                                            </a>
-
-                                            <a href="#" className="related-artist">
-                  
-                    <span className="related-artist__img">
-                    
-                      <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/jcole.jpg" alt="J. Cole"/>
-                      
-                    </span>
-
-                                                <span className="related-artist__name">J. Cole</span>
-
-                                            </a>
-
-                                            <a href="#" className="related-artist">
-                  
-                    <span className="related-artist__img">
-                    
-                      <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/bigsean.jpg" alt="Big Sean"/>
-                      
-                    </span>
-
-                                                <span className="related-artist__name">Big Sean</span>
-
-                                            </a>
-
-                                            <a href="#" className="related-artist">
-                  
-                    <span className="related-artist__img">
-                    
-                      <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/wiz.jpeg" alt="Wiz Khalifa"/>
-                      
-                    </span>
-
-                                                <span className="related-artist__name">Wiz Khalifa</span>
-
-                                            </a>
-
-                                            <a href="#" className="related-artist">
-                  
-                    <span className="related-artist__img">
-                    
-                      <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/yonas.jpg" alt="Yonas"/>
-                      
-                    </span>
-
-                                                <span className="related-artist__name">Yonas</span>
-
-                                            </a>
+                                            {related_artists}
 
                                         </div>
 
@@ -760,134 +446,9 @@ class ArtistInfo extends React.Component {
 
                                         <div className="album">
 
-                                            <div className="album__info">
-
-                                                <div className="album__info__art">
-
-                                                    <img
-                                                        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/whenDarkOut.jpg"
-                                                        alt="When It's Dark Out"/>
-
-                                                </div>
-
-                                                <div className="album__info__meta">
-
-                                                    <div className="album__year">2015</div>
-
-                                                    <div className="album__name">When It's Dark Out</div>
-
-                                                    <div className="album__actions">
-
-                                                        <button id="When It's Dark Out" className="button-light save"
-                                                                onClick={this.handleClick.bind(this)}>{this.state.button_text}
-                                                        </button>
-
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-
-                                            {album_songs}
+                                            {albums}
 
                                         </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <div role="tabpanel" className="tab-pane" id="related-artists">
-
-                                <div className="media-cards">
-
-                                    <div className="media-card">
-
-                                        <div className="media-card__image"
-                                             style={{backgroundImage: "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/hoodie.jpg)"}}>
-
-                                        </div>
-
-                                        <a className="media-card__footer">Hoodie Allen</a>
-
-                                    </div>
-
-                                    <div className="media-card">
-
-                                        <div className="media-card__image"
-                                             style={{backgroundImage: "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/mikestud_large.jpg)"}}>
-
-                                        </div>
-
-                                        <a className="media-card__footer">Mike Stud</a>
-
-                                    </div>
-
-                                    <div className="media-card">
-
-                                        <div className="media-card__image"
-                                             style={{backgroundImage: "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/drake_large.jpg)"}}>
-
-                                        </div>
-
-                                        <a className="media-card__footer">Drake</a>
-
-                                    </div>
-
-                                    <div className="media-card">
-
-                                        <div className="media-card__image"
-                                             style={{backgroundImage: "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/jcole_large.jpg)"}}>
-
-                                        </div>
-
-                                        <a className="media-card__footer">J. Cole</a>
-
-                                    </div>
-
-                                    <div className="media-card">
-
-                                        <div className="media-card__image"
-                                             style={{backgroundImage: "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/bigSean_large.jpg)"}}>
-
-                                        </div>
-
-                                        <a className="media-card__footer">Big Sean</a>
-
-                                    </div>
-
-                                    <div className="media-card">
-
-                                        <div className="media-card__image"
-                                             style={{backgroundImage: "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/wiz.jpeg)"}}>
-
-                                        </div>
-
-                                        <a className="media-card__footer">Wiz Khalifa</a>
-
-                                    </div>
-
-                                    <div className="media-card">
-
-                                        <div className="media-card__image"
-                                             style={{backgroundImage: "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/yonas.jpg)"}}>
-
-                                        </div>
-
-                                        <a className="media-card__footer">Yonas</a>
-
-                                    </div>
-
-                                    <div className="media-card">
-
-                                        <div className="media-card__image"
-                                             style={{backgroundImage: "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/childish.jpg)"}}>
-
-
-                                        </div>
-
-                                        <a className="media-card__footer">Childish Gambino</a>
 
                                     </div>
 

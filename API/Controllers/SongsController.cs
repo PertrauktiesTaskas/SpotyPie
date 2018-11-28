@@ -1,4 +1,5 @@
 ﻿using Database;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.BackEnd;
@@ -29,6 +30,7 @@ namespace API.Controllers
         }
 
         [HttpGet("Songs")]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetSongs()
         {
             try
@@ -43,6 +45,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> Get(int id)
         {
             try
@@ -55,6 +58,28 @@ namespace API.Controllers
             catch (System.Exception ex)
             {
                 return BadRequest(ex);
+            }
+        }
+
+
+        [HttpGet("GetSongAlbum/{id}")]
+        [EnableCors("AllowSpecificOrigin")]
+        public async Task<IActionResult> GetSongAlbum(int id)
+        {
+            try
+            {
+
+                string query = "Select AlbumId as Id from Item where id = " + id;
+                var albumid = await _ctx.Items.FromSql(query).Select(x => new { x.Id }).ToListAsync();
+
+                Album al = await _ctx.Albums.AsNoTracking().Include(x => x.Images).FirstAsync(x => x.Id == albumid.First().Id);
+
+                return Ok(al);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return BadRequest(e.Message);
             }
         }
 
@@ -77,6 +102,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetAllSongs()
         {
             try

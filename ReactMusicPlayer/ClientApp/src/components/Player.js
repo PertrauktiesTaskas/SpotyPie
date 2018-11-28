@@ -26,6 +26,11 @@ class MusicPlayer extends React.Component {
         this.handleMute = this.handleMute.bind(this);
         this.setLoop = this.setLoop.bind(this);
         this.handleProgress = this.handleProgress.bind(this);
+        this.readyToPlay = this.readyToPlay.bind(this);
+    }
+
+    readyToPlay() {
+        this.setState({playing: true});
     }
 
     handleClick(event) {
@@ -225,7 +230,7 @@ class MusicPlayer extends React.Component {
                         </span>
                     </div>
 
-                    <ReactPlayer url='http://spotypie.deveim.com/api/stream/play/542'
+                    <ReactPlayer url={'http://spotypie.deveim.com/api/stream/play/' + this.props.props}
                                  ref={this.ref}
                                  playing={this.state.playing}
                                  controls={true}
@@ -233,6 +238,7 @@ class MusicPlayer extends React.Component {
                                  volume={this.state.volume}
                                  loop={this.state.loop}
                                  muted={this.state.muted}
+                                 onReady={this.readyToPlay.bind(this)}
                                  onStart={this.SetSongInfo.bind(this)}
                                  onProgress={this.handleProgress.bind(this)}/>
 
