@@ -143,7 +143,7 @@ class SideMenuPanel2 extends React.Component {
             let sys_info = await itemService.getSystemInfo();
             console.log("System info", sys_info);
 
-            if (cpuUsage.length > 5) {
+            if (cpuUsage.length > 6) {
                 cpuUsage = cpuUsage.slice(1, cpuUsage.length);
                 cpuUsage.push(sys_info.cU)
             }
@@ -151,7 +151,7 @@ class SideMenuPanel2 extends React.Component {
                 cpuUsage.push(sys_info.cU);
             }
 
-            if (ramUsage.length > 5) {
+            if (ramUsage.length > 6) {
                 ramUsage = ramUsage.slice(1, ramUsage.length);
                 ramUsage.push(sys_info.rU)
             }
@@ -159,7 +159,7 @@ class SideMenuPanel2 extends React.Component {
                 ramUsage.push(sys_info.rU);
             }
 
-            if (cpuTemp.length > 5) {
+            if (cpuTemp.length > 6) {
                 cpuTemp = cpuTemp.slice(1, cpuTemp.length);
                 cpuTemp.push(sys_info.cT)
             }
