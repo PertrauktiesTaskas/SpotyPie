@@ -21,6 +21,8 @@ namespace Database
         int GetCPUUsage();
         int GetRAMUsage();
         int GetCPUTemperature();
+        Task<string> GetLibraryInfo();
         int GetUsedStorage();
+        Task<long> TotalSongLength();
     }
 }

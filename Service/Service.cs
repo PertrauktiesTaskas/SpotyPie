@@ -286,8 +286,33 @@ namespace Services
 
         public async Task<long> TotalSongLength()
         {
-            var l = await _ctx.Items.SumAsync(x => x.DurationMs);
-            return l / 1000;
+            try
+            {
+                var l = await _ctx.Items.SumAsync(x => x.DurationMs);
+                return l / 1000;
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+        }
+
+        public async Task<string> GetLibraryInfo()
+        {
+            try
+            {
+                var songCount = await _ctx.Items.CountAsync(x => !string.IsNullOrWhiteSpace(x.LocalUrl));
+                var artistCount = await _ctx.Artists.CountAsync();
+                var albumCount = await _ctx.Albums.CountAsync();
+                var playlistCount = await _ctx.Playlist.CountAsync();
+                var totalLength = await TotalSongLength(); // in seconds
+
+                return JsonConvert.SerializeObject(new { sC = songCount, arC = artistCount, alC = albumCount, pC = playlistCount, tL = totalLength });
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
         public void Start()

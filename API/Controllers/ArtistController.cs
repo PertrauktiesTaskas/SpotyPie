@@ -30,6 +30,33 @@ namespace API.Controllers
             ct = cts.Token;
         }
 
+        //Search for artists with specified name
+        [HttpPost("/search")]
+        [EnableCors("AllowSpecificOrigin")]
+        public async Task<IActionResult> Search([FromBody] string query)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(query))
+                    return BadRequest("Bad search query");
+
+                var artists = await Task.Factory.StartNew(() =>
+                {
+                    return _ctx.Artists
+                    .AsNoTracking()
+                    .Include(x => x.Images)
+                    .Include(x => x.Songs)
+                    .Where(x => x.Name.Contains(query));
+                });
+
+                return Ok(artists);
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500);
+            }
+        }
+
         // Get artist list
         [HttpGet("Artists")]
         [EnableCors("AllowSpecificOrigin")]

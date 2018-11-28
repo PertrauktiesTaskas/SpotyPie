@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.BackEnd;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,6 +25,31 @@ namespace API.Controllers
             _ctd = ctd;
             cts = new CancellationTokenSource();
             ct = cts.Token;
+        }
+
+        //Search for songs with specified name
+        [HttpPost("/search")]
+        [EnableCors("AllowSpecificOrigin")]
+        public async Task<IActionResult> Search([FromBody] string query)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(query))
+                    return BadRequest("Bad search query");
+
+                var songs = await Task.Factory.StartNew(() =>
+                {
+                    return _ctx.Items
+                    .AsNoTracking()
+                    .Where(x => x.Name.Contains(query));
+                });
+
+                return Ok(songs);
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500);
+            }
         }
 
         [HttpGet("Songs")]
@@ -60,7 +83,6 @@ namespace API.Controllers
                 return BadRequest(ex);
             }
         }
-
 
         [HttpGet("GetSongAlbum/{id}")]
         [EnableCors("AllowSpecificOrigin")]

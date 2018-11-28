@@ -28,6 +28,20 @@ namespace API.Controllers
                 .Build();
         }
 
+        [HttpGet("/library")]
+        [EnableCors("AllowSpecificOrigin")]
+        public async Task<IActionResult> GetLibraryInformation(CancellationToken t)
+        {
+            try
+            {
+                return Ok(await _ctd.GetLibraryInfo());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpGet()]
         [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetSysInformation(CancellationToken t)
