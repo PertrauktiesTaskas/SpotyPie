@@ -7,7 +7,7 @@ import {itemService} from "../Service";
 class Dashboard extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {library_info: []};
     }
 
     async componentDidMount() {
@@ -117,6 +117,10 @@ class Dashboard extends React.Component {
             });
         }
 
+        itemService.getLibraryInfo().then((data) => {
+            this.setState({library_info: data});
+        });
+
         let cpuUsage = [];
         let ramUsage = [];
         let cpuTemp = [];
@@ -177,25 +181,43 @@ class Dashboard extends React.Component {
     }
 
     render() {
+        function AllSongsLength(props) {
+            console.log("Songs length", props.props);
+
+            let length = props.props;
+            let minutes = Math.floor(length / 60);
+            let hours = Math.floor(minutes / 60);
+            let days = Math.floor(hours / 24);
+
+            let finalDays = days;
+            let finalHours = hours - (24 * days);
+            let finalMinutes = minutes - (hours * 60);
+            let finalSeconds = length - (minutes * 60);
+
+            console.log("Days ", finalDays, " Hours ", finalHours, " Minutes ", finalMinutes, " Seconds ", finalSeconds);
+
+            return (<div className="col-sm-4"><i
+                className="far fa-clock"/> Total length: {finalDays}d {finalHours}h {finalMinutes}min {finalSeconds}s
+            </div>);
+        }
+
         return (
             <div style={{height: "100%"}}>
 
                 <div className="col-sm-11 dashboard_section">
                     <div className="section_name">Songs info</div>
+                    <AllSongsLength props={this.state.library_info.tL}/>
                     <div className="col-sm-4">
-                        <div><i className="far fa-clock"/> Total length: 2h 15min</div>
+                        <i className="fas fa-music"/> Songs: {this.state.library_info.sC}
                     </div>
                     <div className="col-sm-4">
-                        <div><i className="fas fa-music"/> Songs: 15</div>
+                        <i className="fas fa-user"/> Artists: {this.state.library_info.arC}
                     </div>
                     <div className="col-sm-4">
-                        <div><i className="fas fa-user-alt"/> Artists: 5</div>
+                        <i className="fas fa-compact-disc"/> Albums: {this.state.library_info.alC}
                     </div>
                     <div className="col-sm-4">
-                        <div><i className="fas fa-compact-disc"/> Albums: 3</div>
-                    </div>
-                    <div className="col-sm-4">
-                        <div><i className="fas fa-list-ul"/> Playlists: 3</div>
+                        <i className="fas fa-list-ul"/> Playlists: {this.state.library_info.pC}
                     </div>
                 </div>
 

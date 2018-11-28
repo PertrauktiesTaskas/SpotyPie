@@ -11,7 +11,9 @@ export const itemService = {
     getSongs,
     getSong,
     getSongAlbum,
-    getSystemInfo
+    getSystemInfo,
+    updateSongPlayCount,
+    getLibraryInfo
 };
 
 async function getAlbums() {
@@ -183,6 +185,22 @@ async function getSystemInfo(){
             console.log(error, 'handleResponse error');
             return error;
         });
+}
+
+function getLibraryInfo(){
+        const requestOptions = {
+            method: 'GET'
+        };
+    return fetch(apiEnd + '/info/library', requestOptions)
+        .then(handleResponse);
+}
+
+function updateSongPlayCount(id){
+    const requestOptions = {
+        method: 'GET'
+    };
+    return fetch(apiEnd + '/Songs/' + id + "/Update", requestOptions)
+        .then(handleResponse);
 }
 
 function handleResponse(response) {

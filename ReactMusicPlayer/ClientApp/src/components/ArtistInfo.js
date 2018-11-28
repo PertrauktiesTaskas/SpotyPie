@@ -132,9 +132,11 @@ class ArtistInfo extends React.Component {
 
         function TopTracks(props) {
 
-            return (<div className="track">
+            console.log("Artist top track", props);
 
-                <div className="track__art">
+            return (<div id={props.props.id - 1} className="track" onClick={props.function}>
+
+                <div id={props.props.id - 1} className="track__art" onClick={props.function}>
 
                     <img
                         src={props.props2[props.index]}
@@ -142,9 +144,9 @@ class ArtistInfo extends React.Component {
 
                 </div>
 
-                <div className="track__number">{props.index + 1}</div>
+                <div id={props.props.id - 1} className="track__number" onClick={props.function}>{props.index + 1}</div>
 
-                <div className="track__title">{props.props.name}</div>
+                <div id={props.props.id - 1} className="track__title" onClick={props.function}>{props.props.name}</div>
 
                 {/*  <div className="track__explicit">
 
@@ -298,7 +300,8 @@ class ArtistInfo extends React.Component {
 
         let top_tracks = this.state.artist_top_tracks.map((top_track, index) => <TopTracks props={top_track}
                                                                                            props2={this.state.top_track_albums}
-                                                                                           index={index}/>);
+                                                                                           index={index}
+                                                                                           function={this.props.function}/>);
 
         let related_artists = this.state.related_artists != null ? this.state.related_artists.map(rel_artist =>
             <RelatedArtists props={rel_artist}/>) : null;

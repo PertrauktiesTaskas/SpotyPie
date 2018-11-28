@@ -183,7 +183,9 @@ class HomePage extends React.Component {
             itemService.getSongAlbum(id).then((data) => {
                 console.log("Playing song album:", data);
                 this.setState({playing_song_album: data});
-            })
+            });
+
+            itemService.updateSongPlayCount(id);
         }
     }
 
