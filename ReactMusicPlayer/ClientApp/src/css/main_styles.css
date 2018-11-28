@@ -169,6 +169,7 @@ body #root {
 
 .content__middle {
     width: 70%;
+    overflow: scroll;
 }
 
 .home_section {
@@ -613,7 +614,8 @@ body #root {
     height: 100%;
     z-index: 0;
     opacity: 0.15;
-    background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/g-eazy.png);
+    /*    background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/g-eazy.png);*/
+    background-color: black;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: top;
@@ -866,7 +868,7 @@ body #root {
 }
 
 .tracks__heading__title {
-    margin-left: 100px;
+    margin-left: 105px;
     width: 44.5%;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -983,6 +985,7 @@ body #root {
 
 .tracks .track:hover {
     background: #282828;
+    cursor: pointer;
 }
 
 .tracks .track:last-child {
@@ -1003,6 +1006,7 @@ body #root {
 .tracks .track__artist {
     margin-left: 30px;
     color: white;
+    width: 165px;
 }
 
 .tracks .track__added {
@@ -1020,7 +1024,7 @@ body #root {
 
 .tracks .track__title {
     width: 45%;
-    margin-left: 110px;
+    margin-left: 20px;
     color: white;
 }
 

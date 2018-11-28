@@ -17,12 +17,9 @@ class AlbumList extends React.Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
-    componentDidMount() {
-        itemService.getAlbums().then((data) => {
-            console.log('Loading albums:', data);
-
-            this.setState({albums: data});
-        });
+    async componentDidMount() {
+        let getAlbums = await itemService.getAlbums();
+            this.setState({albums: getAlbums});
     }
 
     handleClick(event) {
@@ -47,7 +44,7 @@ class AlbumList extends React.Component {
     }
 
     render() {
-        function DisplayAlbum(props, func) {
+        function DisplayAlbum(props) {
 
             var dateFormat = require('dateformat');
 
@@ -98,7 +95,7 @@ class AlbumList extends React.Component {
                                                                      className="fas fa-arrow-left"/>
                     </button>
                     <div className="album_title">{this.state.selected_album.name}</div>
-                    <AlbumSongs props={this.state.selected_album}/>
+                    <AlbumSongs props={this.state.selected_album} function={this.props.props}/>
                 </div>
             );
         }
