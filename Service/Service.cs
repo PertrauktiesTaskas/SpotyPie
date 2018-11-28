@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.BackEnd;
 using Newtonsoft.Json;
+using Service.Helpers;
 using Service.Settings;
 using Services.TagHelpers;
 using System;
@@ -42,6 +43,37 @@ namespace Services
                 fs = null;
                 return false;
             }
+        }
+
+        public string ConvertAudio(string path, int quality)
+        {
+            var outputDir = settings != null ? settings.AudioCachePath : @"/root/MusicCache";
+            if (!string.IsNullOrWhiteSpace(path))
+            {
+                var fileName = Path.GetFileName(path);
+                var outputFileName = Path.GetFileNameWithoutExtension(path) + quality.ToString() + ".mp3";
+
+                if (!File.Exists(outputDir + outputFileName))
+                {
+                    var command = string.Format("ffmpeg -i \"{0}\" -ab {1}k \"{2}\"", path, quality, outputDir + outputFileName);
+                    try
+                    {
+                        var output = command.Bash();
+                        if (File.Exists(outputDir + outputFileName))
+                            return outputDir + outputFileName;
+                        else
+                            return "";
+                    }
+                    catch (Exception ex)
+                    {
+                        return ex.Message;
+                    }
+                }
+                else
+                    return outputDir + outputFileName;
+            }
+            else
+                return "";
         }
 
         public async Task<string> GetAudioPathById(int id)
@@ -222,6 +254,65 @@ namespace Services
             }
 
             return string.Format("{0}/{1}", savedCount, imgList.Count);
+        }
+
+        public int GetCPUUsage()
+        {
+            var output = @"awk -v a=""$(awk '/cpu /{print $2+$4,$2+$4+$5}' / proc / stat; sleep 1)"" '/cpu /{split(a,b,"" ""); print 100*($2+$4-b[1])/($2+$4+$5-b[2])}'  /proc/stat"
+                .Bash();
+            return double.TryParse(output, out double dPercent) ? Convert.ToInt32(dPercent) : -1;
+        }
+
+        public int GetRAMUsage()
+        {
+            var output = "free | awk 'FNR == 3 {print $3/($3+$4)*100}'"
+                .Bash();
+            return double.TryParse(output, out double dPercent) ? Convert.ToInt32(dPercent) : -1;
+        }
+
+        public int GetCPUTemperature()
+        {
+            var output = @"sensors 2>/dev/null | awk '/id 0:/{printf "" % d\n"", $4}'"
+                  .Bash();
+            return int.TryParse(output, out int dPercent) ? dPercent : -1;
+        }
+
+        public int GetUsedStorage()
+        {
+            var output = "df --output=pcent | awk -F'%' 'NR==2{print $1}'"
+                  .Bash();
+            return int.TryParse(output, out int dPercent) ? dPercent : -1;
+        }
+
+        public async Task<long> TotalSongLength()
+        {
+            try
+            {
+                var l = await _ctx.Items.SumAsync(x => x.DurationMs);
+                return l / 1000;
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+        }
+
+        public async Task<string> GetLibraryInfo()
+        {
+            try
+            {
+                var songCount = await _ctx.Items.CountAsync(x => !string.IsNullOrWhiteSpace(x.LocalUrl));
+                var artistCount = await _ctx.Artists.CountAsync();
+                var albumCount = await _ctx.Albums.CountAsync();
+                var playlistCount = await _ctx.Playlist.CountAsync();
+                var totalLength = await TotalSongLength(); // in seconds
+
+                return JsonConvert.SerializeObject(new { sC = songCount, arC = artistCount, alC = albumCount, pC = playlistCount, tL = totalLength });
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
         public void Start()

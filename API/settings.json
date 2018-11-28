@@ -1,0 +1,7 @@
+{
+  "AudioStoragePath": "/root/Music/",
+  "AudioCachePath": "/root/MusicCache/",
+  "CachePath": "/var/www/cache/",
+  "FirstUse": "true",
+  "StreamQuality": "320"
+}

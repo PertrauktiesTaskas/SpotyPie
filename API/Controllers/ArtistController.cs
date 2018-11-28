@@ -1,4 +1,5 @@
 ﻿using Database;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.BackEnd;
@@ -29,8 +30,36 @@ namespace API.Controllers
             ct = cts.Token;
         }
 
+        //Search for artists with specified name
+        [HttpPost("/search")]
+        [EnableCors("AllowSpecificOrigin")]
+        public async Task<IActionResult> Search([FromBody] string query)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(query))
+                    return BadRequest("Bad search query");
+
+                var artists = await Task.Factory.StartNew(() =>
+                {
+                    return _ctx.Artists
+                    .AsNoTracking()
+                    .Include(x => x.Images)
+                    .Include(x => x.Songs)
+                    .Where(x => x.Name.Contains(query));
+                });
+
+                return Ok(artists);
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500);
+            }
+        }
+
         // Get artist list
         [HttpGet("Artists")]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetArtists()
         {
             try
@@ -47,6 +76,7 @@ namespace API.Controllers
 
         //Get only artist info and images
         [HttpGet("{id}")]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetArtist(int id)
         {
             try
@@ -65,6 +95,7 @@ namespace API.Controllers
         //Return artist top 15 tracks
         [Route("{id}/top-tracks")]
         [HttpGet]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetArtistTopTracks(int id)
         {
             try
@@ -85,6 +116,7 @@ namespace API.Controllers
 
         [Route("Related/{id}")]
         [HttpGet]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetRelatedArtists(int id)
         {
             try
@@ -110,6 +142,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetAllArtists()
         {
             try
@@ -140,6 +173,7 @@ namespace API.Controllers
 
         [Route("{id}/Albums")]
         [HttpGet]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetArtistAlbums(int id)
         {
             try

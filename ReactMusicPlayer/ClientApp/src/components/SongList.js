@@ -1,9 +1,65 @@
 import React from "react";
+import {itemService} from "../Service";
 
 class SongList extends React.Component {
+    constructor(props) {
+        super(props);
+        console.log(props);
 
+        this.state = {
+            songs: [],
+            songCount: 0
+        };
+
+    }
+
+    componentDidMount() {
+        itemService.getSongs().then((data) => {
+            console.log('Loading songs:', data);
+            this.setState({
+                songs: data,
+                songCount: data.length
+            });
+        });
+    }
 
     render() {
+
+        function SingleSong(props) {
+
+            let explicit = props.props.explicit ?
+                <div className="track__explicit">
+                    <span className="label">Explicit</span>
+                </div> : null;
+
+            let duration = props.props.DurationMs / 1000;
+            let minutes = Math.floor(duration / 60);
+            let seconds = Math.floor(duration - minutes * 60);
+
+
+            let disp_duration = seconds >= 10 ?
+                <div className="track__length"><i className="far fa-clock"/> {minutes + ':' + seconds}</div> :
+                <div className="track__length"><i className="far fa-clock"/> {minutes + ':0' + seconds}</div>;
+
+            return (
+                <div id={parseInt(props.index)} className="track" onClick={props.function}>
+
+                    <div id={parseInt(props.index)} className="track__number">{props.index + 1}</div>
+
+                    <div id={parseInt(props.index)} className="track__artist">{props.props.Artist}</div>
+
+                    <div id={parseInt(props.index)} className="track__title">{props.props.Name}</div>
+
+                    <div id={parseInt(props.index)} className="track__length"><i
+                        className="far fa-clock"/>{disp_duration}</div>
+
+                </div>
+            );
+        }
+
+        let songs = this.state.songs.map((song, index) => <SingleSong props={song} index={index}
+                                                                      function={this.props.props}/>)
+
         return (
             <div style={{height: "100%"}}>
 
@@ -17,9 +73,7 @@ class SongList extends React.Component {
 
                         <div className="tracks__heading__title">Song</div>
 
-                        <div className="tracks__heading__album">Album</div>
-
-                        <div className="tracks__heading__length">
+                        <div className="tracks__heading__length" style={{marginRight: "20px"}}>
 
                             <i className="far fa-clock"/>
 
@@ -27,121 +81,7 @@ class SongList extends React.Component {
 
                     </div>
 
-                    <div className="track">
-
-                        <div className="track__number">1</div>
-
-                        <div className="track__artist">G-Eazy</div>
-
-                        <div className="track__title">Intro</div>
-
-                        <div className="track__album">When It's Dark Out</div>
-
-                        <div className="track__explicit" style={{marginLeft: "5%"}}>
-
-                            <span className="label">Explicit</span>
-
-                        </div>
-
-                        <div className="track__length"><i className="far fa-clock"/> 1:11</div>
-
-                    </div>
-
-                    <div className="track">
-
-                        <div className="track__number">2</div>
-
-                        <div className="track__artist">G-Eazy</div>
-
-                        <div className="track__title">Random</div>
-
-                        <div className="track__album">When It's Dark Out</div>
-
-                        <div className="track__explicit" style={{marginLeft: "5%"}}>
-
-                            <span className="label">Explicit</span>
-
-                        </div>
-
-                        <div className="track__length"><i className="far fa-clock"/> 3:00</div>
-
-                    </div>
-
-                    <div className="track">
-
-                        <div className="track__number">3</div>
-
-                        <div className="track__artist">G-Eazy</div>
-
-                        <div className="track__title featured">
-
-                            <span className="title">Me, Myself & I</span>
-                            <span className="feature">Bebe Rexha</span>
-
-                        </div>
-
-                        <div className="track__album">When It's Dark Out</div>
-
-                        <div className="track__explicit" style={{marginLeft: "5%"}}>
-
-                            <span className="label">Explicit</span>
-
-                        </div>
-
-                        <div className="track__length"><i className="far fa-clock"/> 4:11</div>
-
-                    </div>
-
-                    <div className="track">
-
-                        <div className="track__number">4</div>
-
-                        <div className="track__artist">G-Eazy</div>
-
-                        <div className="track__title featured">
-
-                            <span className="title">One Of Them</span>
-                            <span className="feature">Big Sean</span>
-
-                        </div>
-
-                        <div className="track__album">When It's Dark Out</div>
-
-                        <div className="track__explicit" style={{marginLeft: "5%"}}>
-
-                            <span className="label">Explicit</span>
-
-                        </div>
-
-                        <div className="track__length"><i className="far fa-clock"/> 3:20</div>
-
-                    </div>
-
-                    <div className="track">
-
-                        <div className="track__number">5</div>
-
-                        <div className="track__artist">G-Eazy</div>
-
-                        <div className="track__title featured">
-
-                            <span className="title">Drifting</span>
-                            <span className="feature">Chris Brown</span>
-                            <span className="feature">Tory Lanez</span>
-
-                        </div>
-
-                        <div className="track__album">When It's Dark Out</div>
-
-                        <div className="track__explicit" style={{marginLeft: "5%"}}>
-
-                            <span className="label">Explicit</span>
-
-                        </div>
-
-                        <div className="track__length"><i className="far fa-clock"/> 4:33</div>
-
-                    </div>
+                    {songs}
 
                 </div>
 

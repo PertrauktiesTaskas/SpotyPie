@@ -12,6 +12,8 @@ import FilesList from "./FilesList";
 import NewPlaylist from "./NewPlaylist";
 import Dashboard from "./Dashboard";
 import UploadSong from "./UploadSong";
+import {itemService} from "../Service";
+import DefaultAlbum from '../img/default-album-artwork.png';
 
 class HomePage extends React.Component {
     constructor(props) {
@@ -26,10 +28,28 @@ class HomePage extends React.Component {
             show_files_list: false,
             show_playlist_add: false,
             show_dashboard: false,
-            upload_song: false
+            upload_song: false,
+            playing_song_id: "",
+            playing_song: "",
+            playing_song_album: "",
+            show_dashboard_btn: false
         };
 
         this.handleClick = this.handleClick.bind(this);
+        this.handlePlay = this.handlePlay.bind(this);
+    }
+
+    componentDidMount() {
+        this.updateDimensions();
+        window.addEventListener("resize", this.updateDimensions.bind(this));
+    }
+
+    updateDimensions() {
+        if (window.innerWidth <= 1400) {
+            this.setState({show_dashboard_btn: true});
+        } else {
+            this.setState({show_dashboard_btn: false});
+        }
     }
 
     handleClick(event) {
@@ -146,20 +166,44 @@ class HomePage extends React.Component {
         }
     }
 
+    handlePlay(event) {
+
+        let id = parseInt(event.target.id) + 1;
+
+        this.setState({playing_song_id: id});
+
+        console.log("Playing song id", id);
+
+        if (id != null) {
+            itemService.getSong(id).then((data) => {
+                console.log("Playing song info:", data);
+                this.setState({playing_song: data});
+            });
+
+            itemService.getSongAlbum(id).then((data) => {
+                console.log("Playing song album:", data);
+                this.setState({playing_song_album: data});
+            });
+
+            itemService.updateSongPlayCount(id);
+        }
+    }
+
+
     render() {
-        let show_window = function (props) {
+        let show_window = function (props, func) {
             console.log("Props", props);
             if (props.show_main_page) {
                 return <MainContent/>;
             }
             else if (props.show_song_list) {
-                return <SongList/>;
+                return <SongList props={func}/>;
             }
             else if (props.show_album_list) {
-                return <AlbumList/>;
+                return <AlbumList props={func}/>;
             }
             else if (props.show_artist_list) {
-                return <ArtistList/>;
+                return <ArtistList props={func}/>;
             }
             else if (props.show_files_list) {
                 return <FilesList/>;
@@ -175,6 +219,44 @@ class HomePage extends React.Component {
             }
         };
 
+        function PlayingSongInfo(props) {
+
+            let display_album_art = props.props2.images != null ? props.props2.images[0].url : {DefaultAlbum};
+
+            if (props.props) {
+                return (<section className="playing">
+                    <div className="playing__art">
+                        <img src={display_album_art} alt=""/>
+                    </div>
+                    <div className="playing__song">
+                        <span className="playing__song__name"><i className="fas fa-music"/> {props.props.name}</span>
+                        <span className="playing__song__artist"><i
+                            className="fas fa-user"/> {JSON.parse(props.props.artists)[0].Name}</span>
+                        <span className="playing__song__album"><i className="fas fa-compact-disc"/> {props.props2.name}</span>
+                    </div>
+
+                </section>);
+            }
+            else {
+                return (<section className="playing">
+                    <div className="playing__art">
+                        <img src={DefaultAlbum} alt=""/>
+                    </div>
+                    <div className="playing__song">
+                        <span className="playing__song__name"><i className="fas fa-music"/> </span>
+                        <span className="playing__song__artist"><i className="fas fa-user"/> </span>
+                        <span className="playing__song__album"><i className="fas fa-compact-disc"/> </span>
+                    </div>
+
+                </section>);
+            }
+        }
+
+        let show_dash_btn = this.state.show_dashboard_btn ?
+            <a href="#" className="navigation__list__item" onClick={this.handleClick.bind(this)}>
+                <i className=" fas fa-tachometer-alt"/>
+                <span id="dashboard">Dashboard</span>
+            </a> : null;
 
         return (<div style={{height: "100%"}}>
             <HeaderBar/>
@@ -191,10 +273,7 @@ class HomePage extends React.Component {
                                     <i className="fas fa-home"/>
                                     <span id="home">Home</span>
                                 </a>
-                                <a href="#" className="navigation__list__item" onClick={this.handleClick.bind(this)}>
-                                    <i className=" fas fa-tachometer-alt"/>
-                                    <span id="dashboard">Dashboard</span>
-                                </a>
+                                {show_dash_btn}
                                 <a href="#" className="navigation__list__item" onClick={this.handleClick.bind(this)}>
                                     <i className="fas fa-upload"/>
                                     <span id="upload">Upload song</span>
@@ -256,28 +335,18 @@ class HomePage extends React.Component {
 
                     </section>
 
-                    <section className="playing">
-                        <div className="playing__art">
-                            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/cputh.jpg" alt="Album Art"/>
-                        </div>
-                        <div className="playing__song">
-                            <span className="playing__song__name"><i className="fas fa-music"/> Some Type of Love</span>
-                            <span className="playing__song__artist"><i className="fas fa-user"/> Charlie Puth</span>
-                            <span className="playing__song__album"><i className="fas fa-compact-disc"/> Album</span>
-                        </div>
-
-                    </section>
+                    <PlayingSongInfo props={this.state.playing_song} props2={this.state.playing_song_album}/>
 
                 </div>
 
                 <div className="content__middle">
-                    {show_window(this.state)}
+                    {show_window(this.state, this.handlePlay.bind(this))}
                 </div>
 
                 {/*Right side panel*/}
                 <SideMenuPanel2/>
             </section>
-            <MusicPlayer/>
+            <MusicPlayer props={this.state.playing_song_id}/>
         </div>);
     }
 }
