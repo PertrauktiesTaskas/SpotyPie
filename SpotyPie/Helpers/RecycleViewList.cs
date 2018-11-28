@@ -36,12 +36,15 @@ namespace SpotyPie.Helpers
 
         public void Add(T item)
         {
-            mItems.Add(item);
-
-            if (Adapter != null)
+            Application.SynchronizationContext.Post(_ =>
             {
-                Adapter.NotifyItemInserted(Count);
-            }
+                mItems.Add(item);
+
+                if (Adapter != null)
+                {
+                    Adapter.NotifyItemInserted(Count);
+                }
+            }, null);
         }
 
         public void Remove(int position)
@@ -67,9 +70,12 @@ namespace SpotyPie.Helpers
 
         public void clear()
         {
-            int size = mItems.Count;
-            Erase();
-            mAdapter.NotifyItemRangeRemoved(0, size);
+            Application.SynchronizationContext.Post(_ =>
+            {
+                int size = mItems.Count;
+                Erase();
+                mAdapter.NotifyItemRangeRemoved(0, size);
+            }, null);
         }
     }
 }
