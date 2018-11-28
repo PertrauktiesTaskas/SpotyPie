@@ -10,8 +10,8 @@ export const itemService = {
     getArtistAlbums,
     getSongs,
     getSong,
-    getSongAlbum
-
+    getSongAlbum,
+    getSystemInfo
 };
 
 async function getAlbums() {
@@ -152,6 +152,25 @@ async function getSongAlbum(id) {
     };
 
     let result = await fetch(apiEnd + '/Songs/GetSongAlbum/' + id, requestOptions);
+
+    return result.text().then(data => {
+            if (result.ok) {
+                let parsed = data && JSON.parse(data);
+                return parsed
+            }
+            return undefined;
+        },
+        error => {
+            console.log(error, 'handleResponse error');
+            return error;
+        });
+}
+
+async function getSystemInfo(){
+    const requestOptions = {
+        method: 'GET'
+    };
+    let result = await fetch(apiEnd + '/info', requestOptions);
 
     return result.text().then(data => {
             if (result.ok) {
