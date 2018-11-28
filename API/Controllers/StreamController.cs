@@ -34,7 +34,7 @@ namespace API.Controllers
         [HttpGet("test")]
         public IActionResult Test(CancellationToken t)
         {
-            return Ok(Environment.CurrentDirectory);
+            return Ok(settings.StreamQuality);
         }
 
         [HttpGet("play/{id}")]
@@ -47,11 +47,29 @@ namespace API.Controllers
 
                 if (!string.IsNullOrWhiteSpace(path))
                 {
-                    if (_ctd.SetAudioPlaying(id))
+                    if (settings != null && settings.StreamQuality < 1000)
                     {
-                        return _ctd.OpenFile(path, out FileStream fs)
-                            ? File(fs, new MediaTypeHeaderValue("audio/mpeg").MediaType, true)
-                            : (IActionResult)BadRequest();
+                        if (_ctd.SetAudioPlaying(id))
+                        {
+                            var qualityPath = _ctd.ConvertAudio(path, settings.StreamQuality);
+                            if (string.IsNullOrWhiteSpace(qualityPath))
+                                return _ctd.OpenFile(path, out FileStream fs)
+                                    ? File(fs, new MediaTypeHeaderValue("audio/mpeg").MediaType, true)
+                                    : (IActionResult)BadRequest();
+                            else
+                                return _ctd.OpenFile(qualityPath, out FileStream fs)
+                                    ? File(fs, new MediaTypeHeaderValue("audio/mpeg").MediaType, true)
+                                    : (IActionResult)BadRequest();
+                        }
+                    }
+                    else
+                    {
+                        if (_ctd.SetAudioPlaying(id))
+                        {
+                            return _ctd.OpenFile(path, out FileStream fs)
+                                ? File(fs, new MediaTypeHeaderValue("audio/mpeg").MediaType, true)
+                                : (IActionResult)BadRequest();
+                        }
                     }
 
                     return BadRequest("Cannot find path specified/File not playable");

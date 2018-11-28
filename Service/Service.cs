@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.BackEnd;
 using Newtonsoft.Json;
+using Service.Helpers;
 using Service.Settings;
 using Services.TagHelpers;
 using System;
@@ -42,6 +43,37 @@ namespace Services
                 fs = null;
                 return false;
             }
+        }
+
+        public string ConvertAudio(string path, int quality)
+        {
+            var outputDir = settings != null ? settings.AudioCachePath : @"/root/MusicCache";
+            if (!string.IsNullOrWhiteSpace(path))
+            {
+                var fileName = Path.GetFileName(path);
+                var outputFileName = Path.GetFileNameWithoutExtension(path) + quality.ToString() + ".mp3";
+
+                if (!File.Exists(outputDir + outputFileName))
+                {
+                    var command = string.Format("ffmpeg -i \"{0}\" -ab {1}k \"{2}\"", path, quality, outputDir + outputFileName);
+                    try
+                    {
+                        var output = command.Bash();
+                        if (File.Exists(outputDir + outputFileName))
+                            return outputDir + outputFileName;
+                        else
+                            return "";
+                    }
+                    catch (Exception ex)
+                    {
+                        return ex.Message;
+                    }
+                }
+                else
+                    return outputDir + outputFileName;
+            }
+            else
+                return "";
         }
 
         public async Task<string> GetAudioPathById(int id)
