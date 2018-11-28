@@ -257,4 +257,11 @@
         app:layout_constraintEnd_toStartOf="@+id/total_song_time"
         app:layout_constraintStart_toEndOf="@+id/current_song_time" />
 
+	<FrameLayout
+        android:id="@+id/player_frame"
+        android:translationX="1000dp"
+        android:background="@color/greylight"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </android.support.constraint.ConstraintLayout>

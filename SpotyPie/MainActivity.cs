@@ -57,7 +57,7 @@ namespace SpotyPie
             Browse = new Browse();
             Search = new Search();
             Library = new Library();
-            Player = new Player();
+            Player = new Player.Player();
             Album = new AlbumFragment();
             Artist = new ArtistFragment();
 

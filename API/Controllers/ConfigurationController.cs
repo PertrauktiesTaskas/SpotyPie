@@ -1,5 +1,6 @@
 ﻿using Config.Net;
 using Database;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Service.Settings;
 using System;
@@ -28,6 +29,7 @@ namespace API.Controllers
         }
 
         [HttpPost("changeQuality")]
+        [EnableCors("AllowSpecificOrigin")]
         public IActionResult ChangeQuality([FromBody] int bits, CancellationToken t)
         {
             try
@@ -42,6 +44,7 @@ namespace API.Controllers
         }
 
         [HttpGet("configFinshed")]
+        [EnableCors("AllowSpecificOrigin")]
         public IActionResult FinishConfig(CancellationToken t)
         {
             try
@@ -56,6 +59,7 @@ namespace API.Controllers
         }
 
         [HttpPost("changeCachePath")]
+        [EnableCors("AllowSpecificOrigin")]
         public IActionResult ChangeCachePath([FromBody] string path, CancellationToken t)
         {
             try
@@ -70,6 +74,7 @@ namespace API.Controllers
         }
 
         [HttpPost("changeAudioPath")]
+        [EnableCors("AllowSpecificOrigin")]
         public IActionResult ChangeAudioPath([FromBody] string path, CancellationToken t)
         {
             try
@@ -84,6 +89,7 @@ namespace API.Controllers
         }
 
         [HttpGet("ClearImages")]
+        [EnableCors("AllowSpecificOrigin")]
         public IActionResult ClearImages(CancellationToken t)
         {
             try
@@ -98,6 +104,7 @@ namespace API.Controllers
         }
 
         [HttpGet("SyncImages")]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> SyncronizeImages(CancellationToken t)
         {
             try

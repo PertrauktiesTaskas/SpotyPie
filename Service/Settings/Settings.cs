@@ -5,10 +5,13 @@ namespace Service.Settings
 {
     public interface ISettings
     {
-        [Option(DefaultValue = @"\root\Audio\")]
+        [Option(DefaultValue = @"/root/Music/")]
         string AudioStoragePath { get; set; }
 
-        [Option(DefaultValue = @"\var\www\cache\")]
+        [Option(DefaultValue = @"/root/MusicCache/")]
+        string AudioCachePath { get; set; }
+
+        [Option(DefaultValue = @"/var/www/cache/")]
         string CachePath { get; set; }
 
         [Option(DefaultValue = true)]

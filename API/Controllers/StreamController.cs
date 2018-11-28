@@ -34,7 +34,7 @@ namespace API.Controllers
         [HttpGet("test")]
         public IActionResult Test(CancellationToken t)
         {
-            return Ok(Environment.CurrentDirectory);
+            return Ok(settings.StreamQuality);
         }
 
         [HttpGet("play/{id}")]
@@ -47,11 +47,29 @@ namespace API.Controllers
 
                 if (!string.IsNullOrWhiteSpace(path))
                 {
-                    if (_ctd.SetAudioPlaying(id))
+                    if (settings != null && settings.StreamQuality < 1000)
                     {
-                        return _ctd.OpenFile(path, out FileStream fs)
-                            ? File(fs, new MediaTypeHeaderValue("audio/mpeg").MediaType, true)
-                            : (IActionResult)BadRequest();
+                        if (_ctd.SetAudioPlaying(id))
+                        {
+                            var qualityPath = _ctd.ConvertAudio(path, settings.StreamQuality);
+                            if (string.IsNullOrWhiteSpace(qualityPath))
+                                return _ctd.OpenFile(path, out FileStream fs)
+                                    ? File(fs, new MediaTypeHeaderValue("audio/mpeg").MediaType, true)
+                                    : (IActionResult)BadRequest();
+                            else
+                                return _ctd.OpenFile(qualityPath, out FileStream fs)
+                                    ? File(fs, new MediaTypeHeaderValue("audio/mpeg").MediaType, true)
+                                    : (IActionResult)BadRequest();
+                        }
+                    }
+                    else
+                    {
+                        if (_ctd.SetAudioPlaying(id))
+                        {
+                            return _ctd.OpenFile(path, out FileStream fs)
+                                ? File(fs, new MediaTypeHeaderValue("audio/mpeg").MediaType, true)
+                                : (IActionResult)BadRequest();
+                        }
                     }
 
                     return BadRequest("Cannot find path specified/File not playable");
@@ -61,7 +79,7 @@ namespace API.Controllers
             }
             catch (System.Exception ex)
             {
-                return BadRequest(ex.InnerException);
+                return StatusCode(500, ex.InnerException);
             }
         }
 
@@ -73,7 +91,8 @@ namespace API.Controllers
                 t.ThrowIfCancellationRequested();
                 //"C:\Users\lukas\Source\Repos\SpotyPie\API\music.flac"
                 //"/root/Music/" + file + ".flac"
-                return _ctd.OpenFile(settings.AudioStoragePath + file + ".flac", out FileStream fs)
+                string aPath = settings != null ? settings.AudioStoragePath : "/root/Music/";
+                return _ctd.OpenFile(aPath + file + ".flac", out FileStream fs)
                     ? File(fs, new MediaTypeHeaderValue("audio/mpeg").MediaType, true)
                     : (IActionResult)BadRequest();
             }

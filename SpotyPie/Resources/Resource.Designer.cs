@@ -4542,28 +4542,31 @@ namespace SpotyPie
 			public const int player = 2130968652;
 			
 			// aapt resource value: 0x7f04004d
-			public const int search_layout = 2130968653;
+			public const int player_song_list = 2130968653;
 			
 			// aapt resource value: 0x7f04004e
-			public const int select_dialog_item_material = 2130968654;
+			public const int search_layout = 2130968654;
 			
 			// aapt resource value: 0x7f04004f
-			public const int select_dialog_multichoice_material = 2130968655;
+			public const int select_dialog_item_material = 2130968655;
 			
 			// aapt resource value: 0x7f040050
-			public const int select_dialog_singlechoice_material = 2130968656;
+			public const int select_dialog_multichoice_material = 2130968656;
 			
 			// aapt resource value: 0x7f040051
-			public const int shuffle_sticky = 2130968657;
+			public const int select_dialog_singlechoice_material = 2130968657;
 			
 			// aapt resource value: 0x7f040052
-			public const int song_list_rv = 2130968658;
+			public const int shuffle_sticky = 2130968658;
 			
 			// aapt resource value: 0x7f040053
-			public const int support_simple_spinner_dropdown_item = 2130968659;
+			public const int song_list_rv = 2130968659;
 			
 			// aapt resource value: 0x7f040054
-			public const int tooltip = 2130968660;
+			public const int support_simple_spinner_dropdown_item = 2130968660;
+			
+			// aapt resource value: 0x7f040055
+			public const int tooltip = 2130968661;
 			
 			static Layout()
 			{
