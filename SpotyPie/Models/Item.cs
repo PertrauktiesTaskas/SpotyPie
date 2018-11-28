@@ -30,5 +30,7 @@ namespace SpotyPie
 
         public DateTime LastActiveTime { get; set; }
 
+        public bool Playing { get; set; }
+
     }
 }
