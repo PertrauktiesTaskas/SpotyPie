@@ -36,6 +36,33 @@ namespace API.Controllers
             return Ok();
         }
 
+        //Search for albums with specified name
+        [HttpPost("/search")]
+        [EnableCors("AllowSpecificOrigin")]
+        public async Task<IActionResult> Search([FromBody] string query)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(query))
+                    return BadRequest("Bad search query");
+
+                var albums = await Task.Factory.StartNew(() =>
+                {
+                    return _ctx.Albums
+                    .AsNoTracking()
+                    .Include(x => x.Images)
+                    .Include(x => x.Songs)
+                    .Where(x => x.Name.Contains(query));
+                });
+
+                return Ok(albums);
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500);
+            }
+        }
+
         //Returns full Album info without songs
         [HttpGet("{id}")]
         [EnableCors("AllowSpecificOrigin")]
@@ -162,7 +189,6 @@ namespace API.Controllers
                 return BadRequest(e.Message);
             }
         }
-
 
         //Return 6 oldes albums
         [Route("Old")]
