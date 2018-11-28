@@ -13,7 +13,8 @@ export const itemService = {
     getSongAlbum,
     getSystemInfo,
     updateSongPlayCount,
-    getLibraryInfo
+    getLibraryInfo,
+    uploadSong
 };
 
 async function getAlbums() {
@@ -201,6 +202,16 @@ function updateSongPlayCount(id){
     };
     return fetch(apiEnd + '/Songs/' + id + "/Update", requestOptions)
         .then(handleResponse);
+}
+
+function uploadSong(data){
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'multipart/form-data'},
+        body: data
+    };
+
+    return fetch(apiEnd + "/upload", requestOptions);
 }
 
 function handleResponse(response) {
