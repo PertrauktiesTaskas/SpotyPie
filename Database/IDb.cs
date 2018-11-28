@@ -18,6 +18,9 @@ namespace Database
         Task<string> GetSongList();
         Task<string> GetArtistList();
         Task<List<Album>> GetAlbumsByArtist(int id);
-
+        int GetCPUUsage();
+        int GetRAMUsage();
+        int GetCPUTemperature();
+        int GetUsedStorage();
     }
 }

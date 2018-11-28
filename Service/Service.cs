@@ -256,6 +256,34 @@ namespace Services
             return string.Format("{0}/{1}", savedCount, imgList.Count);
         }
 
+        public int GetCPUUsage()
+        {
+            var output = @"awk -v a=""$(awk '/cpu /{print $2+$4,$2+$4+$5}' / proc / stat; sleep 1)"" '/cpu /{split(a,b,"" ""); print 100*($2+$4-b[1])/($2+$4+$5-b[2])}'  /proc/stat"
+                .Bash();
+            return double.TryParse(output, out double dPercent) ? Convert.ToInt32(dPercent) : -1;
+        }
+
+        public int GetRAMUsage()
+        {
+            var output = "free | awk 'FNR == 3 {print $3/($3+$4)*100}'"
+                .Bash();
+            return double.TryParse(output, out double dPercent) ? Convert.ToInt32(dPercent) : -1;
+        }
+
+        public int GetCPUTemperature()
+        {
+            var output = @"sensors 2>/dev/null | awk '/id 0:/{printf "" % d\n"", $4}'"
+                  .Bash();
+            return int.TryParse(output, out int dPercent) ? dPercent : -1;
+        }
+
+        public int GetUsedStorage()
+        {
+            var output = "df --output=pcent | awk -F'%' 'NR==2{print $1}'"
+                  .Bash();
+            return int.TryParse(output, out int dPercent) ? dPercent : -1;
+        }
+
         public void Start()
         {
             StartAdding();
