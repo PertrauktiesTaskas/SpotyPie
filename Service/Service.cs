@@ -284,6 +284,12 @@ namespace Services
             return int.TryParse(output, out int dPercent) ? dPercent : -1;
         }
 
+        public async Task<long> TotalSongLength()
+        {
+            var l = await _ctx.Items.SumAsync(x => x.DurationMs);
+            return l / 1000;
+        }
+
         public void Start()
         {
             StartAdding();
