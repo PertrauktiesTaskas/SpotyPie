@@ -7,7 +7,8 @@ class UploadSong extends React.Component {
         super(props);
 
         this.state = {
-            fileName: ""
+            fileName: "",
+            message: ""
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -28,10 +29,14 @@ class UploadSong extends React.Component {
 
         /*console.log("Data", data.entries());*/
 
-        itemService.uploadSong(data);
+        itemService.uploadSong(data).then(() => {
+            this.setState({message: "Song successfully uploaded"});
+        });
     }
 
     handleChange() {
+        this.setState({message: ""});
+
         let input = document.getElementById("file-upload");
         var file = input.value.split("\\");
         var fileName = file[file.length - 1];
@@ -41,6 +46,7 @@ class UploadSong extends React.Component {
     render() {
 
         let file = this.state.fileName != null ? <div className="file-name">{this.state.fileName}</div> : null;
+        let success = this.state.message != null ? <div className="file-name">{this.state.message}</div> : null;
 
         return (
             <div style={{height: "100%"}}>
@@ -49,10 +55,13 @@ class UploadSong extends React.Component {
                     <div className="upload_title">Upload a song</div>
                     {file}
                     <label className="custom-file-upload">
-                        <input type="file" id="file-upload" onChange={this.handleChange.bind(this)} ref={(ref) => { this.uploadInput = ref; }}/>
+                        <input type="file" id="file-upload" onChange={this.handleChange.bind(this)} ref={(ref) => {
+                            this.uploadInput = ref;
+                        }}/>
                         Choose file
                     </label>
                     <input className="submit_btn" type="submit" value="Submit"/>
+                    {success}
                 </form>
             </div>
 
