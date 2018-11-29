@@ -1,4 +1,5 @@
 const apiEnd = 'http://spotypie.deveim.com/api';
+/*const apiEnd = 'https://localhost:9876/api';*/
 
 export const itemService = {
     getAlbums,

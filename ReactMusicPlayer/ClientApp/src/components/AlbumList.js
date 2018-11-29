@@ -81,7 +81,7 @@ class AlbumList extends React.Component {
 
         if (this.state.show_album_list) {
             return (
-                <div style={{height: "100%", overflow: "scroll"}}>
+                <div style={{height: "100%"}}>
 
 
                     {album}
