@@ -20,7 +20,13 @@ class UploadSong extends React.Component {
         const data = new FormData();
         data.append('file', this.uploadInput.files[0]);
 
-        console.log("Data", data);
+        /*console.log("Upload file", this.uploadInput.files[0]);
+
+        for (var pair of data.entries()) {
+            console.log("Data", pair);
+        }*/
+
+        /*console.log("Data", data.entries());*/
 
         itemService.uploadSong(data);
     }

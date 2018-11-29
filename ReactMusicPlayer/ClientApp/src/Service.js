@@ -208,7 +208,7 @@ function updateSongPlayCount(id){
 function uploadSong(data){
     const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'multipart/form-data'},
+/*        headers: { 'Content-Type': 'multipart/form-data'},*/
         body: data
     };
 
