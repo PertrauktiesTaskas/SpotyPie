@@ -79,6 +79,11 @@ namespace API.Controllers
                     .Include(x => x.Images)
                     .FirstOrDefaultAsync(x => x.Id == id);
 
+                _ctx.Update(album);
+                album.Popularity++;
+                album.LastActiveTime = DateTime.Now;
+                _ctx.SaveChanges();
+
                 return Ok(album);
             }
             catch (System.Exception ex)
@@ -139,6 +144,11 @@ namespace API.Controllers
                 var data = await _ctx.Albums
                     .Include(x => x.Songs).Include(x => x.Images)
                     .FirstOrDefaultAsync(x => x.Id == id);
+
+                _ctx.Update(data);
+                data.Popularity++;
+                data.LastActiveTime = DateTime.Now;
+                _ctx.SaveChanges();
 
                 return Ok(data);
             }

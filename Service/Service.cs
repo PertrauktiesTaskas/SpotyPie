@@ -38,7 +38,7 @@ namespace Services
                 fs = File.OpenRead(path);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 fs = null;
                 return false;
@@ -83,7 +83,7 @@ namespace Services
                 var file = await _ctx.Items.FirstOrDefaultAsync(x => x.Id == id);
                 return file.IsPlayable ? file.LocalUrl : string.Empty;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "";
             }
@@ -241,15 +241,29 @@ namespace Services
             }
         }
 
-        public bool SetAudioPlaying(int id)
+        public async Task<bool> SetAudioPlaying(int id, int artId, int albId, int plId)
         {
             try
             {
-                //var audio = _ctx.NowPlaying.Add(id);
+                var song = await _ctx.Items.FirstOrDefaultAsync(x => x.Id == id);
+
+                _ctx.CurrentSong.Add(new CurrentSong
+                {
+                    SongId = id,
+                    Name = song.Name,
+                    DurationMs = song.DurationMs,
+                    ImageUrl = song.ImageUrl,
+                    LocalUrl = song.LocalUrl,
+                    CurrentMs = 0,
+                    ArtistId = artId,
+                    AlbumId = albId,
+                    PlaylistId = plId
+                });
+
                 _ctx.SaveChanges();
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -273,7 +287,7 @@ namespace Services
 
                 return JsonConvert.SerializeObject(list);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -293,7 +307,7 @@ namespace Services
 
                 return JsonConvert.SerializeObject(list);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -308,7 +322,7 @@ namespace Services
                     .FirstOrDefaultAsync(x => x.Id == id);
                 return albums.Albums;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -360,7 +374,7 @@ namespace Services
 
         public int GetCPUUsage()
         {
-            var output = @"awk -v a=""$(awk '/cpu /{print $2+$4,$2+$4+$5}' / proc / stat; sleep 1)"" '/cpu /{split(a,b,"" ""); print 100*($2+$4-b[1])/($2+$4+$5-b[2])}'  /proc/stat"
+            var output = @"top -b -n1 | grep ""Cpu(s)"" | awk '{print $2 + $4}'"
                 .Bash();
             return double.TryParse(output, out double dPercent) ? Convert.ToInt32(dPercent) : -1;
         }

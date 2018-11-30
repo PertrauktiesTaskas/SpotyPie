@@ -1,6 +1,7 @@
 ﻿using Config.Net;
 using Database;
 using Microsoft.AspNetCore.Mvc;
+using Service.Helpers;
 using Service.Settings;
 using System;
 using System.IO;
@@ -37,8 +38,8 @@ namespace API.Controllers
             return Ok(settings.StreamQuality);
         }
 
-        [HttpGet("play/{id}")]
-        public async Task<IActionResult> GetMusic(CancellationToken t, int id)
+        [HttpPost("play/{id}")]
+        public async Task<IActionResult> GetMusic([FromBody] MusicPlayPost data, CancellationToken t, int id)
         {
             try
             {
@@ -49,7 +50,7 @@ namespace API.Controllers
                 {
                     if (settings != null && settings.StreamQuality < 1000)
                     {
-                        if (_ctd.SetAudioPlaying(id))
+                        if (await _ctd.SetAudioPlaying(id, data.ArtistId, data.AlbumId, data.PlaylistId))
                         {
                             var qualityPath = _ctd.ConvertAudio(path, settings.StreamQuality);
                             if (string.IsNullOrWhiteSpace(qualityPath))
@@ -64,7 +65,53 @@ namespace API.Controllers
                     }
                     else
                     {
-                        if (_ctd.SetAudioPlaying(id))
+                        if (await _ctd.SetAudioPlaying(id, data.ArtistId, data.AlbumId, data.PlaylistId))
+                        {
+                            return _ctd.OpenFile(path, out FileStream fs)
+                                ? File(fs, new MediaTypeHeaderValue("audio/mpeg").MediaType, true)
+                                : (IActionResult)BadRequest();
+                        }
+                    }
+
+                    return BadRequest("Cannot find path specified/File not playable");
+                }
+
+                return BadRequest("Cannot find path specified/File not playable");
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, ex.InnerException);
+            }
+        }
+
+        [HttpGet("play/{id}")]
+        public async Task<IActionResult> GetMusic(CancellationToken t, int id)
+        {
+            try
+            {
+                t.ThrowIfCancellationRequested();
+                var path = await _ctd.GetAudioPathById(id);
+
+                if (!string.IsNullOrWhiteSpace(path))
+                {
+                    if (settings != null && settings.StreamQuality < 1000)
+                    {
+                        if (await _ctd.SetAudioPlaying(id, 0, 0, 0))
+                        {
+                            var qualityPath = _ctd.ConvertAudio(path, settings.StreamQuality);
+                            if (string.IsNullOrWhiteSpace(qualityPath))
+                                return _ctd.OpenFile(path, out FileStream fs)
+                                    ? File(fs, new MediaTypeHeaderValue("audio/mpeg").MediaType, true)
+                                    : (IActionResult)BadRequest();
+                            else
+                                return _ctd.OpenFile(qualityPath, out FileStream fs)
+                                    ? File(fs, new MediaTypeHeaderValue("audio/mpeg").MediaType, true)
+                                    : (IActionResult)BadRequest();
+                        }
+                    }
+                    else
+                    {
+                        if (await _ctd.SetAudioPlaying(id, 0, 0, 0))
                         {
                             return _ctd.OpenFile(path, out FileStream fs)
                                 ? File(fs, new MediaTypeHeaderValue("audio/mpeg").MediaType, true)

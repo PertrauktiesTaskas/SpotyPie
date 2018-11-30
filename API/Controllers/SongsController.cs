@@ -75,6 +75,10 @@ namespace API.Controllers
             {
                 var song = await _ctx.Items.AsNoTracking()  ///.Select(x => new { x.Id, x.Artists, x.DurationMs, x.IsPlayable, x.Name })
                     .FirstOrDefaultAsync(x => x.Id == id);
+                _ctx.Update(song);
+                song.Popularity++;
+                song.LastActiveTime = DateTime.Now;
+                _ctx.SaveChanges();
 
                 return Ok(song);
             }
@@ -95,6 +99,10 @@ namespace API.Controllers
                 var albumid = await _ctx.Items.FromSql(query).Select(x => new { x.Id }).ToListAsync();
 
                 Album al = await _ctx.Albums.AsNoTracking().Include(x => x.Images).FirstAsync(x => x.Id == albumid.First().Id);
+                _ctx.Update(al);
+                al.Popularity++;
+                al.LastActiveTime = DateTime.Now;
+                _ctx.SaveChanges();
 
                 return Ok(al);
             }

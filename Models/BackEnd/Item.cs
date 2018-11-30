@@ -29,6 +29,8 @@ namespace Models.BackEnd
 
         public DateTime LastActiveTime { get; set; }
 
+        public long Popularity { get; set; }
+
         //public decimal Bitrate { get; set; }
 
         //public int Frequency { get; set; }
