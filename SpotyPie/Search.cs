@@ -147,7 +147,7 @@ namespace SpotyPie
                     var Songs = JsonConvert.DeserializeObject<List<Item>>(response.Content);
                     if (Songs != null && Songs.Count != 0)
                     {
-                        foreach (var x in Songs)
+                        foreach (var x in Songs.Take(8))
                         {
                             Search.Songs.Add(new List(x.Id, x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name));
                         }
@@ -180,7 +180,7 @@ namespace SpotyPie
                     var Albums = JsonConvert.DeserializeObject<List<Album>>(response.Content);
                     if (Albums != null && Albums.Count != 0)
                     {
-                        for (int i = 0; i < Albums.Count; i = i + 2)
+                        for (int i = 0; i < Albums.Count && i <= 8; i = i + 2)
                         {
                             if (Albums.Count - i == 1)
                             {
