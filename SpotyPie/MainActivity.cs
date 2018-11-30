@@ -37,6 +37,7 @@ namespace SpotyPie
         public static ImageButton OptionsHeaderButton;
 
         public static int widthInDp = 0;
+        public static int HeightInDp = 0;
         public static bool PlayerVisible = false;
 
         public static TextView ActionName;
@@ -59,6 +60,7 @@ namespace SpotyPie
             PlayerContainer = FindViewById<FrameLayout>(Resource.Id.player_frame);
 
             widthInDp = Resources.DisplayMetrics.WidthPixels;
+            HeightInDp = Resources.DisplayMetrics.HeightPixels;
             PlayerContainer.TranslationX = widthInDp;
 
             Home = new Home();
