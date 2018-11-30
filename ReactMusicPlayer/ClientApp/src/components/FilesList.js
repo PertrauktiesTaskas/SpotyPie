@@ -23,8 +23,8 @@ class FilesList extends React.Component {
 
         function File(props) {
 
-            var file = props.props.split("/");
-            var fileName = file[file.length - 1];
+            let file = props.props.split("/");
+            let fileName = file[file.length - 1];
 
             let finalName = fileName.split(".")[0];
             let format = fileName.split(".")[1];

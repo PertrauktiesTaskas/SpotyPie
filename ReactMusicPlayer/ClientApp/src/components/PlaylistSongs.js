@@ -22,8 +22,6 @@ class PlaylistSongs extends React.Component {
 
         function SingleSong(props) {
 
-            console.log("Playlist song", props);
-
             let explicit = props.props.explicit ?
                 <div id={props.props.id - 1} className="track__explicit">
                     <span className="label">Explicit</span>
@@ -43,7 +41,7 @@ class PlaylistSongs extends React.Component {
                     <div id={props.props.id - 1} className="track__number">{props.index + 1}</div>
 
                     <div id={props.props.id - 1} className="track__title"
-                         style={{marginLeft: "110px"}}>{props.props.name}</div>
+                         style={{marginLeft: "110px"}}>{JSON.parse(props.props.artists)[0].Name + " - " + props.props.name}</div>
 
                     {/*<div className="track__title featured">
 
@@ -62,7 +60,8 @@ class PlaylistSongs extends React.Component {
             );
         }
 
-        let songs = this.state.songs.map((song, index) => <SingleSong props={song} index={index} function={this.props.function}/>);
+        let songs = this.state.songs.map((song, index) => <SingleSong props={song} index={index}
+                                                                      function={this.props.function}/>);
 
         return (
             <div>
