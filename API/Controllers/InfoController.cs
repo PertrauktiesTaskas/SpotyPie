@@ -28,13 +28,27 @@ namespace API.Controllers
                 .Build();
         }
 
-        [HttpGet("/library")]
+        [HttpGet("library")]
         [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetLibraryInformation(CancellationToken t)
         {
             try
             {
                 return Ok(await _ctd.GetLibraryInfo());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("list")]
+        [EnableCors("AllowSpecificOrigin")]
+        public async Task<IActionResult> GetFileList(CancellationToken t)
+        {
+            try
+            {
+                return new JsonResult(await _ctd.GetAudioList());
             }
             catch (Exception ex)
             {

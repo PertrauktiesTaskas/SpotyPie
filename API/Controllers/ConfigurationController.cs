@@ -28,6 +28,20 @@ namespace API.Controllers
                 .Build();
         }
 
+        [HttpGet("rebindAudio")]
+        [EnableCors("AllowSpecificOrigin")]
+        public async Task<IActionResult> RebindAudioFiles(CancellationToken t)
+        {
+            try
+            {
+                return Ok(await _ctd.BindAudioFiles());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPost("changeQuality")]
         [EnableCors("AllowSpecificOrigin")]
         public IActionResult ChangeQuality([FromBody] int bits, CancellationToken t)
@@ -75,12 +89,15 @@ namespace API.Controllers
 
         [HttpPost("changeAudioPath")]
         [EnableCors("AllowSpecificOrigin")]
-        public IActionResult ChangeAudioPath([FromBody] string path, CancellationToken t)
+        public async Task<IActionResult> ChangeAudioPath([FromBody] string path, CancellationToken t)
         {
             try
             {
                 settings.AudioStoragePath = path;
-                return Ok();
+                if (await _ctd.BindAudioFiles())
+                    return Ok();
+                else
+                    return StatusCode(500, "Failed to re-bind audio files");
             }
             catch (Exception ex)
             {

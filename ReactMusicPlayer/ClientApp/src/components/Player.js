@@ -19,6 +19,7 @@ class MusicPlayer extends React.Component {
             played_percentage: 0,
             playbackRate: 1.0,
             loop: false,
+            enable_play_btn: false
         };
 
         this.handleClick = this.handleClick.bind(this);
@@ -30,7 +31,10 @@ class MusicPlayer extends React.Component {
     }
 
     readyToPlay() {
-        this.setState({playing: true});
+        this.setState({
+            playing: true,
+            enable_play_btn: true
+        });
     }
 
     handleClick(event) {
@@ -184,7 +188,7 @@ class MusicPlayer extends React.Component {
 
         };
 
-        let playing_song = this.state.playing ?
+        let playing_song = this.state.playing && this.state.enable_play_btn ?
             <a><i id="play/pause" className="fas fa-pause" onClick={this.handleClick.bind(this)}/></a> :
             <a><i id="play/pause" className="fas fa-play" onClick={this.handleClick.bind(this)}/></a>;
 

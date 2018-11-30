@@ -1,4 +1,5 @@
 const apiEnd = 'http://spotypie.deveim.com/api';
+/*const apiEnd = 'https://localhost:9876/api';*/
 
 export const itemService = {
     getAlbums,
@@ -14,7 +15,10 @@ export const itemService = {
     getSystemInfo,
     updateSongPlayCount,
     getLibraryInfo,
-    uploadSong
+    uploadSong,
+    getFileList,
+    getPlaylists,
+    getPlaylistSongs
 };
 
 async function getAlbums() {
@@ -169,7 +173,7 @@ async function getSongAlbum(id) {
         });
 }
 
-async function getSystemInfo(){
+async function getSystemInfo() {
     const requestOptions = {
         method: 'GET'
     };
@@ -188,15 +192,23 @@ async function getSystemInfo(){
         });
 }
 
-function getLibraryInfo(){
-        const requestOptions = {
-            method: 'GET'
-        };
+function getLibraryInfo() {
+    const requestOptions = {
+        method: 'GET'
+    };
     return fetch(apiEnd + '/info/library', requestOptions)
         .then(handleResponse);
 }
 
-function updateSongPlayCount(id){
+function getFileList() {
+    const requestOptions = {
+        method: 'GET'
+    };
+    return fetch(apiEnd + '/info/list', requestOptions)
+        .then(handleResponse);
+}
+
+function updateSongPlayCount(id) {
     const requestOptions = {
         method: 'GET'
     };
@@ -204,10 +216,27 @@ function updateSongPlayCount(id){
         .then(handleResponse);
 }
 
-function uploadSong(data){
+function getPlaylists(){
+    const requestOptions = {
+        method: 'GET'
+    };
+    return fetch(apiEnd + '/playlist/playlists', requestOptions)
+        .then(handleResponse);
+}
+
+function getPlaylistSongs(id){
+
+    const requestOptions = {
+        method: 'GET'
+    };
+    return fetch(apiEnd + '/playlist/' + id + '/tracks', requestOptions)
+        .then(handleResponse);
+}
+
+function uploadSong(data) {
     const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'multipart/form-data'},
+        /*        headers: { 'Content-Type': 'multipart/form-data'},*/
         body: data
     };
 

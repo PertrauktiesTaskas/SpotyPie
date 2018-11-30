@@ -14,6 +14,7 @@ import Dashboard from "./Dashboard";
 import UploadSong from "./UploadSong";
 import {itemService} from "../Service";
 import DefaultAlbum from '../img/default-album-artwork.png';
+import PlaylistSongs from "./PlaylistSongs";
 
 class HomePage extends React.Component {
     constructor(props) {
@@ -32,7 +33,10 @@ class HomePage extends React.Component {
             playing_song_id: "",
             playing_song: "",
             playing_song_album: "",
-            show_dashboard_btn: false
+            show_dashboard_btn: false,
+            playlists: [],
+            selected_playlist: "",
+            show_playlist: false
         };
 
         this.handleClick = this.handleClick.bind(this);
@@ -42,6 +46,11 @@ class HomePage extends React.Component {
     componentDidMount() {
         this.updateDimensions();
         window.addEventListener("resize", this.updateDimensions.bind(this));
+
+        itemService.getPlaylists().then((data) => {
+            console.log("Loading playlists", data);
+            this.setState({playlists: data});
+        });
     }
 
     updateDimensions() {
@@ -189,6 +198,23 @@ class HomePage extends React.Component {
         }
     }
 
+    openPlaylist(event) {
+        console.log("Selected playlist", event.target.id);
+
+        this.setState({
+            show_main_page: false,
+            show_song_list: false,
+            show_album_list: false,
+            show_artist_list: false,
+            show_files_list: false,
+            show_playlist_add: false,
+            show_dashboard: false,
+            upload_song: false,
+            selected_playlist: event.target.id,
+            show_playlist: true
+        });
+    }
+
 
     render() {
         let show_window = function (props, func) {
@@ -216,6 +242,9 @@ class HomePage extends React.Component {
             }
             else if (props.upload_song) {
                 return <UploadSong/>;
+            }
+            else if(props.show_playlist){
+                return <PlaylistSongs props={props.selected_playlist} function={func}/>;
             }
         };
 
@@ -252,11 +281,25 @@ class HomePage extends React.Component {
             }
         }
 
+        function Playlists(props) {
+            console.log("Playlist props", props.props);
+
+            return (
+                <a id={props.props.id} href="#" className="navigation__list__item" onClick={props.function}>
+                    <i id={props.props.id} className="fas fa-music"/>
+                    <span id={props.props.id}>{props.props.name}</span>
+                </a>);
+        }
+
+
         let show_dash_btn = this.state.show_dashboard_btn ?
             <a href="#" className="navigation__list__item" onClick={this.handleClick.bind(this)}>
                 <i className=" fas fa-tachometer-alt"/>
                 <span id="dashboard">Dashboard</span>
             </a> : null;
+
+        let playlist = this.state.playlists.map((item) => <Playlists props={item}
+                                                                     function={this.openPlaylist.bind(this)}/>);
 
         return (<div style={{height: "100%"}}>
             <HeaderBar/>
@@ -306,7 +349,7 @@ class HomePage extends React.Component {
                                 <a id="files" href="#" className="navigation__list__item"
                                    onClick={this.handleClick.bind(this)}>
                                     <i className="fas fa-file"/>
-                                    <span id="files">Local Files</span>
+                                    <span id="files">Files</span>
                                 </a>
                             </div>
                         </div>
@@ -317,14 +360,7 @@ class HomePage extends React.Component {
                                 Playlists
                             </div>
                             <div className="collapse in">
-                                <a href="#" className="navigation__list__item">
-                                    <i className="fas fa-music"/>
-                                    <span>Doo Wop</span>
-                                </a>
-                                <a href="#" className="navigation__list__item">
-                                    <i className="fas fa-music"/>
-                                    <span>Pop Classics</span>
-                                </a>
+                                {playlist}
                                 <a id="playlist" href="#" className="navigation__list__item"
                                    onClick={this.handleClick.bind(this)}>
                                     <i className="fas fa-plus"/>
