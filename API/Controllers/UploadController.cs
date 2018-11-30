@@ -1,5 +1,6 @@
 ﻿using Config.Net;
 using Database;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -36,6 +37,7 @@ namespace API.Controllers
         [RequestSizeLimit(500000000)]
         [DisableFormValueModelBinding]
         [HttpPost]
+        [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> Post()
         {
             try

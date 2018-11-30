@@ -25,6 +25,8 @@ namespace Models.BackEnd
 
         public string LocalUrl { get; set; }
 
+        public string ImageUrl { get; set; }
+
         public DateTime LastActiveTime { get; set; }
 
         //public decimal Bitrate { get; set; }

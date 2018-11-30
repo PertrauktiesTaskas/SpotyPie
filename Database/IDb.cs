@@ -11,7 +11,9 @@ namespace Database
         bool OpenFile(string path, out FileStream fs);
         Task<string> GetAudioPathById(int id);
         Task<bool> AddAudioToLibrary(string path, string name, Item file);
+        Task<bool> BindAudioFiles();
         bool SetAudioPlaying(int id);
+        Task<List<string>> GetAudioList();
         string ConvertAudio(string path, int quality);
         void RemoveCache();
         Task<string> CacheImages();

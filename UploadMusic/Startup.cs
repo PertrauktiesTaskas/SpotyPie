@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Services;
 
 namespace UploadMusic
 {
@@ -27,7 +26,7 @@ namespace UploadMusic
                 options.MultipartBodyLengthLimit = 500000000;
             });
 
-            services.AddScoped<IDb, Service>();
+            services.AddScoped<IDb, Services.Service>();
 
             services.Configure<CookiePolicyOptions>(options =>
             {

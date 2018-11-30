@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Models.BackEnd
 {
     public class Playlist
     {
         public int Id { get; set; }
+
+        public string Name { get; set; }
 
         public List<Item> Items { get; set; }
 
@@ -17,5 +18,9 @@ namespace Models.BackEnd
         public long Limit { get; set; }
 
         public long Total { get; set; }
+
+        public long Popularity { get; set; }
+
+        public string ImageUrl { get; set; }
     }
 }

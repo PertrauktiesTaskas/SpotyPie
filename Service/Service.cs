@@ -89,6 +89,92 @@ namespace Services
             }
         }
 
+        public async Task<List<string>> GetAudioList()
+        {
+            return await Task.Factory.StartNew(() =>
+            {
+                if (Directory.Exists(settings.AudioStoragePath))
+                {
+                    return Directory.EnumerateFiles(settings.AudioStoragePath).ToList();
+                }
+
+                return new List<string>();
+            });
+        }
+
+        public async Task<bool> BindAudioFiles()
+        {
+            try
+            {
+                await Task.Factory.StartNew(async () =>
+                {
+                    if (Directory.Exists(settings.AudioStoragePath))
+                    {
+                        foreach (var file in Directory.EnumerateFiles(settings.AudioStoragePath))
+                        {
+                            Item audioDb = null;
+                            IAudioFile audio = AudioFile.Create(file, false);
+
+                            if (audio != null && audio.FileType == AudioFileType.Flac)
+                            {
+                                VorbisComment flacTag = new VorbisComment(file);
+
+                                if (string.IsNullOrWhiteSpace(flacTag.Title) || string.IsNullOrWhiteSpace(flacTag.Artist))
+                                {
+                                    audioDb = await _ctx.Items
+                                        .FirstOrDefaultAsync(x =>
+                                        x.Name.Equals(Path.GetFileNameWithoutExtension(file), StringComparison.InvariantCultureIgnoreCase));
+
+                                    if (audioDb == null)
+                                    {
+                                        audioDb = await _ctx.Items
+                                        .FirstOrDefaultAsync(x =>
+                                        x.Name.Contains(Path.GetFileNameWithoutExtension(file), StringComparison.InvariantCultureIgnoreCase));
+                                    }
+                                }
+                                else
+                                {
+                                    var replaced = flacTag.Title.Replace("'", "’");
+                                    var replacedArtist = flacTag.Artist.Replace("'", "’");
+                                    audioDb = await _ctx.Items
+                                        .FirstOrDefaultAsync(x => x.Name.Equals(replaced, StringComparison.InvariantCultureIgnoreCase)
+                                        && x.Artists.Contains(replacedArtist));
+
+                                    if (audioDb == null)
+                                    {
+                                        audioDb = await _ctx.Items
+                                        .FirstOrDefaultAsync(x => x.Name.Contains(replaced, StringComparison.InvariantCultureIgnoreCase)
+                                        && x.Artists.Contains(replacedArtist));
+                                    }
+                                }
+                            }
+                            else
+                                audioDb = await _ctx.Items.FirstOrDefaultAsync(x => x.Name.Equals(Path.GetFileNameWithoutExtension(file), StringComparison.InvariantCultureIgnoreCase));
+
+                            if (audioDb != null)
+                            {
+                                _ctx.Update(audioDb);
+                                audioDb.LocalUrl = file;
+
+                                if (audio != null)
+                                {
+                                    audioDb.DurationMs = (long)audio.TotalSeconds * 1000;
+                                }
+
+                                _ctx.SaveChanges();
+                                audio = null;
+                            }
+                        }
+                    }
+                });
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public async Task<bool> AddAudioToLibrary(string path, string name, Item file = null)
         {
             try
@@ -101,9 +187,18 @@ namespace Services
                     VorbisComment flacTag = new VorbisComment(path);
 
                     if (string.IsNullOrWhiteSpace(flacTag.Title) || string.IsNullOrWhiteSpace(flacTag.Artist))
+                    {
                         audioDb = await _ctx.Items
                             .FirstOrDefaultAsync(x =>
                             x.Name.Equals(Path.GetFileNameWithoutExtension(name), StringComparison.InvariantCultureIgnoreCase));
+
+                        if (audioDb == null)
+                        {
+                            audioDb = await _ctx.Items
+                            .FirstOrDefaultAsync(x =>
+                            x.Name.Contains(Path.GetFileNameWithoutExtension(name), StringComparison.InvariantCultureIgnoreCase));
+                        }
+                    }
                     else
                     {
                         var replaced = flacTag.Title.Replace("'", "’");
@@ -111,6 +206,13 @@ namespace Services
                         audioDb = await _ctx.Items
                             .FirstOrDefaultAsync(x => x.Name.Equals(replaced, StringComparison.InvariantCultureIgnoreCase)
                             && x.Artists.Contains(replacedArtist));
+
+                        if (audioDb == null)
+                        {
+                            audioDb = await _ctx.Items
+                            .FirstOrDefaultAsync(x => x.Name.Contains(replaced, StringComparison.InvariantCultureIgnoreCase)
+                            && x.Artists.Contains(replacedArtist));
+                        }
                     }
                 }
                 else
@@ -325,18 +427,19 @@ namespace Services
             try
             {
                 //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Public\TestFolder\WriteLines2.txt");
-                string artist = System.IO.File.ReadAllText(@"C:\Users\Eimantas\source\repos\Models\Models\bin\Debug\netcoreapp2.1\Spotify\JSON\Artist19data.json");
-
-                string albums = System.IO.File.ReadAllText(@"C:\Users\Eimantas\source\repos\Models\Models\bin\Debug\netcoreapp2.1\Spotify\JSON\14.json");
-
+                string artist = System.IO.File.ReadAllText(@"C:\Users\lukas\source\repos\SpotyPie\API\bin\Debug\netcoreapp2.1\Spotify\Artist19data.json");
                 var Artist = JsonConvert.DeserializeObject<Spotify.ArtistRoot>(artist);
-                var Albums = JsonConvert.DeserializeObject<Spotify.AlbumRoot>(albums);
 
-                InsertArtist(Albums);
-                UpdateArtisthFullData(Artist);
-                InsertCopyrights(Albums);
-                InsertAlbums(Albums);
+                foreach (var file in Directory.EnumerateFiles(@"C:\Users\lukas\source\repos\SpotyPie\API\bin\Debug\netcoreapp2.1\Spotify\JSON\"))
+                {
+                    string albums = System.IO.File.ReadAllText(file);
+                    var Albums = JsonConvert.DeserializeObject<Spotify.AlbumRoot>(albums);
 
+                    InsertArtist(Albums);
+                    UpdateArtisthFullData(Artist);
+                    InsertCopyrights(Albums);
+                    InsertAlbums(Albums);
+                }
             }
             catch (Exception e)
             {
@@ -457,6 +560,7 @@ namespace Services
                     {
                         //ADDING SONG TO ALBUM
                         song.Artists = JsonConvert.SerializeObject(Helpers.GetArtist(x.Artists));
+                        song.ImageUrl = Helpers.GetImages(x.Images)[0].Url;
                         dbSong.Songs.Add(song);
                         _ctx.Entry(dbSong).State = EntityState.Modified;
                         _ctx.SaveChanges();

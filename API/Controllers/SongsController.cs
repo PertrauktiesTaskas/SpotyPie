@@ -28,7 +28,7 @@ namespace API.Controllers
         }
 
         //Search for songs with specified name
-        [HttpPost("/search")]
+        [HttpPost("search")]
         [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> Search([FromBody] string query)
         {

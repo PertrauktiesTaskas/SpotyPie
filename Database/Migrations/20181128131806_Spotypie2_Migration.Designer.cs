@@ -4,14 +4,16 @@ using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Database.Migrations
 {
     [DbContext(typeof(SpotyPieIDbContext))]
-    partial class SpotyPieIDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181128131806_Spotypie2_Migration")]
+    partial class Spotypie2_Migration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -173,8 +175,6 @@ namespace Database.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("Created");
-
-                    b.Property<string>("ImageUrl");
 
                     b.Property<DateTime>("LastActiveTime");
 
