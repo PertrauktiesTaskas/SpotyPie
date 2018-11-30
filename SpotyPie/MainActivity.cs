@@ -43,10 +43,18 @@ namespace SpotyPie
         ConstraintLayout MiniPlayer;
         public static FrameLayout PlayerContainer;
 
+        ConstraintLayout HeaderContainer;
+
+        public static Android.Support.V4.App.FragmentManager mSupportFragmentManager;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
+
+            HeaderContainer = FindViewById<ConstraintLayout>(Resource.Id.HeaderContainer);
+
+            mSupportFragmentManager = SupportFragmentManager;
 
             PlayerContainer = FindViewById<FrameLayout>(Resource.Id.player_frame);
 
@@ -56,7 +64,7 @@ namespace SpotyPie
             Home = new Home();
             Browse = new Browse();
             Search = new Search();
-            Library = new Library();
+            Library = new LibraryFragment();
             Player = new Player.Player();
             Album = new AlbumFragment();
             Artist = new ArtistFragment();
@@ -105,7 +113,7 @@ namespace SpotyPie
                     .Replace(Resource.Id.content_frame, Current_state.BackFragment)
                     .Commit();
             }
-            catch (System.Exception ex)
+            catch (System.Exception)
             {
                 Home = new Home();
                 SupportFragmentManager.BeginTransaction()
@@ -159,7 +167,7 @@ namespace SpotyPie
             adapter.AddFragment(new Home(), "Home");
             adapter.AddFragment(new Browse(), "Browse");
             adapter.AddFragment(new Search(), "Search");
-            adapter.AddFragment(new Library(), "Library");
+            adapter.AddFragment(new LibraryFragment(), "Library");
 
             viewPager.Adapter = adapter;
         }
@@ -196,6 +204,9 @@ namespace SpotyPie
 
         void LoadFragment(int id)
         {
+            if (HeaderContainer.Visibility == ViewStates.Gone)
+                HeaderContainer.Visibility = ViewStates.Visible;
+
             Android.Support.V4.App.Fragment fragment = null;
             switch (id)
             {
@@ -209,7 +220,7 @@ namespace SpotyPie
                     break;
                 case Resource.Id.search:
                     fragment = Search;
-                    ActionName.Text = "Search";
+                    HeaderContainer.Visibility = ViewStates.Gone;
                     break;
                 case Resource.Id.library:
                     fragment = Library;

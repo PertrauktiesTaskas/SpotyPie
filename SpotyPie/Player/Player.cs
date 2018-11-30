@@ -152,13 +152,15 @@ namespace SpotyPie.Player
                         Application.SynchronizationContext.Post(_ =>
                             {
                                 player.Reset();
+#pragma warning disable CS0618 // Type or member is obsolete
                                 player.SetAudioStreamType(Stream.Music);
+#pragma warning restore CS0618 // Type or member is obsolete
                                 player.SetDataSource("http://spotypie.deveim.com/api/stream/play/" + Current_state.Current_Song.Id);
                                 player.Prepare();
                             }, null);
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     Application.SynchronizationContext.Post(_ =>
                     {
@@ -240,11 +242,13 @@ namespace SpotyPie.Player
                         }
                     }
                     Thread.Sleep(250);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     Task.Run(() => UpdateLoop());
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     Application.SynchronizationContext.Post(_ => { Updating = false; }, null);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Application.SynchronizationContext.Post(_ => { Updating = false; }, null);
             }

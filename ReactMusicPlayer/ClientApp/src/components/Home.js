@@ -31,13 +31,26 @@ class HomePage extends React.Component {
             upload_song: false,
             playing_song_id: "",
             playing_song: "",
-            playing_song_album: ""
+            playing_song_album: "",
+            show_dashboard_btn: false
         };
 
         this.handleClick = this.handleClick.bind(this);
         this.handlePlay = this.handlePlay.bind(this);
     }
 
+    componentDidMount() {
+        this.updateDimensions();
+        window.addEventListener("resize", this.updateDimensions.bind(this));
+    }
+
+    updateDimensions() {
+        if (window.innerWidth <= 1400) {
+            this.setState({show_dashboard_btn: true});
+        } else {
+            this.setState({show_dashboard_btn: false});
+        }
+    }
 
     handleClick(event) {
         console.log("Menu clicked", event.target.id);
@@ -170,7 +183,9 @@ class HomePage extends React.Component {
             itemService.getSongAlbum(id).then((data) => {
                 console.log("Playing song album:", data);
                 this.setState({playing_song_album: data});
-            })
+            });
+
+            itemService.updateSongPlayCount(id);
         }
     }
 
@@ -206,7 +221,7 @@ class HomePage extends React.Component {
 
         function PlayingSongInfo(props) {
 
-            let display_album_art = props.props2.images != null? props.props2.images[0].url: {DefaultAlbum};
+            let display_album_art = props.props2.images != null ? props.props2.images[0].url : {DefaultAlbum};
 
             if (props.props) {
                 return (<section className="playing">
@@ -237,6 +252,11 @@ class HomePage extends React.Component {
             }
         }
 
+        let show_dash_btn = this.state.show_dashboard_btn ?
+            <a href="#" className="navigation__list__item" onClick={this.handleClick.bind(this)}>
+                <i className=" fas fa-tachometer-alt"/>
+                <span id="dashboard">Dashboard</span>
+            </a> : null;
 
         return (<div style={{height: "100%"}}>
             <HeaderBar/>
@@ -253,10 +273,7 @@ class HomePage extends React.Component {
                                     <i className="fas fa-home"/>
                                     <span id="home">Home</span>
                                 </a>
-                                <a href="#" className="navigation__list__item" onClick={this.handleClick.bind(this)}>
-                                    <i className=" fas fa-tachometer-alt"/>
-                                    <span id="dashboard">Dashboard</span>
-                                </a>
+                                {show_dash_btn}
                                 <a href="#" className="navigation__list__item" onClick={this.handleClick.bind(this)}>
                                     <i className="fas fa-upload"/>
                                     <span id="upload">Upload song</span>

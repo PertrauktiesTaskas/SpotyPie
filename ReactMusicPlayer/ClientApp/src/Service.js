@@ -1,4 +1,5 @@
 const apiEnd = 'http://spotypie.deveim.com/api';
+/*const apiEnd = 'https://localhost:9876/api';*/
 
 export const itemService = {
     getAlbums,
@@ -11,7 +12,10 @@ export const itemService = {
     getSongs,
     getSong,
     getSongAlbum,
-    getSystemInfo
+    getSystemInfo,
+    updateSongPlayCount,
+    getLibraryInfo,
+    uploadSong
 };
 
 async function getAlbums() {
@@ -183,6 +187,32 @@ async function getSystemInfo(){
             console.log(error, 'handleResponse error');
             return error;
         });
+}
+
+function getLibraryInfo(){
+        const requestOptions = {
+            method: 'GET'
+        };
+    return fetch(apiEnd + '/info/library', requestOptions)
+        .then(handleResponse);
+}
+
+function updateSongPlayCount(id){
+    const requestOptions = {
+        method: 'GET'
+    };
+    return fetch(apiEnd + '/Songs/' + id + "/Update", requestOptions)
+        .then(handleResponse);
+}
+
+function uploadSong(data){
+    const requestOptions = {
+        method: 'POST',
+/*        headers: { 'Content-Type': 'multipart/form-data'},*/
+        body: data
+    };
+
+    return fetch(apiEnd + "/upload", requestOptions);
 }
 
 function handleResponse(response) {

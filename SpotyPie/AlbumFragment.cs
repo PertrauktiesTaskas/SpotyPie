@@ -49,8 +49,6 @@ namespace SpotyPie
 
         MarginLayoutParams MarginParrams;
         RelativeLayout relative;
-
-        private NestedScrollView Scroll;
         private NestedScrollView ScrollFather;
         int scrolled = 0;
 
@@ -150,7 +148,7 @@ namespace SpotyPie
                     }, null);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }

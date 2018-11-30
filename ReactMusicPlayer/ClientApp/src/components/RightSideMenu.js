@@ -8,7 +8,7 @@ import {itemService} from "../Service";
 class SideMenuPanel2 extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {library_info: []};
     }
 
     async componentDidMount() {
@@ -118,6 +118,10 @@ class SideMenuPanel2 extends React.Component {
             });
         }
 
+        itemService.getLibraryInfo().then((data) => {
+            this.setState({library_info: data});
+        });
+
         let cpuUsage = [];
         let ramUsage = [];
         let cpuTemp = [];
@@ -143,7 +147,7 @@ class SideMenuPanel2 extends React.Component {
             let sys_info = await itemService.getSystemInfo();
             console.log("System info", sys_info);
 
-            if (cpuUsage.length > 5) {
+            if (cpuUsage.length > 6) {
                 cpuUsage = cpuUsage.slice(1, cpuUsage.length);
                 cpuUsage.push(sys_info.cU)
             }
@@ -151,7 +155,7 @@ class SideMenuPanel2 extends React.Component {
                 cpuUsage.push(sys_info.cU);
             }
 
-            if (ramUsage.length > 5) {
+            if (ramUsage.length > 6) {
                 ramUsage = ramUsage.slice(1, ramUsage.length);
                 ramUsage.push(sys_info.rU)
             }
@@ -159,7 +163,7 @@ class SideMenuPanel2 extends React.Component {
                 ramUsage.push(sys_info.rU);
             }
 
-            if (cpuTemp.length > 5) {
+            if (cpuTemp.length > 6) {
                 cpuTemp = cpuTemp.slice(1, cpuTemp.length);
                 cpuTemp.push(sys_info.cT)
             }
@@ -179,6 +183,24 @@ class SideMenuPanel2 extends React.Component {
 
     render() {
 
+        function AllSongsLength(props) {
+            console.log("Songs length", props.props);
+
+            let length = props.props;
+            let minutes = Math.floor(length / 60);
+            let hours = Math.floor(minutes / 60);
+            let days = Math.floor(hours / 24);
+
+            let finalDays = days;
+            let finalHours = hours - (24 * days);
+            let finalMinutes = minutes - (hours * 60);
+            let finalSeconds = length - (minutes * 60);
+
+            console.log("Days ", finalDays, " Hours ", finalHours, " Minutes ", finalMinutes, " Seconds ", finalSeconds);
+
+            return (<span className="dashboard_item"><i
+                className="far fa-clock"/> Total length: {finalDays}d {finalHours}h {finalMinutes}min {finalSeconds}s</span>);
+        }
 
         return (
             <div className="content__right">
@@ -187,24 +209,24 @@ class SideMenuPanel2 extends React.Component {
 
                     <div className="dashboard_items">
 
-                    <span className="dashboard_item">
-                        <i className="far fa-clock"/> Total length: 2h 15min
+
+                        <AllSongsLength props={this.state.library_info.tL}/>
+
+
+                        <span className="dashboard_item">
+                        <i className="fas fa-music"/> Songs: {this.state.library_info.sC}
                     </span>
 
                         <span className="dashboard_item">
-                        <i className="fas fa-music"/> Songs: 15
+                        <i className="fas fa-user"/> Artists: {this.state.library_info.arC}
                     </span>
 
                         <span className="dashboard_item">
-                        <i className="fas fa-user"/> Artists: 5
+                        <i className="fas fa-compact-disc"/> Albums: {this.state.library_info.alC}
                     </span>
 
                         <span className="dashboard_item">
-                        <i className="fas fa-compact-disc"/> Albums: 3
-                    </span>
-
-                        <span className="dashboard_item">
-                        <i className="fas fa-list-ul"/> Playlists: 2
+                        <i className="fas fa-list-ul"/> Playlists: {this.state.library_info.pC}
                     </span>
 
                         <canvas id="system" style={{height: "300px;", width: "300px;"}}/>

@@ -89,7 +89,7 @@ namespace SpotyPie.Player
                     }, null);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }

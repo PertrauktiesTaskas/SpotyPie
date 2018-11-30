@@ -1,40 +1,68 @@
 import React from "react";
-import Formsy from "formsy-react";
-import FormInput from './FormInput';
-import FormCheckbox from "./FormCheckbox";
+import '../css/song_upload.css';
+import {itemService} from "../Service";
 
 class UploadSong extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            canSubmit: false,
+            fileName: "",
+            message: ""
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.disableButton = this.disableButton.bind(this);
-        this.enableButton = this.enableButton.bind(this);
     }
 
-    disableButton() {
-        this.setState({canSubmit: false});
+    handleSubmit(event) {
+        console.log("Submit", event);
+        event.preventDefault();
+
+        const data = new FormData();
+        data.append('file', this.uploadInput.files[0]);
+
+        /*console.log("Upload file", this.uploadInput.files[0]);
+
+        for (var pair of data.entries()) {
+            console.log("Data", pair);
+        }*/
+
+        /*console.log("Data", data.entries());*/
+
+        itemService.uploadSong(data).then(() => {
+            this.setState({message: "Song successfully uploaded"});
+        });
     }
 
-    enableButton() {
-        this.setState({canSubmit: true});
-    }
+    handleChange() {
+        this.setState({message: ""});
 
-    handleSubmit(model) {
-        var json = JSON.stringify(model);
-        console.log(json);
-        this.setState({});
+        let input = document.getElementById("file-upload");
+        var file = input.value.split("\\");
+        var fileName = file[file.length - 1];
+        this.setState({fileName: fileName});
     }
 
     render() {
+
+        let file = this.state.fileName != null ? <div className="file-name">{this.state.fileName}</div> : null;
+        let success = this.state.message != null ? <div className="file-name">{this.state.message}</div> : null;
+
         return (
             <div style={{height: "100%"}}>
-
-
+                <form method="POST" className="upload_song_form" encType="multipart/form-data"
+                      onSubmit={this.handleSubmit.bind(this)}>
+                    <div className="upload_title">Upload a song</div>
+                    {file}
+                    <label className="custom-file-upload">
+                        <input type="file" id="file-upload" onChange={this.handleChange.bind(this)} ref={(ref) => {
+                            this.uploadInput = ref;
+                        }}/>
+                        Choose file
+                    </label>
+                    <input className="submit_btn" type="submit" value="Submit"/>
+                    {success}
+                </form>
             </div>
 
         );

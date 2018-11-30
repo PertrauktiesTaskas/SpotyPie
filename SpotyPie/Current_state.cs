@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.Views;
 using Newtonsoft.Json;
+using RestSharp;
 using SpotyPie.Models;
 using Square.Picasso;
 using System.Collections.Generic;
@@ -47,6 +48,15 @@ namespace SpotyPie
             PlayerIsVisible = true;
             UpdateCurrentInfo();
             Player.Player.StartPlayMusic();
+            Task.Run(() => Update());
+
+            async Task Update()
+            {
+                var client = new RestClient("http://spotypie.deveim.com/api/songs/1/update");
+                var request = new RestRequest(Method.GET);
+                request.AddHeader("cache-control", "no-cache");
+                IRestResponse response = await client.ExecuteTaskAsync(request);
+            }
         }
 
         public static void UpdateCurrentInfo()
@@ -78,8 +88,17 @@ namespace SpotyPie
 
         public static void SetAlbum(BlockWithImage album)
         {
+            Task.Run(() => Update());
             ClickedInRVH = album;
             AlbumTitle = album.Title;
+
+            async Task Update()
+            {
+                var client = new RestClient("http://spotypie.deveim.com/api/album/update/" + album.Id);
+                var request = new RestRequest(Method.GET);
+                request.AddHeader("cache-control", "no-cache");
+                IRestResponse response = await client.ExecuteTaskAsync(request);
+            }
         }
 
         public static void Music_play_toggle()

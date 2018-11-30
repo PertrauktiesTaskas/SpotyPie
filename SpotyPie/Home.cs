@@ -211,7 +211,7 @@ namespace SpotyPie
                     }, null);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
@@ -243,7 +243,7 @@ namespace SpotyPie
                     }, null);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
@@ -291,7 +291,7 @@ namespace SpotyPie
                     }, null);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
@@ -323,7 +323,7 @@ namespace SpotyPie
                     }, null);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
