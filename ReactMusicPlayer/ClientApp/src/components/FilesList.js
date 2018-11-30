@@ -1,10 +1,49 @@
 import React from "react";
+import {itemService} from "../Service";
 
 class FilesList extends React.Component {
+    constructor(props) {
+        super(props);
+        console.log(props);
+
+        this.state = {
+            files: []
+        };
+    }
+
+    componentDidMount() {
+        itemService.getFileList().then((data) => {
+            console.log("File list", data);
+            this.setState({files: data});
+        });
+    }
+
 
     render() {
+
+        function File(props) {
+
+            let file = props.props.split("/");
+            let fileName = file[file.length - 1];
+
+            let finalName = fileName.split(".")[0];
+            let format = fileName.split(".")[1];
+
+            return (<div className="track">
+
+                <div className="track__number">{props.index + 1}</div>
+
+                <div className="track__title" style={{marginLeft: "110px"}}>{finalName}</div>
+
+                <div className="track__length" style={{marginRight: "15px"}}>{format}</div>
+
+            </div>);
+        }
+
+        let file = this.state.files.map((f, index) => <File props={f} index={index}/>);
+
         return (
-            <div  style={{height: "100%"}}>
+            <div style={{height: "100%"}}>
 
                 <div className="tracks">
 
@@ -18,55 +57,9 @@ class FilesList extends React.Component {
 
                     </div>
 
-                    <div className="track">
 
-                        <div className="track__number">1</div>
+                    {file}
 
-                        <div className="track__title">G-Eazy - Intro</div>
-
-                        <div className="track__length" style={{marginRight: "15px"}}>FLAC</div>
-
-                    </div>
-
-                    <div className="track">
-
-                        <div className="track__number">2</div>
-
-                        <div className="track__title">G-Eazy - Random</div>
-
-                        <div className="track__length" style={{marginRight: "15px"}}>FLAC</div>
-
-                    </div>
-
-                    <div className="track">
-
-                        <div className="track__number">3</div>
-
-                        <div className="track__title">G-Eazy feat. Bebe Rexha - Me, Myself & I</div>
-
-                        <div className="track__length" style={{marginRight: "15px"}}>FLAC</div>
-
-                    </div>
-
-                    <div className="track">
-
-                        <div className="track__number">4</div>
-
-                        <div className="track__title">G-Eazy feat. Big Sean - One Of Them</div>
-
-                        <div className="track__length" style={{marginRight: "15px"}}>FLAC</div>
-
-                    </div>
-
-                    <div className="track">
-
-                        <div className="track__number">5</div>
-
-                        <div className="track__title">G-Eazy feat. Chris Brown & Tory Lanez - Drifting</div>
-
-                        <div className="track__length" style={{marginRight: "15px"}}>FLAC</div>
-
-                    </div>
 
                 </div>
 

@@ -139,7 +139,7 @@ namespace API.Controllers
                 //"C:\Users\lukas\Source\Repos\SpotyPie\API\music.flac"
                 //"/root/Music/" + file + ".flac"
                 string aPath = settings != null ? settings.AudioStoragePath : "/root/Music/";
-                return _ctd.OpenFile(aPath + file + ".flac", out FileStream fs)
+                return _ctd.OpenFile(aPath + file, out FileStream fs)
                     ? File(fs, new MediaTypeHeaderValue("audio/mpeg").MediaType, true)
                     : (IActionResult)BadRequest();
             }

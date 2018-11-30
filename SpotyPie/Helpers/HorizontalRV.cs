@@ -101,7 +101,10 @@ namespace SpotyPie.Helpers
                 BlockImage view = holder as BlockImage;
                 view.Title.Text = Dataset[position].Title;
                 view.SubTitile.Text = Dataset[position].SubTitle;
-                Picasso.With(Context).Load(Dataset[position].Image).Into(view.Image);
+                if (Dataset[position].Image != string.Empty)
+                    Picasso.With(Context).Load(Dataset[position].Image).Into(view.Image);
+                else
+                    view.Image.SetImageResource(Resource.Drawable.noimg);
 
             }
         }

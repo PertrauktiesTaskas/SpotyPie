@@ -72,9 +72,22 @@ namespace SpotyPie.Helpers
         {
             Application.SynchronizationContext.Post(_ =>
             {
-                int size = mItems.Count;
-                Erase();
-                mAdapter.NotifyItemRangeRemoved(0, size);
+                try
+                {
+                    int size = mItems.Count;
+                    for (int i = 0; i < mItems.Count; i++)
+                    {
+                        if (mItems[i] != null)
+                        {
+                            Remove(i);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+                Adapter.NotifyDataSetChanged();
             }, null);
         }
     }

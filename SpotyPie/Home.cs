@@ -265,7 +265,11 @@ namespace SpotyPie
                         foreach (var x in artists)
                         {
                             string DisplayGenre;
-                            var genres = JsonConvert.DeserializeObject<List<string>>(x.Genres);
+                            List<string> genres = new List<string>();
+
+                            if (x.Genres != null)
+                                genres = JsonConvert.DeserializeObject<List<string>>(x.Genres);
+
                             if (genres.Count > 1)
                             {
                                 Random ran = new Random();
@@ -279,7 +283,11 @@ namespace SpotyPie
                             else
                                 DisplayGenre = string.Empty;
 
-                            BestArtists.Add(new BlockWithImage(x.Id, RvType.Artist, x.Name, DisplayGenre, x.Images.First().Url));
+                            var img = string.Empty;
+                            if (x.Images.FirstOrDefault() != null)
+                                img = x.Images.First().Url;
+
+                            BestArtists.Add(new BlockWithImage(x.Id, RvType.Artist, x.Name, DisplayGenre, img));
                         }
                     }, null);
                 }
@@ -291,7 +299,7 @@ namespace SpotyPie
                     }, null);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
             }

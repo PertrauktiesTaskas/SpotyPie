@@ -9,6 +9,7 @@ class NewPlaylist extends React.Component {
 
         this.state = {
             canSubmit: false,
+            songs: []
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -57,8 +58,11 @@ class NewPlaylist extends React.Component {
                             <div className="tracks__heading__number">#</div>
 
                             <div className="tracks__heading__artist">Artist</div>
-
-                            <div className="tracks__heading__title">Song</div>
+                            ''
+                            <div className="tracks__heading__title" style={{
+                                marginLeft: "125px",
+                                width: "45.5%"
+                            }}>Song</div>
 
                             <div className="tracks__heading__album">Album</div>
 

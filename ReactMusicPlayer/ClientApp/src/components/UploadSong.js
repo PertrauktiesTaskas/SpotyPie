@@ -8,7 +8,8 @@ class UploadSong extends React.Component {
 
         this.state = {
             fileName: "",
-            message: ""
+            message: "",
+            block_btn: true
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -38,15 +39,21 @@ class UploadSong extends React.Component {
         this.setState({message: ""});
 
         let input = document.getElementById("file-upload");
-        var file = input.value.split("\\");
-        var fileName = file[file.length - 1];
-        this.setState({fileName: fileName});
+        let file = input.value.split("\\");
+        let fileName = file[file.length - 1];
+        this.setState({
+            fileName: fileName,
+            block_btn: false
+        });
     }
 
     render() {
 
         let file = this.state.fileName != null ? <div className="file-name">{this.state.fileName}</div> : null;
         let success = this.state.message != null ? <div className="file-name">{this.state.message}</div> : null;
+        let button = this.state.block_btn ?
+            <input className="submit_btn" type="submit" value="Upload" disabled={true} style={{opacity: 0.5}}/> :
+            <input className="submit_btn" type="submit" value="Upload"/>
 
         return (
             <div style={{height: "100%"}}>
@@ -60,7 +67,7 @@ class UploadSong extends React.Component {
                         }}/>
                         Choose file
                     </label>
-                    <input className="submit_btn" type="submit" value="Submit"/>
+                    {button}
                     {success}
                 </form>
             </div>

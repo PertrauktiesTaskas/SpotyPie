@@ -28,9 +28,16 @@ namespace SpotyPie
 
         public string LocalUrl { get; set; }
 
+        public string ImageUrl { get; set; }
+
         public DateTime LastActiveTime { get; set; }
 
         public bool Playing { get; set; }
 
+        //public decimal Bitrate { get; set; }
+
+        //public int Frequency { get; set; }
+
+        //public int Channels { get; set; }
     }
 }

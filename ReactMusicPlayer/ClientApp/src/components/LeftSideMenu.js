@@ -36,7 +36,7 @@ const SideMenuPanel = ({props}) => {
                         </a>
                         <a href="#" className="navigation__list__item">
                             <i className="fas fa-file"/>
-                            <span>Local Files</span>
+                            <span>Files</span>
                         </a>
                     </div>
                 </div>
