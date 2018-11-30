@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Models.BackEnd;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Database
 {
@@ -14,7 +11,7 @@ namespace Database
 
         public DbSet<User> Users { get; set; }
         public DbSet<Album> Albums { get; set; }
-
+        public DbSet<CurrentSong> CurrentSong { get; set; }
         public DbSet<Playlist> Playlist { get; set; }
 
         public DbSet<Tracks> Tracks { get; set; }

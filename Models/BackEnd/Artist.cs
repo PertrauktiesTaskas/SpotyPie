@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Models.BackEnd
 {
@@ -20,5 +19,7 @@ namespace Models.BackEnd
         public List<Album> Albums { get; set; }
 
         public long Popularity { get; set; }
+
+        public DateTime LastActiveTime { get; set; }
     }
 }
