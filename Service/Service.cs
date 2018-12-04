@@ -102,76 +102,79 @@ namespace Services
             });
         }
 
-        public async Task<bool> BindAudioFiles()
+        public async Task<string> BindAudioFiles()
         {
             try
             {
-                await Task.Factory.StartNew(async () =>
+                //await Task.Factory.StartNew(async () =>
+                //{
+                if (Directory.Exists(settings.AudioStoragePath))
                 {
-                    if (Directory.Exists(settings.AudioStoragePath))
+                    foreach (var file in Directory.EnumerateFiles(settings.AudioStoragePath))
                     {
-                        foreach (var file in Directory.EnumerateFiles(settings.AudioStoragePath))
+                        Item audioDb = null;
+                        IAudioFile audio = AudioFile.Create(file, false);
+                        Console.WriteLine(file);
+
+                        if (audio != null && audio.FileType == AudioFileType.Flac)
                         {
-                            Item audioDb = null;
-                            IAudioFile audio = AudioFile.Create(file, false);
+                            VorbisComment flacTag = new VorbisComment(file);
 
-                            if (audio != null && audio.FileType == AudioFileType.Flac)
+                            if (string.IsNullOrWhiteSpace(flacTag.Title) || string.IsNullOrWhiteSpace(flacTag.Artist))
                             {
-                                VorbisComment flacTag = new VorbisComment(file);
+                                audioDb = await _ctx.Items
+                                    .FirstOrDefaultAsync(x =>
+                                    x.Name == Path.GetFileNameWithoutExtension(file));
 
-                                if (string.IsNullOrWhiteSpace(flacTag.Title) || string.IsNullOrWhiteSpace(flacTag.Artist))
+                                if (audioDb == null)
                                 {
                                     audioDb = await _ctx.Items
-                                        .FirstOrDefaultAsync(x =>
-                                        x.Name.Equals(Path.GetFileNameWithoutExtension(file), StringComparison.InvariantCultureIgnoreCase));
-
-                                    if (audioDb == null)
-                                    {
-                                        audioDb = await _ctx.Items
-                                        .FirstOrDefaultAsync(x =>
-                                        x.Name.Contains(Path.GetFileNameWithoutExtension(file), StringComparison.InvariantCultureIgnoreCase));
-                                    }
-                                }
-                                else
-                                {
-                                    var replaced = flacTag.Title.Replace("'", "’");
-                                    var replacedArtist = flacTag.Artist.Replace("'", "’");
-                                    audioDb = await _ctx.Items
-                                        .FirstOrDefaultAsync(x => x.Name.Equals(replaced, StringComparison.InvariantCultureIgnoreCase)
-                                        && x.Artists.Contains(replacedArtist));
-
-                                    if (audioDb == null)
-                                    {
-                                        audioDb = await _ctx.Items
-                                        .FirstOrDefaultAsync(x => x.Name.Contains(replaced, StringComparison.InvariantCultureIgnoreCase)
-                                        && x.Artists.Contains(replacedArtist));
-                                    }
+                                    .FirstOrDefaultAsync(x =>
+                                    x.Name.Contains(Path.GetFileNameWithoutExtension(file)));
                                 }
                             }
                             else
-                                audioDb = await _ctx.Items.FirstOrDefaultAsync(x => x.Name.Equals(Path.GetFileNameWithoutExtension(file), StringComparison.InvariantCultureIgnoreCase));
-
-                            if (audioDb != null)
                             {
-                                _ctx.Update(audioDb);
-                                audioDb.LocalUrl = file;
+                                var replaced = flacTag.Title.Replace("'", "’");
+                                var replacedArtist = flacTag.Artist.Replace("'", "’");
+                                audioDb = await _ctx.Items
+                                    .FirstOrDefaultAsync(x => x.Name.Contains(replaced)
+                                    && x.Artists.Contains(replacedArtist));
 
-                                if (audio != null)
+                                if (audioDb == null)
                                 {
-                                    audioDb.DurationMs = (long)audio.TotalSeconds * 1000;
+                                    audioDb = await _ctx.Items
+                                    .FirstOrDefaultAsync(x => x.Name.Contains(replaced)
+                                    && x.Artists.Contains(replacedArtist));
                                 }
-
-                                _ctx.SaveChanges();
-                                audio = null;
                             }
                         }
+                        else
+                            audioDb = await _ctx.Items.FirstOrDefaultAsync(x => x.Name == Path.GetFileNameWithoutExtension(file));
+
+                        if (audioDb != null)
+                        {
+                            Console.WriteLine("found file " + file);
+                            _ctx.Update(audioDb);
+                            audioDb.LocalUrl = file;
+
+                            if (audio != null)
+                            {
+                                audioDb.DurationMs = (long)audio.TotalSeconds * 1000;
+                            }
+
+                            _ctx.SaveChanges();
+                            audio = null;
+                        }
                     }
-                });
-                return true;
+                    return "true";
+                }
+                //});
+                return "false";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return false;
+                return ex.Message + " " + ex.StackTrace;
             }
         }
 

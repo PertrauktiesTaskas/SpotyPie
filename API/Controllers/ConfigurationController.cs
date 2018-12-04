@@ -34,7 +34,8 @@ namespace API.Controllers
         {
             try
             {
-                return Ok(await _ctd.BindAudioFiles());
+                var r = await _ctd.BindAudioFiles();
+                return Ok(r);
             }
             catch (Exception ex)
             {
@@ -94,10 +95,7 @@ namespace API.Controllers
             try
             {
                 settings.AudioStoragePath = path;
-                if (await _ctd.BindAudioFiles())
-                    return Ok();
-                else
-                    return StatusCode(500, "Failed to re-bind audio files");
+                return Ok(await _ctd.BindAudioFiles());
             }
             catch (Exception ex)
             {
