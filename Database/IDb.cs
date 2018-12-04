@@ -16,6 +16,7 @@ namespace Database
         Task<List<string>> GetAudioList();
         string ConvertAudio(string path, int quality);
         void RemoveCache();
+        void TransferCache(string oldDir);
         Task<string> CacheImages();
         Task<string> GetSongList();
         Task<string> GetArtistList();

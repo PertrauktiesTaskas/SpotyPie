@@ -331,6 +331,28 @@ namespace Services
             }
         }
 
+        public void TransferCache(string oldDir)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    if (!Directory.Exists(settings.AudioCachePath))
+                        Directory.CreateDirectory(settings.AudioCachePath);
+
+                    DirectoryInfo di = new DirectoryInfo(oldDir);
+                    foreach (FileInfo file in di.EnumerateFiles())
+                    {
+                        file.MoveTo(settings.AudioCachePath);
+                        file.Delete();
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            });
+        }
+
         public void RemoveCache()
         {
             DirectoryInfo di = new DirectoryInfo(settings.CachePath);

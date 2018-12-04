@@ -28,6 +28,20 @@ namespace API.Controllers
                 .Build();
         }
 
+        [HttpGet]
+        [EnableCors("AllowSpecificOrigin")]
+        public IActionResult GetConfiguration(CancellationToken t)
+        {
+            try
+            {
+                return new JsonResult(new { settings.AudioStoragePath, settings.AudioCachePath, settings.FirstUse, settings.StreamQuality });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpGet("rebindAudio")]
         [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> RebindAudioFiles(CancellationToken t)
@@ -79,7 +93,9 @@ namespace API.Controllers
         {
             try
             {
+                var old = settings.AudioCachePath;
                 settings.CachePath = path;
+                _ctd.TransferCache(old);
                 return Ok();
             }
             catch (Exception ex)
