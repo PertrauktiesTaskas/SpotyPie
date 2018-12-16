@@ -88,6 +88,23 @@ namespace API.Controllers
             }
         }
 
+        [HttpDelete("{id}")]
+        [EnableCors("AllowSpecificOrigin")]
+        public async Task<IActionResult> Remove(int id)
+        {
+            try
+            {
+                if (await _ctd.RemoveAudio(id))
+                    return Ok();
+                else
+                    return StatusCode(404);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [HttpGet("GetSongAlbum/{id}")]
         [EnableCors("AllowSpecificOrigin")]
         public async Task<IActionResult> GetSongAlbum(int id)

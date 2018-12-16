@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="API.Controllers.InfoController">
+    <Position X="3.5" Y="0.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAIAAAAAAAAAABAAAACAAAAAIAAAAAAAAAI=</HashCode>
+      <FileName>Controllers\InfoController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_ctd" />
+      <Field Name="settings" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Microsoft.AspNetCore.Mvc.ControllerBase" Collapsed="true">
+    <Position X="4.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Interface Name="Database.IDb">
+    <Position X="7.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Service.Settings.ISettings">
+    <Position X="0.5" Y="0.5" Width="2" />
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

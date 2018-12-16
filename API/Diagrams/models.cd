@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Models.BackEnd.Album">
+    <Position X="17" Y="0.5" Width="2.25" />
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="Songs" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Models.BackEnd.Artist">
+    <Position X="13.75" Y="0.5" Width="2.25" />
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="Albums" />
+      <Property Name="Images" />
+      <Property Name="Songs" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Models.BackEnd.Copyright">
+    <Position X="7.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier />
+    <ShowAsCollectionAssociation>
+      <Property Name="Albums" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Models.BackEnd.CurrentSong">
+    <Position X="0.75" Y="3" Width="1.75" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Models.BackEnd.Image">
+    <Position X="0.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Models.BackEnd.Item">
+    <Position X="5.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Models.BackEnd.Playlist">
+    <Position X="8.75" Y="2.5" Width="2.25" />
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="Items" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Models.BackEnd.Tracks">
+    <Position X="8" Y="0.5" Width="1.5" />
+    <AssociationLine Name="Items" Type="Models.BackEnd.Item" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8.75" Y="0.5" />
+        <Point X="8.75" Y="0.125" />
+        <Point X="6.562" Y="0.125" />
+        <Point X="6.562" Y="0.5" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier />
+    <ShowAsCollectionAssociation>
+      <Property Name="Items" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Models.BackEnd.User">
+    <Position X="2.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="System.Collections.Generic.List&lt;T&gt;" Collapsed="true">
+    <Position X="12.25" Y="5.25" Width="1.5" />
+    <NestedTypes>
+      <Class Name="System.Collections.Generic.List&lt;T&gt;.Enumerator" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

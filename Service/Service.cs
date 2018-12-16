@@ -76,6 +76,15 @@ namespace Services
                 return "";
         }
 
+        public async Task<bool> RemoveAudio(int id)
+        {
+            var path = await GetAudioPathById(id);
+            File.Delete(path);
+            if (!File.Exists(path))
+                return true;
+            return false;
+        }
+
         public async Task<string> GetAudioPathById(int id)
         {
             try

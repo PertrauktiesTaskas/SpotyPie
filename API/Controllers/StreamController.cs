@@ -15,15 +15,13 @@ namespace API.Controllers
     [ApiController]
     public class StreamController : ControllerBase
     {
-        private readonly SpotyPieIDbContext _ctx;
         private readonly CancellationTokenSource cts;
         private CancellationToken ct;
         private readonly IDb _ctd;
         private ISettings settings;
 
-        public StreamController(SpotyPieIDbContext ctx, IDb ctd)
+        public StreamController(IDb ctd)
         {
-            _ctx = ctx;
             _ctd = ctd;
             cts = new CancellationTokenSource();
             ct = cts.Token;
