@@ -74,7 +74,7 @@ namespace SpotyPie
             ButtonBackGround = RootView.FindViewById<TextView>(Resource.Id.backgroundHalf);
             ButtonBackGround2 = RootView.FindViewById<TextView>(Resource.Id.backgroundHalfInner);
 
-            Picasso.With(Context).Load(Current_state.Current_Artist.Images[0].Url).Into(Photo);
+            Picasso.With(Context).Load(Current_state.Current_Artist.Images[0].Url).Resize(300, 300).CenterCrop().Into(Photo);
             AlbumTitle.Text = Current_state.Current_Artist.Name;
 
             //TODO error if genres is null
@@ -137,7 +137,7 @@ namespace SpotyPie
         {
             try
             {
-                RestClient Client = new RestClient("http://spotypie.deveim.com/api/artist/" + id + "/top-tracks");
+                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/artist/" + id + "/top-tracks");
                 var request = new RestRequest(Method.GET);
                 IRestResponse response = await Client.ExecuteGetTaskAsync(request);
                 if (response.IsSuccessful)
@@ -171,7 +171,7 @@ namespace SpotyPie
         {
             try
             {
-                RestClient Client = new RestClient("http://spotypie.deveim.com/api/artist/" + id + "/Albums");
+                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/artist/" + id + "/Albums");
                 var request = new RestRequest(Method.GET);
                 IRestResponse response = await Client.ExecuteGetTaskAsync(request);
                 if (response.IsSuccessful)

@@ -189,7 +189,7 @@ namespace SpotyPie
         {
             try
             {
-                RestClient Client = new RestClient("http://spotypie.deveim.com/api/album/Recent");
+                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/album/Recent");
                 var request = new RestRequest(Method.GET);
                 IRestResponse response = await Client.ExecuteGetTaskAsync(request);
                 if (response.IsSuccessful)
@@ -221,7 +221,7 @@ namespace SpotyPie
         {
             try
             {
-                RestClient Client = new RestClient("http://spotypie.deveim.com/api/album/popular");
+                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/album/popular");
                 var request = new RestRequest(Method.GET);
                 IRestResponse response = await Client.ExecuteGetTaskAsync(request);
                 if (response.IsSuccessful)
@@ -253,7 +253,7 @@ namespace SpotyPie
         {
             try
             {
-                RestClient Client = new RestClient("http://spotypie.deveim.com/api/artist/popular");
+                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/artist/popular");
                 var request = new RestRequest(Method.GET);
                 IRestResponse response = await Client.ExecuteGetTaskAsync(request);
                 if (response.IsSuccessful)
@@ -309,7 +309,7 @@ namespace SpotyPie
         {
             try
             {
-                RestClient Client = new RestClient("http://spotypie.deveim.com/api/album/old");
+                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/album/old");
                 var request = new RestRequest(Method.GET);
                 IRestResponse response = await Client.ExecuteGetTaskAsync(request);
                 if (response.IsSuccessful)

@@ -64,7 +64,7 @@ namespace SpotyPie.Player
         {
             try
             {
-                RestClient Client = new RestClient("http://spotypie.deveim.com/api/album/" + id + "/tracks");
+                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/album/" + id + "/tracks");
                 var request = new RestRequest(Method.GET);
                 IRestResponse response = await Client.ExecuteGetTaskAsync(request);
                 if (response.IsSuccessful)

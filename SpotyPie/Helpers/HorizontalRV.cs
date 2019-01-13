@@ -102,7 +102,7 @@ namespace SpotyPie.Helpers
                 view.Title.Text = Dataset[position].Title;
                 view.SubTitile.Text = Dataset[position].SubTitle;
                 if (Dataset[position].Image != string.Empty)
-                    Picasso.With(Context).Load(Dataset[position].Image).Into(view.Image);
+                    Picasso.With(Context).Load(Dataset[position].Image).Resize(300, 300).CenterCrop().Into(view.Image);
                 else
                     view.Image.SetImageResource(Resource.Drawable.noimg);
 

@@ -155,7 +155,7 @@ namespace SpotyPie.Player
 #pragma warning disable CS0618 // Type or member is obsolete
                                 player.SetAudioStreamType(Stream.Music);
 #pragma warning restore CS0618 // Type or member is obsolete
-                                player.SetDataSource("http://spotypie.deveim.com/api/stream/play/" + Current_state.Current_Song.Id);
+                                player.SetDataSource("http://spotypie.pertrauktiestaskas.lt/api/stream/play/" + Current_state.Current_Song.Id);
                                 player.Prepare();
                             }, null);
                     }

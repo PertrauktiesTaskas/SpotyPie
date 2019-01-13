@@ -181,7 +181,7 @@ namespace SpotyPie
         {
             try
             {
-                RestClient Client = new RestClient("http://spotypie.deveim.com/api/songs/search");
+                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/songs/search");
                 var request = new RestRequest(Method.POST);
                 request.AddHeader("cache-control", "no-cache");
                 request.AddHeader("content-type", "application/json");
@@ -235,7 +235,7 @@ namespace SpotyPie
 
             try
             {
-                RestClient Client = new RestClient("http://spotypie.deveim.com/Api/Album/Search");
+                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/Api/Album/Search");
                 var request = new RestRequest(Method.POST);
                 request.AddHeader("cache-control", "no-cache");
                 request.AddHeader("content-type", "application/json");
@@ -316,7 +316,7 @@ namespace SpotyPie
 
             try
             {
-                RestClient Client = new RestClient("http://spotypie.deveim.com/Api/artist/Search");
+                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/Api/artist/Search");
                 var request = new RestRequest(Method.POST);
                 request.AddHeader("cache-control", "no-cache");
                 request.AddHeader("content-type", "application/json");
