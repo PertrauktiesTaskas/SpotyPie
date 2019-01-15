@@ -17,40 +17,72 @@ using SupportFragment = Android.Support.V4.App.Fragment;
 
 namespace SpotyPie
 {
-    public class Home : SupportFragment
+    public class HomeFragment : SupportFragment
     {
         View RootView;
 
         //Recent albums
-        public RecycleViewList<BlockWithImage> RecentAlbums = new RecycleViewList<BlockWithImage>();
+        public static RecycleViewList<BlockWithImage> RecentAlbums = new RecycleViewList<BlockWithImage>();
         private RecyclerView.LayoutManager RecentAlbumsLayoutManager;
-        private RecyclerView.Adapter RecentAlbumsAdapter;
-        private RecyclerView RecentAlbumsRecyclerView;
+        private static RecyclerView.Adapter RecentAlbumsAdapter;
+        private static RecyclerView RecentAlbumsRecyclerView;
 
         //Best albums
-        public RecycleViewList<BlockWithImage> BestAlbums = new RecycleViewList<BlockWithImage>();
+        public static RecycleViewList<BlockWithImage> BestAlbums = new RecycleViewList<BlockWithImage>();
         private RecyclerView.LayoutManager BestAlbumsLayoutManager;
-        private RecyclerView.Adapter BestAlbumsAdapter;
-        private RecyclerView BestAlbumsRecyclerView;
+        private static RecyclerView.Adapter BestAlbumsAdapter;
+        private static RecyclerView BestAlbumsRecyclerView;
 
         //Best artists
-        public List<Artist> BestArtistList;
-        public RecycleViewList<BlockWithImage> BestArtists = new RecycleViewList<BlockWithImage>();
+        public static List<Artist> BestArtistList;
+        public static RecycleViewList<BlockWithImage> BestArtists = new RecycleViewList<BlockWithImage>();
         private RecyclerView.LayoutManager BestArtistsLayoutManager;
-        private RecyclerView.Adapter BestArtistsAdapter;
-        private RecyclerView BestArtistsRecyclerView;
+        private static RecyclerView.Adapter BestArtistsAdapter;
+        private static RecyclerView BestArtistsRecyclerView;
 
         //Jump back albums
-        public RecycleViewList<BlockWithImage> JumpBack = new RecycleViewList<BlockWithImage>();
+        public static RecycleViewList<BlockWithImage> JumpBack = new RecycleViewList<BlockWithImage>();
         private RecyclerView.LayoutManager JumpBackLayoutManager;
-        private RecyclerView.Adapter JumpBackAdapter;
-        private RecyclerView JumpBackRecyclerView;
+        private static RecyclerView.Adapter JumpBackAdapter;
+        private static RecyclerView JumpBackRecyclerView;
 
         //Top playlist
-        public RecycleViewList<BlockWithImage> TopPlaylist = new RecycleViewList<BlockWithImage>();
+        public static RecycleViewList<BlockWithImage> TopPlaylist = new RecycleViewList<BlockWithImage>();
         private RecyclerView.LayoutManager TopPlaylistLayoutManager;
-        private RecyclerView.Adapter TopPlaylistAdapter;
-        private RecyclerView TopPlaylistRecyclerView;
+        private static RecyclerView.Adapter TopPlaylistAdapter;
+        private static RecyclerView TopPlaylistRecyclerView;
+
+        public MainActivity MainActivity
+        {
+            get => default(MainActivity);
+            set
+            {
+            }
+        }
+
+        public RecycleViewList<object> RecycleViewList
+        {
+            get => default(RecycleViewList<object>);
+            set
+            {
+            }
+        }
+
+        public HorizontalRV HorizontalRV
+        {
+            get => default(HorizontalRV);
+            set
+            {
+            }
+        }
+
+        public BoxedRV BoxedRV
+        {
+            get => default(BoxedRV);
+            set
+            {
+            }
+        }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
@@ -74,6 +106,8 @@ namespace SpotyPie
                     .Commit();
                 }
             });
+
+
 
             //MOST POLULAR ALL TIME ALBUMS
             BestAlbumsLayoutManager = new LinearLayoutManager(this.Activity, LinearLayoutManager.Horizontal, false);
@@ -187,7 +221,7 @@ namespace SpotyPie
         {
             try
             {
-                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/album/Recent");
+                RestClient Client = new RestClient("http://spotypie.deveim.com/api/album/Recent");
                 var request = new RestRequest(Method.GET);
                 IRestResponse response = await Client.ExecuteGetTaskAsync(request);
                 if (response.IsSuccessful)
@@ -219,7 +253,7 @@ namespace SpotyPie
         {
             try
             {
-                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/album/popular");
+                RestClient Client = new RestClient("http://spotypie.deveim.com/api/album/popular");
                 var request = new RestRequest(Method.GET);
                 IRestResponse response = await Client.ExecuteGetTaskAsync(request);
                 if (response.IsSuccessful)
@@ -251,7 +285,7 @@ namespace SpotyPie
         {
             try
             {
-                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/artist/popular");
+                RestClient Client = new RestClient("http://spotypie.deveim.com/api/artist/popular");
                 var request = new RestRequest(Method.GET);
                 IRestResponse response = await Client.ExecuteGetTaskAsync(request);
                 if (response.IsSuccessful)
@@ -307,7 +341,7 @@ namespace SpotyPie
         {
             try
             {
-                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/album/old");
+                RestClient Client = new RestClient("http://spotypie.deveim.com/api/album/old");
                 var request = new RestRequest(Method.GET);
                 IRestResponse response = await Client.ExecuteGetTaskAsync(request);
                 if (response.IsSuccessful)

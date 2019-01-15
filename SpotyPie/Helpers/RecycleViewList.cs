@@ -47,6 +47,11 @@ namespace SpotyPie.Helpers
             }, null);
         }
 
+        public T Get(int position)
+        {
+            return mItems[position];
+        }
+
         public void Remove(int position)
         {
             mItems.RemoveAt(position);
@@ -68,7 +73,7 @@ namespace SpotyPie.Helpers
             get { return mItems.Count; }
         }
 
-        public void clear()
+        public void Clear()
         {
             Application.SynchronizationContext.Post(_ =>
             {
@@ -89,6 +94,9 @@ namespace SpotyPie.Helpers
                 }
                 Adapter.NotifyDataSetChanged();
             }, null);
+
+            if (mItems.Count != 0)
+                Clear();
         }
     }
 }

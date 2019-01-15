@@ -67,7 +67,7 @@ namespace SpotyPie
             ButtonBackGround = RootView.FindViewById<TextView>(Resource.Id.backgroundHalf);
             ButtonBackGround2 = RootView.FindViewById<TextView>(Resource.Id.backgroundHalfInner);
 
-            Picasso.With(Context).Load(Current_state.ClickedInRVH.Image).Into(AlbumPhoto);
+            Picasso.With(Context).Load(Current_state.ClickedInRVH.Image).Resize(300, 300).CenterCrop().Into(AlbumPhoto);
             AlbumTitle.Text = Current_state.ClickedInRVH.Title;
             AlbumByText.Text = Current_state.ClickedInRVH.SubTitle;
 
@@ -123,7 +123,7 @@ namespace SpotyPie
         {
             try
             {
-                RestClient Client = new RestClient("http://spotypie.deveim.com/api/album/" + id + "/tracks");
+                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/album/" + id + "/tracks");
                 var request = new RestRequest(Method.GET);
                 IRestResponse response = await Client.ExecuteGetTaskAsync(request);
                 if (response.IsSuccessful)

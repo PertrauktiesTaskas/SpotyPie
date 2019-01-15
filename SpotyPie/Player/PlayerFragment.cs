@@ -10,7 +10,7 @@ using SupportFragment = Android.Support.V4.App.Fragment;
 
 namespace SpotyPie.Player
 {
-    public class Player : SupportFragment
+    public class PlayerFragment : MainActivity
     {
         View RootView;
         SupportFragment PlayerSongList;
@@ -52,11 +52,19 @@ namespace SpotyPie.Player
 
         public static FrameLayout PlayerSongListContainer;
 
+        public PlayerSongListFragment PlayerSongListFragment
+        {
+            get => default(PlayerSongListFragment);
+            set
+            {
+            }
+        }
+
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             RootView = inflater.Inflate(Resource.Layout.player, container, false);
             contextStatic = this.Context;
-            PlayerSongList = new player_song_list();
+            PlayerSongList = new PlayerSongListFragment();
             PlayerSongListContainer = RootView.FindViewById<FrameLayout>(Resource.Id.player_frame);
             PlayerSongListContainer.TranslationX = MainActivity.widthInDp;
             SongListButton = RootView.FindViewById<ImageButton>(Resource.Id.song_list);
@@ -126,7 +134,7 @@ namespace SpotyPie.Player
 
             float Procent = (e.Event.GetX() * 100) / SongProgress.Width;
             int Second = (int)(Current_state.Current_Song.DurationMs * Procent / 100);
-            Player.player.SeekTo(Second);
+            PlayerFragment.player.SeekTo(Second);
         }
 
         private void PreviewSong_Click(object sender, EventArgs e)
@@ -152,8 +160,10 @@ namespace SpotyPie.Player
                         Application.SynchronizationContext.Post(_ =>
                             {
                                 player.Reset();
+#pragma warning disable CS0618 // Type or member is obsolete
                                 player.SetAudioStreamType(Stream.Music);
-                                player.SetDataSource("http://spotypie.pertrauktiestaskas.lt/api/stream/play/" + Current_state.Current_Song.Id);
+#pragma warning restore CS0618 // Type or member is obsolete
+                                player.SetDataSource("http://spotypie.deveim.com/api/stream/play/" + Current_state.Current_Song.Id);
                                 player.Prepare();
                             }, null);
                     }

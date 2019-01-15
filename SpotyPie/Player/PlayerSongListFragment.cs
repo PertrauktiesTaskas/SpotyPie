@@ -15,7 +15,7 @@ using SupportFragment = Android.Support.V4.App.Fragment;
 
 namespace SpotyPie.Player
 {
-    public class player_song_list : SupportFragment
+    public class PlayerSongListFragment : SupportFragment
     {
         View RootView;
 
@@ -25,6 +25,38 @@ namespace SpotyPie.Player
         private RecyclerView.LayoutManager AlbumSongsLayoutManager;
         private static RecyclerView.Adapter AlbumSongsAdapter;
         private static RecyclerView AlbumSongsRecyclerView;
+
+        public VerticalRV VerticalRV
+        {
+            get => default(VerticalRV);
+            set
+            {
+            }
+        }
+
+        public HorizontalRV HorizontalRV
+        {
+            get => default(HorizontalRV);
+            set
+            {
+            }
+        }
+
+        public BoxedRV BoxedRV
+        {
+            get => default(BoxedRV);
+            set
+            {
+            }
+        }
+
+        public RecycleViewList<object> RecycleViewList
+        {
+            get => default(RecycleViewList<object>);
+            set
+            {
+            }
+        }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
@@ -44,7 +76,7 @@ namespace SpotyPie.Player
                 if (AlbumSongsRecyclerView != null && AlbumSongsRecyclerView.ChildCount != 0)
                 {
                     Current_state.SetSong(Current_state.Current_Song_List[position]);
-                    Player.PlayerSongListContainer.TranslationX = MainActivity.widthInDp;
+                    PlayerFragment.PlayerSongListContainer.TranslationX = MainActivity.widthInDp;
                 }
             });
 
@@ -64,7 +96,7 @@ namespace SpotyPie.Player
         {
             try
             {
-                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/album/" + id + "/tracks");
+                RestClient Client = new RestClient("http://spotypie.deveim.com/api/album/" + id + "/tracks");
                 var request = new RestRequest(Method.GET);
                 IRestResponse response = await Client.ExecuteGetTaskAsync(request);
                 if (response.IsSuccessful)

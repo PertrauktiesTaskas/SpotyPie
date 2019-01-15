@@ -115,12 +115,12 @@ namespace SpotyPie.Helpers
                 BlockImage view = holder as BlockImage;
                 view.L_Title.Text = Dataset[position].Left.Title;
                 view.L_SubTitile.Text = Dataset[position].Left.SubTitle;
-                Picasso.With(Context).Load(Dataset[position].Left.Image).Into(view.L_Image);
+                Picasso.With(Context).Load(Dataset[position].Left.Image).Resize(300, 300).CenterCrop().Into(view.L_Image);
                 if (Dataset[position].Right != null)
                 {
                     view.R_Title.Text = Dataset[position].Right.Title;
                     view.R_SubTitile.Text = Dataset[position].Right.SubTitle;
-                    Picasso.With(Context).Load(Dataset[position].Right.Image).Into(view.R_Image);
+                    Picasso.With(Context).Load(Dataset[position].Right.Image).Resize(300, 300).CenterCrop().Into(view.R_Image);
                 }
                 else
                 {

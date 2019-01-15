@@ -18,7 +18,7 @@ using SupportFragment = Android.Support.V4.App.Fragment;
 
 namespace SpotyPie
 {
-    public class Search : SupportFragment
+    public class SearchFragment : SupportFragment
     {
         View RootView;
 
@@ -45,8 +45,6 @@ namespace SpotyPie
         private bool ArtistFinded = false;
         private bool PlaylistFinded = false;
 
-        public bool SearchNow = true;
-
         ConstraintLayout SongsContainer;
         ConstraintLayout AlbumsContainer;
         ConstraintLayout PlaylistContainer;
@@ -56,6 +54,46 @@ namespace SpotyPie
 
         EditText search;
         ImageView SearchIcon;
+
+        public MainActivity MainActivity
+        {
+            get => default(MainActivity);
+            set
+            {
+            }
+        }
+
+        public RecycleViewList<object> RecycleViewList
+        {
+            get => default(RecycleViewList<object>);
+            set
+            {
+            }
+        }
+
+        public VerticalRV VerticalRV
+        {
+            get => default(VerticalRV);
+            set
+            {
+            }
+        }
+
+        public HorizontalRV HorizontalRV
+        {
+            get => default(HorizontalRV);
+            set
+            {
+            }
+        }
+
+        public BoxedRV BoxedRV
+        {
+            get => default(BoxedRV);
+            set
+            {
+            }
+        }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
@@ -72,7 +110,6 @@ namespace SpotyPie
             SearchIcon = RootView.FindViewById<ImageView>(Resource.Id.imageView);
 
             search = RootView.FindViewById<EditText>(Resource.Id.editText);
-            search.Text = "Search";
             search.BeforeTextChanged += Search_BeforeTextChanged;
             search.FocusChange += Search_FocusChange;
             // song list
@@ -116,27 +153,17 @@ namespace SpotyPie
                     //Current_state.SetSong(Current_state.Current_Song_List[position]);
                 }
             });
-            return RootView;
-        }
 
-        public override void OnResume()
-        {
-            base.OnResume();
-            SearchNow = true;
             Task.Run(() => Checker());
-        }
 
-        public override void OnStop()
-        {
-            base.OnStop();
-            SearchNow = false;
+            return RootView;
         }
 
         private void Search_FocusChange(object sender, View.FocusChangeEventArgs e)
         {
             if (search.IsFocused)
             {
-                if (search.Text.Contains("Search"))
+                if (search.Text.Contains("Search song, album, playlist"))
                     search.Text = "";
             }
 
@@ -153,7 +180,7 @@ namespace SpotyPie
         public async Task Checker()
         {
             var query = "";
-            while (SearchNow)
+            while (true)
             {
                 try
                 {
@@ -161,9 +188,9 @@ namespace SpotyPie
                     {
                         Application.SynchronizationContext.Post(_ =>
                         {
-                            Songs.Clear();
-                            Albums.Clear();
-                            Artists.Clear();
+                            Songs.clear();
+                            Albums.clear();
+                            Artists.clear();
                         }, null);
                         await Task.Delay(500);
                         var a = Task.Run(() => SearchSong(search.Text));
@@ -194,7 +221,7 @@ namespace SpotyPie
         {
             try
             {
-                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/songs/search");
+                RestClient Client = new RestClient("http://spotypie.deveim.com/api/songs/search");
                 var request = new RestRequest(Method.POST);
                 request.AddHeader("cache-control", "no-cache");
                 request.AddHeader("content-type", "application/json");
@@ -248,7 +275,7 @@ namespace SpotyPie
 
             try
             {
-                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/Api/Album/Search");
+                RestClient Client = new RestClient("http://spotypie.deveim.com/Api/Album/Search");
                 var request = new RestRequest(Method.POST);
                 request.AddHeader("cache-control", "no-cache");
                 request.AddHeader("content-type", "application/json");
@@ -329,7 +356,7 @@ namespace SpotyPie
 
             try
             {
-                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/Api/artist/Search");
+                RestClient Client = new RestClient("http://spotypie.deveim.com/Api/artist/Search");
                 var request = new RestRequest(Method.POST);
                 request.AddHeader("cache-control", "no-cache");
                 request.AddHeader("content-type", "application/json");

@@ -52,7 +52,7 @@ namespace SpotyPie
 
             async Task Update()
             {
-                var client = new RestClient("http://spotypie.deveim.com/api/songs/1/update");
+                var client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/songs/1/update");
                 var request = new RestRequest(Method.GET);
                 request.AddHeader("cache-control", "no-cache");
                 IRestResponse response = await client.ExecuteTaskAsync(request);
@@ -68,7 +68,7 @@ namespace SpotyPie
                     if (Current_Player_Image != ClickedInRVH.Image)
                     {
                         Current_Player_Image = ClickedInRVH.Image;
-                        Picasso.With(Player.Player.contextStatic).Load(ClickedInRVH.Image).Into(Player.Player.Player_Image);
+                        Picasso.With(Player.Player.contextStatic).Load(ClickedInRVH.Image).Resize(300, 300).CenterCrop().Into(Player.Player.Player_Image);
                     }
                     MainActivity.PlayerContainer.TranslationX = 0;
                     Player.Player.CurretSongTimeText.Text = "0.00";
@@ -94,7 +94,7 @@ namespace SpotyPie
 
             async Task Update()
             {
-                var client = new RestClient("http://spotypie.deveim.com/api/album/update/" + album.Id);
+                var client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/album/update/" + album.Id);
                 var request = new RestRequest(Method.GET);
                 request.AddHeader("cache-control", "no-cache");
                 IRestResponse response = await client.ExecuteTaskAsync(request);
