@@ -152,9 +152,7 @@ namespace SpotyPie.Player
                         Application.SynchronizationContext.Post(_ =>
                             {
                                 player.Reset();
-#pragma warning disable CS0618 // Type or member is obsolete
                                 player.SetAudioStreamType(Stream.Music);
-#pragma warning restore CS0618 // Type or member is obsolete
                                 player.SetDataSource("http://spotypie.pertrauktiestaskas.lt/api/stream/play/" + Current_state.Current_Song.Id);
                                 player.Prepare();
                             }, null);

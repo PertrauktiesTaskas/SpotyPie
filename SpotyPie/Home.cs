@@ -22,35 +22,35 @@ namespace SpotyPie
         View RootView;
 
         //Recent albums
-        public static RecycleViewList<BlockWithImage> RecentAlbums = new RecycleViewList<BlockWithImage>();
+        public RecycleViewList<BlockWithImage> RecentAlbums = new RecycleViewList<BlockWithImage>();
         private RecyclerView.LayoutManager RecentAlbumsLayoutManager;
-        private static RecyclerView.Adapter RecentAlbumsAdapter;
-        private static RecyclerView RecentAlbumsRecyclerView;
+        private RecyclerView.Adapter RecentAlbumsAdapter;
+        private RecyclerView RecentAlbumsRecyclerView;
 
         //Best albums
-        public static RecycleViewList<BlockWithImage> BestAlbums = new RecycleViewList<BlockWithImage>();
+        public RecycleViewList<BlockWithImage> BestAlbums = new RecycleViewList<BlockWithImage>();
         private RecyclerView.LayoutManager BestAlbumsLayoutManager;
-        private static RecyclerView.Adapter BestAlbumsAdapter;
-        private static RecyclerView BestAlbumsRecyclerView;
+        private RecyclerView.Adapter BestAlbumsAdapter;
+        private RecyclerView BestAlbumsRecyclerView;
 
         //Best artists
-        public static List<Artist> BestArtistList;
-        public static RecycleViewList<BlockWithImage> BestArtists = new RecycleViewList<BlockWithImage>();
+        public List<Artist> BestArtistList;
+        public RecycleViewList<BlockWithImage> BestArtists = new RecycleViewList<BlockWithImage>();
         private RecyclerView.LayoutManager BestArtistsLayoutManager;
-        private static RecyclerView.Adapter BestArtistsAdapter;
-        private static RecyclerView BestArtistsRecyclerView;
+        private RecyclerView.Adapter BestArtistsAdapter;
+        private RecyclerView BestArtistsRecyclerView;
 
         //Jump back albums
-        public static RecycleViewList<BlockWithImage> JumpBack = new RecycleViewList<BlockWithImage>();
+        public RecycleViewList<BlockWithImage> JumpBack = new RecycleViewList<BlockWithImage>();
         private RecyclerView.LayoutManager JumpBackLayoutManager;
-        private static RecyclerView.Adapter JumpBackAdapter;
-        private static RecyclerView JumpBackRecyclerView;
+        private RecyclerView.Adapter JumpBackAdapter;
+        private RecyclerView JumpBackRecyclerView;
 
         //Top playlist
-        public static RecycleViewList<BlockWithImage> TopPlaylist = new RecycleViewList<BlockWithImage>();
+        public RecycleViewList<BlockWithImage> TopPlaylist = new RecycleViewList<BlockWithImage>();
         private RecyclerView.LayoutManager TopPlaylistLayoutManager;
-        private static RecyclerView.Adapter TopPlaylistAdapter;
-        private static RecyclerView TopPlaylistRecyclerView;
+        private RecyclerView.Adapter TopPlaylistAdapter;
+        private RecyclerView TopPlaylistRecyclerView;
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
@@ -74,8 +74,6 @@ namespace SpotyPie
                     .Commit();
                 }
             });
-
-
 
             //MOST POLULAR ALL TIME ALBUMS
             BestAlbumsLayoutManager = new LinearLayoutManager(this.Activity, LinearLayoutManager.Horizontal, false);

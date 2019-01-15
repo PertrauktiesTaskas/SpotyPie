@@ -45,6 +45,8 @@ namespace SpotyPie
         private bool ArtistFinded = false;
         private bool PlaylistFinded = false;
 
+        public bool SearchNow = true;
+
         ConstraintLayout SongsContainer;
         ConstraintLayout AlbumsContainer;
         ConstraintLayout PlaylistContainer;
@@ -70,6 +72,7 @@ namespace SpotyPie
             SearchIcon = RootView.FindViewById<ImageView>(Resource.Id.imageView);
 
             search = RootView.FindViewById<EditText>(Resource.Id.editText);
+            search.Text = "Search";
             search.BeforeTextChanged += Search_BeforeTextChanged;
             search.FocusChange += Search_FocusChange;
             // song list
@@ -113,17 +116,27 @@ namespace SpotyPie
                     //Current_state.SetSong(Current_state.Current_Song_List[position]);
                 }
             });
-
-            Task.Run(() => Checker());
-
             return RootView;
+        }
+
+        public override void OnResume()
+        {
+            base.OnResume();
+            SearchNow = true;
+            Task.Run(() => Checker());
+        }
+
+        public override void OnStop()
+        {
+            base.OnStop();
+            SearchNow = false;
         }
 
         private void Search_FocusChange(object sender, View.FocusChangeEventArgs e)
         {
             if (search.IsFocused)
             {
-                if (search.Text.Contains("Search song, album, playlist"))
+                if (search.Text.Contains("Search"))
                     search.Text = "";
             }
 
@@ -140,7 +153,7 @@ namespace SpotyPie
         public async Task Checker()
         {
             var query = "";
-            while (true)
+            while (SearchNow)
             {
                 try
                 {
@@ -148,9 +161,9 @@ namespace SpotyPie
                     {
                         Application.SynchronizationContext.Post(_ =>
                         {
-                            Songs.clear();
-                            Albums.clear();
-                            Artists.clear();
+                            Songs.Clear();
+                            Albums.Clear();
+                            Artists.Clear();
                         }, null);
                         await Task.Delay(500);
                         var a = Task.Run(() => SearchSong(search.Text));
