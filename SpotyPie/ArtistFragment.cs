@@ -36,13 +36,15 @@ namespace SpotyPie
         TextView ButtonBackGround2;
 
         //Artist Songs
-        public RecycleViewList<List> ArtistTopSongs = new RecycleViewList<List>();
+        public List<Item> ArtistTopSongsData;
+        public RecycleViewList<Item> ArtistTopSongs;
         private RecyclerView.LayoutManager ArtistSongsLayoutManager;
         private RecyclerView.Adapter ArtistSongsAdapter;
         private RecyclerView ArtistSongsRecyclerView;
 
         //Artist Albums
-        public RecycleViewList<TwoBlockWithImage> Albums = new RecycleViewList<TwoBlockWithImage>();
+        List<Album> AlbumsData;
+        public RecycleViewList<TwoBlockWithImage> Albums;
         private RecyclerView.LayoutManager AlbumsLayoutManager;
         private RecyclerView.Adapter AlbumsAdapter;
         private RecyclerView AlbumsRecyclerView;
@@ -74,7 +76,11 @@ namespace SpotyPie
             ButtonBackGround = RootView.FindViewById<TextView>(Resource.Id.backgroundHalf);
             ButtonBackGround2 = RootView.FindViewById<TextView>(Resource.Id.backgroundHalfInner);
 
-            Picasso.With(Context).Load(Current_state.Current_Artist.Images[0].Url).Resize(300, 300).CenterCrop().Into(Photo);
+            if (Current_state.GetArtistPhoto() != null)
+                Picasso.With(Context).Load(Current_state.GetArtistPhoto()).Resize(300, 300).CenterCrop().Into(Photo);
+            else
+                Photo.SetImageResource(Resource.Drawable.noimg);
+
             AlbumTitle.Text = Current_state.Current_Artist.Name;
 
             //TODO error if genres is null
@@ -96,15 +102,20 @@ namespace SpotyPie
 
 
             //Artist song list
+
+            ArtistTopSongsData = new List<Item>();
+            ArtistTopSongs = new RecycleViewList<Item>();
             ArtistSongsLayoutManager = new LinearLayoutManager(this.Activity);
             ArtistSongsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.song_list);
             ArtistSongsRecyclerView.SetLayoutManager(ArtistSongsLayoutManager);
-            ArtistSongsAdapter = new VerticalRV(ArtistTopSongs, ArtistSongsRecyclerView, this.Context);
+            ArtistSongsAdapter = new VerticalRV(ArtistTopSongs, this.Context);
             ArtistTopSongs.Adapter = ArtistSongsAdapter;
             ArtistSongsRecyclerView.SetAdapter(ArtistSongsAdapter);
             ArtistSongsRecyclerView.NestedScrollingEnabled = false;
 
             //Artist song list
+            AlbumsData = new List<Album>();
+            Albums = new RecycleViewList<TwoBlockWithImage>();
             AlbumsLayoutManager = new LinearLayoutManager(this.Activity);
             AlbumsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.artist_albums_list);
             AlbumsRecyclerView.SetLayoutManager(AlbumsLayoutManager);
@@ -118,17 +129,13 @@ namespace SpotyPie
 
         public override void OnDestroyView()
         {
-            ArtistTopSongs = new RecycleViewList<List>();
             base.OnDestroyView();
         }
 
         public override void OnResume()
         {
-            if (ArtistTopSongs == null || ArtistTopSongs.Count == 0)
-                Task.Run(() => GetSongsAsync(Current_state.Current_Artist.Id));
-
-            if (Albums == null || Albums.Count == 0)
-                Task.Run(() => GetArtistAlbums(Current_state.Current_Artist.Id));
+            Task.Run(() => GetSongsAsync(Current_state.Current_Artist.Id));
+            Task.Run(() => GetArtistAlbums(Current_state.Current_Artist.Id));
 
             base.OnResume();
         }
@@ -143,12 +150,13 @@ namespace SpotyPie
                 if (response.IsSuccessful)
                 {
                     List<Item> songs = JsonConvert.DeserializeObject<List<Item>>(response.Content);
+                    foreach (var x in songs.OrderByDescending(x => x.LastActiveTime).Take(6))
+                    {
+                        ArtistTopSongs.Add(x);
+                    }
+                    ArtistTopSongsData = songs;
                     Application.SynchronizationContext.Post(_ =>
                     {
-                        foreach (var x in songs.OrderByDescending(x => x.LastActiveTime).Take(6))
-                        {
-                            ArtistTopSongs.Add(new List(x.Id, x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name));
-                        }
                         List<string> Genres = JsonConvert.DeserializeObject<List<string>>(Current_state.Current_Artist.Genres);
                         Copyrights.Text = string.Join("\n", Genres);
                     }, null);
@@ -179,6 +187,7 @@ namespace SpotyPie
                     Artist ArtistWithAlbums = JsonConvert.DeserializeObject<Artist>(response.Content);
                     Application.SynchronizationContext.Post(_ =>
                     {
+                        AlbumsData = ArtistWithAlbums.Albums;
                         for (int i = 0; i < ArtistWithAlbums.Albums.Count; i = i + 2)
                         {
                             if (ArtistWithAlbums.Albums.Count - i == 1)

@@ -1,5 +1,6 @@
 ﻿using Android.App;
 using Android.Views;
+using Android.Widget;
 using Newtonsoft.Json;
 using RestSharp;
 using SpotyPie.Models;
@@ -34,24 +35,37 @@ namespace SpotyPie
 
         public static List<Item> Current_Song_List { get; set; } = null;
 
+        public static RestClient client = new RestClient();
+
         public static void SetSong(Item song, bool refresh = false)
         {
-            Current_Song = song;
-            Current_Artist = JsonConvert.DeserializeObject<List<Artist>>(Current_Song.Artists).First();
-            Current_Song.Playing = true;
-            Current_Song_List.First(x => x.Id == Current_Song.Id).Playing = true;
-            Start_music = true;
-            PlayerIsVisible = true;
-            UpdateCurrentInfo();
-            Player.Player.StartPlayMusic();
-            Task.Run(() => Update());
-
-            async Task Update()
+            if (song.LocalUrl != null)
             {
-                var client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/songs/1/update");
-                var request = new RestRequest(Method.GET);
-                request.AddHeader("cache-control", "no-cache");
-                IRestResponse response = await client.ExecuteTaskAsync(request);
+                Player.Player.StartPlayMusic();
+
+                Current_Song = song;
+                Current_Artist = JsonConvert.DeserializeObject<List<Artist>>(Current_Song.Artists).First();
+                Current_Song.Playing = true;
+                Current_Song_List.First(x => x.Id == Current_Song.Id).Playing = true;
+                Start_music = true;
+                PlayerIsVisible = true;
+                UpdateCurrentInfo();
+                Task.Run(() => Update());
+
+                async Task Update()
+                {
+                    var client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/songs/1/update");
+                    var request = new RestRequest(Method.GET);
+                    request.AddHeader("cache-control", "no-cache");
+                    IRestResponse response = await client.ExecuteTaskAsync(request);
+                }
+
+                if (MainActivity.MiniPlayer.Visibility == ViewStates.Gone)
+                    MainActivity.MiniPlayer.Visibility = ViewStates.Visible;
+            }
+            else
+            {
+                Toast.MakeText(Player.Player.contextStatic, "Please upload song", ToastLength.Short).Show();
             }
         }
 
@@ -83,16 +97,17 @@ namespace SpotyPie
 
         public static void SetAlbum(Album album)
         {
-            Task.Run(() => Update());
             Current_Album = album;
             Current_Artist = JsonConvert.DeserializeObject<List<Artist>>(Current_Album.Artists).First();
             Application.SynchronizationContext.Post(_ =>
             {
                 Player.Player.Player_playlist_name.Text = Current_Artist.Name + " - " + Current_Album.Name;
             }, null);
+
+            Task.Run(() => Update());
             async Task Update()
             {
-                var client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/album/update/" + album.Id);
+                client.BaseUrl = new System.Uri("http://spotypie.pertrauktiestaskas.lt/api/album/update/" + album.Id);
                 var request = new RestRequest(Method.GET);
                 request.AddHeader("cache-control", "no-cache");
                 IRestResponse response = await client.ExecuteTaskAsync(request);
@@ -184,6 +199,27 @@ namespace SpotyPie
                     break;
                 }
             }
+        }
+
+        public static string GetAlbumPhoto()
+        {
+            if (Current_Album != null && Current_Album.Images != null && Current_Album.Images.Count != 0)
+                return Current_Album.Images.First().Url;
+            return null;
+        }
+
+        public static string GetArtistPhoto()
+        {
+            if (Current_Artist != null && Current_Artist.Images != null && Current_Artist.Images.Count != 0)
+                return Current_Artist.Images.First().Url;
+            return null;
+        }
+
+        public static string GetSongPhoto()
+        {
+            if (Current_Song != null && Current_Song.ImageUrl != null)
+                return Current_Song.ImageUrl;
+            return null;
         }
     }
 }

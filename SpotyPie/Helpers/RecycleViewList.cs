@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
@@ -44,6 +45,20 @@ namespace SpotyPie.Helpers
                 {
                     Adapter.NotifyItemInserted(Count);
                 }
+            }, null);
+        }
+
+        public void RemoveLoading()
+        {
+            Application.SynchronizationContext.Post(_ =>
+            {
+                mItems.RemoveAt(0);
+
+                if (Adapter != null)
+                {
+                    Adapter.NotifyItemRemoved(0);
+                }
+                Adapter.NotifyDataSetChanged();
             }, null);
         }
 

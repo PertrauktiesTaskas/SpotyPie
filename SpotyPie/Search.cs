@@ -24,8 +24,8 @@ namespace SpotyPie
         View RootView;
 
         //List Songs
-        public List<Item> SearchSongs = new List<Item>();
-        public RecycleViewList<List> Songs = new RecycleViewList<List>();
+        public List<Item> SearchSongs;
+        public RecycleViewList<Item> Songs;
         private RecyclerView.LayoutManager SongsLayoutManager;
         private RecyclerView.Adapter SongsAdapter;
         private RecyclerView SongsRecyclerView;
@@ -36,7 +36,8 @@ namespace SpotyPie
         private RecyclerView.Adapter AlbumsAdapter;
         private RecyclerView AlbumsRecyclerView;
 
-        public RecycleViewList<Artist> Artists = new RecycleViewList<Artist>();
+        public List<Artist> ArtistsData;
+        public RecycleViewList<Artist> Artists;
         private RecyclerView.LayoutManager ArtistsLayoutManager;
         private RecyclerView.Adapter ArtistsAdapter;
         private RecyclerView ArtistsRecyclerView;
@@ -79,11 +80,14 @@ namespace SpotyPie
             search.Text = "";
             search.BeforeTextChanged += Search_BeforeTextChanged;
             search.FocusChange += Search_FocusChange;
+
             // song list
+            SearchSongs = new List<Item>();
+            Songs = new RecycleViewList<Item>();
             SongsLayoutManager = new LinearLayoutManager(this.Activity);
             SongsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.song_rv);
             SongsRecyclerView.SetLayoutManager(SongsLayoutManager);
-            SongsAdapter = new VerticalRV(Songs, SongsRecyclerView, this.Context);
+            SongsAdapter = new VerticalRV(Songs, this.Context);
             Songs.Adapter = SongsAdapter;
             SongsRecyclerView.SetAdapter(SongsAdapter);
             SongsRecyclerView.NestedScrollingEnabled = false;
@@ -96,6 +100,7 @@ namespace SpotyPie
                     Current_state.SetSong(Current_state.Current_Song_List[position]);
                 }
             });
+
 
             AlbumsLayoutManager = new LinearLayoutManager(this.Activity);
             AlbumsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.albums_rv);
@@ -129,6 +134,8 @@ namespace SpotyPie
             });
 
             //ARTIST RV
+            ArtistsData = new List<Artist>();
+            Artists = new RecycleViewList<Artist>();
             ArtistsLayoutManager = new LinearLayoutManager(this.Activity);
             ArtistsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.artists_rv);
             ArtistsRecyclerView.SetLayoutManager(ArtistsLayoutManager);
@@ -237,7 +244,7 @@ namespace SpotyPie
 
                         foreach (var x in Songsx.Take(16))
                         {
-                            Songs.Add(new List(x.Id, x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name));
+                            Songs.Add(x);
                         }
                     }
                     else
@@ -372,6 +379,7 @@ namespace SpotyPie
                         }
                         Application.SynchronizationContext.Post(_ =>
                         {
+                            ArtistsData = mArtists;
                             ArtistFinded = true;
                             if (ArtistContainer.Visibility == ViewStates.Gone)
                                 ArtistContainer.Visibility = ViewStates.Visible;

@@ -6,9 +6,9 @@ using Android.Support.V4.App;
 using Android.Support.V4.View;
 using Android.Support.V7.App;
 using Android.Views;
-using Android.Views.Animations;
 using Android.Widget;
 using Java.Lang;
+using SpotyPie.Player;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,7 +17,7 @@ using SupportFragmentManager = Android.Support.V4.App.FragmentManager;
 
 namespace SpotyPie
 {
-    [Activity(Label = "SpotyPie", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait, MainLauncher = true, Icon = "@drawable/logo", Theme = "@style/Theme.SpotyPie")]
+    [Activity(Label = "SpotyPie", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait, MainLauncher = true, Icon = "@drawable/logo_spotify", Theme = "@style/Theme.SpotyPie")]
     public class MainActivity : AppCompatActivity
     {
         SupportFragment Home;
@@ -39,14 +39,17 @@ namespace SpotyPie
         public static int widthInDp = 0;
         public static int HeightInDp = 0;
         public static bool PlayerVisible = false;
+        public ImageButton ShowPlayler;
 
         public static TextView ActionName;
-        ConstraintLayout MiniPlayer;
+        public static ConstraintLayout MiniPlayer;
         public static FrameLayout PlayerContainer;
+
+        public static FrameLayout Fragment;
 
         ConstraintLayout HeaderContainer;
 
-        public static Android.Support.V4.App.FragmentManager mSupportFragmentManager;
+        public static SupportFragmentManager mSupportFragmentManager;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -58,10 +61,12 @@ namespace SpotyPie
             mSupportFragmentManager = SupportFragmentManager;
 
             PlayerContainer = FindViewById<FrameLayout>(Resource.Id.player_frame);
+            Fragment = FindViewById<FrameLayout>(Resource.Id.song_options);
 
             widthInDp = Resources.DisplayMetrics.WidthPixels;
             HeightInDp = Resources.DisplayMetrics.HeightPixels;
             PlayerContainer.TranslationX = widthInDp;
+            Fragment.TranslationX = widthInDp;
 
             Home = new Home();
             Browse = new Browse();
@@ -76,6 +81,7 @@ namespace SpotyPie
             ActionName = FindViewById<TextView>(Resource.Id.textView);
             MiniPlayer = FindViewById<ConstraintLayout>(Resource.Id.PlayerContainer);
             ArtistName = FindViewById<TextView>(Resource.Id.artist_name);
+            ShowPlayler = FindViewById<ImageButton>(Resource.Id.show_player);
             //Animation marquee = AnimationUtils.LoadAnimation(this, Resource.Drawable.marquee);
             //ArtistName.StartAnimation(marquee);
 
@@ -91,9 +97,11 @@ namespace SpotyPie
             BackHeaderButton.Click += BackHeaderButton_Click;
 
             MiniPlayer.Click += MiniPlayer_Click;
+            ShowPlayler.Click += MiniPlayer_Click;
             PlayToggle.Click += PlayToggle_Click;
             bottomNavigation.NavigationItemSelected += BottomNavigation_NavigationItemSelected;
             LoadFragment(Resource.Id.home);
+            MiniPlayer.Visibility = ViewStates.Gone;
         }
 
         public override void OnBackPressed()
@@ -104,6 +112,14 @@ namespace SpotyPie
                 return;
             }
             base.OnBackPressed();
+        }
+
+        public void LoadOptionsMeniu()
+        {
+            SupportFragmentManager.BeginTransaction()
+                .Replace(Resource.Id.song_options, new PlaylistFragment())
+                .Commit();
+            MainActivity.Fragment.TranslationX = 0;
         }
 
         private void BackHeaderButton_Click(object sender, EventArgs e)

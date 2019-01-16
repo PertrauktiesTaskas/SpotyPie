@@ -21,7 +21,7 @@ namespace SpotyPie.Player
 
         //Album Songs
         public static List<Item> AlbumSongsItem = new List<Item>();
-        public static RecycleViewList<List> AlbumSongs = new RecycleViewList<List>();
+        public static RecycleViewList<Item> AlbumSongs = new RecycleViewList<Item>();
         private RecyclerView.LayoutManager AlbumSongsLayoutManager;
         private static RecyclerView.Adapter AlbumSongsAdapter;
         private static RecyclerView AlbumSongsRecyclerView;
@@ -34,7 +34,7 @@ namespace SpotyPie.Player
             AlbumSongsLayoutManager = new LinearLayoutManager(this.Activity);
             AlbumSongsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.song_list);
             AlbumSongsRecyclerView.SetLayoutManager(AlbumSongsLayoutManager);
-            AlbumSongsAdapter = new VerticalRV(AlbumSongs, AlbumSongsRecyclerView, this.Context);
+            AlbumSongsAdapter = new VerticalRV(AlbumSongs, this.Context);
             AlbumSongs.Adapter = AlbumSongsAdapter;
             AlbumSongsRecyclerView.SetAdapter(AlbumSongsAdapter);
             AlbumSongsRecyclerView.NestedScrollingEnabled = false;
@@ -73,7 +73,7 @@ namespace SpotyPie.Player
                         Current_state.Current_Song_List = album.Songs;
                         foreach (var x in album.Songs)
                         {
-                            AlbumSongs.Add(new List(x.Id, x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name));
+                            AlbumSongs.Add(x);
                         }
                         List<Copyright> Copyright = JsonConvert.DeserializeObject<List<Copyright>>(album.Copyrights);
                     }, null);
@@ -90,12 +90,6 @@ namespace SpotyPie.Player
             {
 
             }
-        }
-
-        public override void OnDestroyView()
-        {
-            AlbumSongs = new RecycleViewList<List>();
-            base.OnDestroyView();
         }
     }
 }
