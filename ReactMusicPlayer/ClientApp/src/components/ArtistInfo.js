@@ -132,14 +132,14 @@ class ArtistInfo extends React.Component {
 
         function TopTracks(props) {
 
-            console.log("Artist top track", props);
+            console.log("Artist top track", props.props.imageUrl);
 
             return (<div id={props.props.id - 1} className="track" onClick={props.function}>
 
                 <div id={props.props.id - 1} className="track__art" onClick={props.function}>
 
                     <img
-                        src={props.props2[props.index]}
+                        src={props.props.imageUrl}
                         alt=""/>
 
                 </div>
