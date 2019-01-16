@@ -22,12 +22,14 @@ namespace SpotyPie
         View RootView;
 
         //Recent albums
+        public List<Album> RecentAlbumsData;
         public RecycleViewList<BlockWithImage> RecentAlbums = new RecycleViewList<BlockWithImage>();
         private RecyclerView.LayoutManager RecentAlbumsLayoutManager;
         private RecyclerView.Adapter RecentAlbumsAdapter;
         private RecyclerView RecentAlbumsRecyclerView;
 
         //Best albums
+        public List<Album> BestAlbumsData;
         public RecycleViewList<BlockWithImage> BestAlbums = new RecycleViewList<BlockWithImage>();
         private RecyclerView.LayoutManager BestAlbumsLayoutManager;
         private RecyclerView.Adapter BestAlbumsAdapter;
@@ -41,12 +43,14 @@ namespace SpotyPie
         private RecyclerView BestArtistsRecyclerView;
 
         //Jump back albums
+        public List<Album> JumpBackData;
         public RecycleViewList<BlockWithImage> JumpBack = new RecycleViewList<BlockWithImage>();
         private RecyclerView.LayoutManager JumpBackLayoutManager;
         private RecyclerView.Adapter JumpBackAdapter;
         private RecyclerView JumpBackRecyclerView;
 
         //Top playlist
+        public List<Playlist> TopPlaylistData;
         public RecycleViewList<BlockWithImage> TopPlaylist = new RecycleViewList<BlockWithImage>();
         private RecyclerView.LayoutManager TopPlaylistLayoutManager;
         private RecyclerView.Adapter TopPlaylistAdapter;
@@ -68,7 +72,7 @@ namespace SpotyPie
             {
                 if (RecentAlbumsRecyclerView != null && RecentAlbumsRecyclerView.ChildCount != 0)
                 {
-                    Current_state.SetAlbum(RecentAlbums[position]);
+                    Current_state.SetAlbum(RecentAlbumsData[position]);
                     FragmentManager.BeginTransaction()
                     .Replace(Resource.Id.content_frame, MainActivity.Album)
                     .Commit();
@@ -87,7 +91,7 @@ namespace SpotyPie
             {
                 if (BestAlbumsRecyclerView != null && BestAlbumsRecyclerView.ChildCount != 0)
                 {
-                    Current_state.SetAlbum(BestAlbums[position]);
+                    Current_state.SetAlbum(BestAlbumsData[position]);
                     FragmentManager.BeginTransaction()
                     .Replace(Resource.Id.content_frame, MainActivity.Album)
                     .Commit();
@@ -127,7 +131,7 @@ namespace SpotyPie
             {
                 if (JumpBackRecyclerView != null && JumpBackRecyclerView.ChildCount != 0)
                 {
-                    Current_state.SetAlbum(JumpBack[position]);
+                    Current_state.SetAlbum(JumpBackData[position]);
                     FragmentManager.BeginTransaction()
                     .Replace(Resource.Id.content_frame, MainActivity.Album)
                     .Commit();
@@ -156,11 +160,6 @@ namespace SpotyPie
 
         public override void OnDestroyView()
         {
-            //RecentAlbums = new RecycleViewList<BlockWithImage>();
-            //BestAlbums = new RecycleViewList<BlockWithImage>();
-            //BestArtists = new RecycleViewList<BlockWithImage>();
-            //JumpBack = new RecycleViewList<BlockWithImage>();
-            //TopPlaylist = new RecycleViewList<BlockWithImage>();
             base.OnDestroyView();
         }
 
@@ -195,6 +194,7 @@ namespace SpotyPie
                     List<Album> album = JsonConvert.DeserializeObject<List<Album>>(response.Content);
                     Application.SynchronizationContext.Post(_ =>
                     {
+                        RecentAlbumsData = album;
                         foreach (var x in album)
                         {
                             RecentAlbums.Add(new BlockWithImage(x.Id, RvType.Album, x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name, x.Images.First().Url));
@@ -227,6 +227,7 @@ namespace SpotyPie
                     List<Album> album = JsonConvert.DeserializeObject<List<Album>>(response.Content);
                     Application.SynchronizationContext.Post(_ =>
                     {
+                        BestAlbumsData = album;
                         foreach (var x in album)
                         {
                             BestAlbums.Add(new BlockWithImage(x.Id, RvType.Album, x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name, x.Images.First().Url));
@@ -315,6 +316,7 @@ namespace SpotyPie
                     List<Album> album = JsonConvert.DeserializeObject<List<Album>>(response.Content);
                     Application.SynchronizationContext.Post(_ =>
                     {
+                        JumpBackData = album;
                         foreach (var x in album)
                         {
                             JumpBack.Add(new BlockWithImage(x.Id, RvType.Album, x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name, x.Images.First().Url));

@@ -36,7 +36,7 @@ namespace SpotyPie.Library.Fragments
             ArtistsSongsLayoutManager = new LinearLayoutManager(this.Activity);
             ArtistsSongsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.artists);
             ArtistsSongsRecyclerView.SetLayoutManager(ArtistsSongsLayoutManager);
-            ArtistsSongsAdapter = new ArtistRV(ArtistsData, ArtistsSongsRecyclerView, this.Context);
+            ArtistsSongsAdapter = new ArtistRV(ArtistsData, this.Context);
             ArtistsData.Adapter = ArtistsSongsAdapter;
             ArtistsSongsRecyclerView.SetAdapter(ArtistsSongsAdapter);
             ArtistsSongsRecyclerView.NestedScrollingEnabled = false;
@@ -81,12 +81,7 @@ namespace SpotyPie.Library.Fragments
                     {
                         if (artists.Count != ArtistsLocal.Count)
                         {
-                            if (ArtistsData != null && ArtistsData.Count != 0)
-                            {
-                                ArtistsData.Clear();
-                                while (ArtistsData.Count != 0)
-                                    await Task.Delay(50);
-                            }
+                            await ArtistsData.ClearAsync();
 
                             artists = artists.OrderByDescending(x => x.Popularity).ToList();
                             Application.SynchronizationContext.Post(_ =>
@@ -111,13 +106,11 @@ namespace SpotyPie.Library.Fragments
     public class ArtistRV : RecyclerView.Adapter
     {
         private RecycleViewList<Artist> Dataset;
-        private readonly RecyclerView mRecyclerView;
         private Context Context;
 
-        public ArtistRV(RecycleViewList<Artist> data, RecyclerView recyclerView, Context context)
+        public ArtistRV(RecycleViewList<Artist> data, Context context)
         {
             Dataset = data;
-            mRecyclerView = recyclerView;
             Context = context;
         }
 

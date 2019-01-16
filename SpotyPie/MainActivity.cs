@@ -239,6 +239,31 @@ namespace SpotyPie
                 .Replace(Resource.Id.content_frame, fragment)
                 .Commit();
         }
+
+
+        //public virtual void RemoveCurrentFragment(bool WithStateLoss = false)
+        //{
+        //    Application.SynchronizationContext.Post(_ =>
+        //    {
+        //        if (CurrentFragment != null)
+        //        {
+        //            ab.SetHomeAsUpIndicator(Resource.Drawable.menu_new_vec);
+        //            FragmentTransaction transaction = SupFragmentManager.BeginTransaction();
+        //            transaction.Remove(CurrentFragment);
+        //            if (WithStateLoss)
+        //            {
+        //                transaction.CommitAllowingStateLoss();
+        //            }
+        //            else
+        //            {
+        //                transaction.Commit();
+        //            }
+        //            transaction.SetTransition(FragmentTransaction.TransitFragmentClose);
+        //            CurrentFragment = null;
+        //            CURRENT_FRAGMENT_ID = 0;
+        //        }
+        //    }, null);
+        //}
     }
 }
 

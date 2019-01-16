@@ -20,16 +20,13 @@ namespace SpotyPie
 
         public static bool PlayerIsVisible { get; set; } = false;
 
-        public static string ArtistName { get; set; }
-        public static string SongTitle { get; set; }
-        public static string AlbumTitle { get; set; }
         public static float Progress { get; set; }
 
         public static Android.Support.V4.App.Fragment BackFragment { get; set; }
 
-        public static BlockWithImage ClickedInRVH { get; set; } = null;
+        private static string Current_Player_Image { get; set; }
 
-        public static string Current_Player_Image { get; set; }
+        public static Album Current_Album { get; set; } = null;
 
         public static Artist Current_Artist { get; set; } = null;
 
@@ -40,10 +37,9 @@ namespace SpotyPie
         public static void SetSong(Item song, bool refresh = false)
         {
             Current_Song = song;
+            Current_Artist = JsonConvert.DeserializeObject<List<Artist>>(Current_Song.Artists).First();
             Current_Song.Playing = true;
             Current_Song_List.First(x => x.Id == Current_Song.Id).Playing = true;
-            ArtistName = JsonConvert.DeserializeObject<List<Artist>>(song.Artists).First().Name;
-            SongTitle = song.Name;
             Start_music = true;
             PlayerIsVisible = true;
             UpdateCurrentInfo();
@@ -65,18 +61,17 @@ namespace SpotyPie
             {
                 Application.SynchronizationContext.Post(_ =>
                 {
-                    if (Current_Player_Image != ClickedInRVH.Image)
+                    if (Current_Player_Image != Current_Song.ImageUrl)
                     {
-                        Current_Player_Image = ClickedInRVH.Image;
-                        Picasso.With(Player.Player.contextStatic).Load(ClickedInRVH.Image).Resize(300, 300).CenterCrop().Into(Player.Player.Player_Image);
+                        Current_Player_Image = Current_Song.ImageUrl;
+                        Picasso.With(Player.Player.contextStatic).Load(Current_Song.ImageUrl).Resize(900, 900).CenterCrop().Into(Player.Player.Player_Image);
                     }
                     MainActivity.PlayerContainer.TranslationX = 0;
                     Player.Player.CurretSongTimeText.Text = "0.00";
-                    Player.Player.Player_song_name.Text = SongTitle;
-                    MainActivity.SongTitle.Text = SongTitle;
-                    MainActivity.ArtistName.Text = ArtistName;
-                    Player.Player.Player_artist_name.Text = ArtistName;
-                    Player.Player.Player_playlist_name.Text = ArtistName + " - " + AlbumTitle;
+                    Player.Player.Player_song_name.Text = Current_Song.Name;
+                    MainActivity.SongTitle.Text = Current_Song.Name;
+                    MainActivity.ArtistName.Text = Current_Song.Name;
+                    Player.Player.Player_artist_name.Text = Current_Artist.Name;
                 }, null);
             });
         }
@@ -86,12 +81,15 @@ namespace SpotyPie
             Current_Artist = art;
         }
 
-        public static void SetAlbum(BlockWithImage album)
+        public static void SetAlbum(Album album)
         {
             Task.Run(() => Update());
-            ClickedInRVH = album;
-            AlbumTitle = album.Title;
-
+            Current_Album = album;
+            Current_Artist = JsonConvert.DeserializeObject<List<Artist>>(Current_Album.Artists).First();
+            Application.SynchronizationContext.Post(_ =>
+            {
+                Player.Player.Player_playlist_name.Text = Current_Artist.Name + " - " + Current_Album.Name;
+            }, null);
             async Task Update()
             {
                 var client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/album/update/" + album.Id);

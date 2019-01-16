@@ -20,7 +20,7 @@ namespace SpotyPie
 
         public long Total { get; set; }
 
-        public long Popularity { get; set; }
+        public int Popularity { get; set; }
 
         public string ImageUrl { get; set; }
     }

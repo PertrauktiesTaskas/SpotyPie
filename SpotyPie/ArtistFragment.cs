@@ -36,16 +36,16 @@ namespace SpotyPie
         TextView ButtonBackGround2;
 
         //Artist Songs
-        public static RecycleViewList<List> ArtistTopSongs = new RecycleViewList<List>();
+        public RecycleViewList<List> ArtistTopSongs = new RecycleViewList<List>();
         private RecyclerView.LayoutManager ArtistSongsLayoutManager;
-        private static RecyclerView.Adapter ArtistSongsAdapter;
-        private static RecyclerView ArtistSongsRecyclerView;
+        private RecyclerView.Adapter ArtistSongsAdapter;
+        private RecyclerView ArtistSongsRecyclerView;
 
         //Artist Albums
-        public static RecycleViewList<TwoBlockWithImage> Albums = new RecycleViewList<TwoBlockWithImage>();
+        public RecycleViewList<TwoBlockWithImage> Albums = new RecycleViewList<TwoBlockWithImage>();
         private RecyclerView.LayoutManager AlbumsLayoutManager;
-        private static RecyclerView.Adapter AlbumsAdapter;
-        private static RecyclerView AlbumsRecyclerView;
+        private RecyclerView.Adapter AlbumsAdapter;
+        private RecyclerView AlbumsRecyclerView;
 
         private TextView download;
         private TextView Copyrights;

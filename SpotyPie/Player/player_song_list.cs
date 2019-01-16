@@ -53,10 +53,7 @@ namespace SpotyPie.Player
 
         public override void OnResume()
         {
-            if (AlbumSongs == null || AlbumSongs.Count == 0)
-            {
-                Task.Run(() => GetSongsAsync(Current_state.ClickedInRVH.Id));
-            }
+            Task.Run(() => GetSongsAsync(Current_state.Current_Album.Id));
             base.OnResume();
         }
 
@@ -70,6 +67,7 @@ namespace SpotyPie.Player
                 if (response.IsSuccessful)
                 {
                     Album album = JsonConvert.DeserializeObject<Album>(response.Content);
+                    await AlbumSongs.ClearAsync();
                     Application.SynchronizationContext.Post(_ =>
                     {
                         Current_state.Current_Song_List = album.Songs;
@@ -78,7 +76,6 @@ namespace SpotyPie.Player
                             AlbumSongs.Add(new List(x.Id, x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name));
                         }
                         List<Copyright> Copyright = JsonConvert.DeserializeObject<List<Copyright>>(album.Copyrights);
-                        //Copyrights.Text = string.Join("\n", Copyright.Select(x => x.Text));
                     }, null);
                 }
                 else

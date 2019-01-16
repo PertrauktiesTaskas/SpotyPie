@@ -36,11 +36,11 @@ namespace SpotyPie
         TextView ButtonBackGround2;
 
         //Album Songs
-        public static List<Item> AlbumSongsItem = new List<Item>();
-        public static RecycleViewList<List> AlbumSongs = new RecycleViewList<List>();
+        public List<Item> AlbumSongsItem = new List<Item>();
+        public RecycleViewList<List> AlbumSongs = new RecycleViewList<List>();
         private RecyclerView.LayoutManager AlbumSongsLayoutManager;
-        private static RecyclerView.Adapter AlbumSongsAdapter;
-        private static RecyclerView AlbumSongsRecyclerView;
+        private RecyclerView.Adapter AlbumSongsAdapter;
+        private RecyclerView AlbumSongsRecyclerView;
 
         private TextView download;
         private TextView Copyrights;
@@ -56,7 +56,7 @@ namespace SpotyPie
         {
             RootView = inflater.Inflate(Resource.Layout.Album_layout, container, false);
 
-            MainActivity.ActionName.Text = Current_state.ClickedInRVH.Title;
+            MainActivity.ActionName.Text = Current_state.Current_Song.Name;
 
             //Background binding
             AlbumPhoto = RootView.FindViewById<ImageView>(Resource.Id.album_photo);
@@ -67,9 +67,9 @@ namespace SpotyPie
             ButtonBackGround = RootView.FindViewById<TextView>(Resource.Id.backgroundHalf);
             ButtonBackGround2 = RootView.FindViewById<TextView>(Resource.Id.backgroundHalfInner);
 
-            Picasso.With(Context).Load(Current_state.ClickedInRVH.Image).Resize(300, 300).CenterCrop().Into(AlbumPhoto);
-            AlbumTitle.Text = Current_state.ClickedInRVH.Title;
-            AlbumByText.Text = Current_state.ClickedInRVH.SubTitle;
+            Picasso.With(Context).Load(Current_state.Current_Album.Images.First().Url).Resize(300, 300).CenterCrop().Into(AlbumPhoto);
+            AlbumTitle.Text = Current_state.Current_Album.Name;
+            AlbumByText.Text = Current_state.Current_Album.Label;
 
             Current_state.ShowHeaderNavigationButtons();
 
@@ -106,17 +106,20 @@ namespace SpotyPie
 
         public override void OnDestroyView()
         {
-            AlbumSongs = new RecycleViewList<List>();
             base.OnDestroyView();
         }
 
         public override void OnResume()
         {
-            if (AlbumSongs == null || AlbumSongs.Count == 0)
-            {
-                Task.Run(() => GetSongsAsync(Current_state.ClickedInRVH.Id));
-            }
             base.OnResume();
+            if (AlbumSongs == null || AlbumSongs.Count == 0 && Current_state.Current_Album != null)
+            {
+                Task.Run(() => GetSongsAsync(Current_state.Current_Album.Id));
+            }
+            else
+            {
+                OnDestroyView();
+            }
         }
 
         public async Task GetSongsAsync(int id)
@@ -129,6 +132,9 @@ namespace SpotyPie
                 if (response.IsSuccessful)
                 {
                     Album album = JsonConvert.DeserializeObject<Album>(response.Content);
+
+                    await AlbumSongs.ClearAsync();
+
                     Application.SynchronizationContext.Post(_ =>
                     {
                         Current_state.Current_Song_List = album.Songs;
