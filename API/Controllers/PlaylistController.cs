@@ -67,12 +67,16 @@ namespace API.Controllers
                 //Need includes
                 var playlist = await _ctx.Playlist
                     .AsNoTracking()
+                    .Include(x => x.Items)
                     .FirstOrDefaultAsync(x => x.Id == id);
 
                 _ctx.Update(playlist);
+                playlist.ImageUrl = playlist.Items[new Random((int)DateTime.Now.Ticks).Next(0, playlist.Items.Count)].ImageUrl;
                 playlist.LastActiveTime = DateTime.Now;
                 playlist.Popularity++;
                 _ctx.SaveChanges();
+
+                playlist.Items = null;
 
                 return Ok(playlist);
             }
@@ -99,6 +103,7 @@ namespace API.Controllers
                     .FirstOrDefaultAsync(x => x.Id == id);
 
                 _ctx.Update(playlist);
+                playlist.ImageUrl = playlist.Items[new Random((int)DateTime.Now.Ticks).Next(0, playlist.Items.Count)].ImageUrl;
                 playlist.LastActiveTime = DateTime.Now;
                 playlist.Popularity++;
                 _ctx.SaveChanges();
