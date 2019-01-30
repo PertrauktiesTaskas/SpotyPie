@@ -10,6 +10,7 @@ using Android.Runtime;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
+using Newtonsoft.Json;
 using SpotyPie.Models;
 using Square.Picasso;
 
@@ -17,14 +18,12 @@ namespace SpotyPie.Helpers
 {
     public class VerticalRV : RecyclerView.Adapter
     {
-        private RecycleViewList<List> Dataset;
-        private readonly RecyclerView mRecyclerView;
+        private RecycleViewList<Item> Dataset;
         private Context Context;
 
-        public VerticalRV(RecycleViewList<List> data, RecyclerView recyclerView, Context context)
+        public VerticalRV(RecycleViewList<Item> data, Context context)
         {
             Dataset = data;
-            mRecyclerView = recyclerView;
             Context = context;
         }
 
@@ -100,8 +99,8 @@ namespace SpotyPie.Helpers
             else if (holder is BlockImage)
             {
                 BlockImage view = holder as BlockImage;
-                view.Title.Text = Dataset[position].Title;
-                view.SubTitile.Text = Dataset[position].Subtitle;
+                view.Title.Text = Dataset[position].Name;
+                view.SubTitile.Text = JsonConvert.DeserializeObject<List<Artist>>(Dataset[position].Artists).First().Name;
                 //Picasso.With(Context).Load(Dataset[position].Image).Into(view.Image);
 
             }

@@ -13,110 +13,7 @@ class SideMenuPanel2 extends React.Component {
 
     async componentDidMount() {
 
-        function Charts(cpuUsage, ramUsage, cpuTemp, storage) {
 
-            let ctx = document.getElementById('system').getContext('2d');
-            let ctx2 = document.getElementById('storage').getContext('2d');
-            let ctx3 = document.getElementById('temp').getContext('2d');
-            let chart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ["1", "2", "3", "4", "5", "6", "7"],
-                    datasets: [{
-                        label: 'CPU usage',
-
-                        borderColor: '#107dac',
-                        /*data: [0, 10, 5, 2, 20, 30, 45],*/
-                        data: cpuUsage,
-                    },
-                        {
-                            label: 'RAM usage',
-                            borderColor: "#aaaaaa",
-                            /*data: [1, 15, 20, 35, 50, 70, 10],*/
-                            data: ramUsage,
-                        }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                fontColor: '#aaaaaa'
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                                fontColor: '#181818'
-                            }
-                        }]
-                    },
-                    legend: {
-                        labels: {
-                            fontColor: '#aaaaaa'
-                        }
-                    },
-                    animation: {
-                        duration: 0
-                    }
-                }
-            });
-            let chart2 = new Chart(ctx2, {
-                type: 'doughnut',
-                data: {
-                    labels: ["Used (" + storage + "%)", "Free (" + (100 - storage) + "%)"],
-                    datasets: [{
-
-                        data: [storage, 100 - storage],
-                        backgroundColor: ['#107dac', 'transparent'],
-                        borderColor: '#107dac'
-                    }],
-
-                },
-                options: {
-                    title: {
-                        display: true,
-                        text: 'Storage'
-                    },
-                    animation: {
-                        duration: 0
-                    }
-                }
-            });
-            let chart3 = new Chart(ctx3, {
-                type: 'line',
-                data: {
-                    labels: ["1", "2", "3", "4", "5", "6", "7"],
-                    datasets: [{
-                        label: 'CPU temp',
-
-                        borderColor: '#107dac',
-                        /*data: [0, 10, 5, 2, 20, 30, 45],*/
-                        data: cpuTemp,
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                fontColor: '#aaaaaa'
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                                fontColor: '#181818'
-                            }
-                        }]
-                    },
-                    legend: {
-                        labels: {
-                            fontColor: '#aaaaaa'
-                        }
-                    },
-                    animation: {
-                        duration: 0
-                    }
-                }
-            });
-        }
 
         itemService.getLibraryInfo().then((data) => {
             this.setState({library_info: data});
@@ -135,10 +32,8 @@ class SideMenuPanel2 extends React.Component {
         cpuTemp.push(sys_info.cT);
         storage = sys_info.dU;
 
-        let chart = Charts(cpuUsage, ramUsage, cpuTemp, storage);
-        {
-            chart
-        }
+        this.Charts(cpuUsage, ramUsage, cpuTemp, storage);
+
 
         const interval = require('interval-promise')
 
@@ -173,12 +68,114 @@ class SideMenuPanel2 extends React.Component {
 
             storage = sys_info.dU;
 
-            let chart = Charts(cpuUsage, ramUsage, cpuTemp, storage);
-            {
-                chart
-            }
+            this.Charts(cpuUsage, ramUsage, cpuTemp, storage);
 
         }, 5000, {})
+    }
+
+    Charts(cpuUsage, ramUsage, cpuTemp, storage) {
+
+        let ctx = document.getElementById('system').getContext('2d');
+        let ctx2 = document.getElementById('storage').getContext('2d');
+        let ctx3 = document.getElementById('temp').getContext('2d');
+        let chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ["1", "2", "3", "4", "5", "6", "7"],
+                datasets: [{
+                    label: 'CPU usage',
+
+                    borderColor: '#107dac',
+                    /*data: [0, 10, 5, 2, 20, 30, 45],*/
+                    data: cpuUsage,
+                },
+                    {
+                        label: 'RAM usage',
+                        borderColor: "#aaaaaa",
+                        /*data: [1, 15, 20, 35, 50, 70, 10],*/
+                        data: ramUsage,
+                    }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            fontColor: '#aaaaaa'
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            fontColor: '#181818'
+                        }
+                    }]
+                },
+                legend: {
+                    labels: {
+                        fontColor: '#aaaaaa'
+                    }
+                },
+                animation: {
+                    duration: 0
+                }
+            }
+        });
+        let chart2 = new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: ["Used (" + storage + "%)", "Free (" + (100 - storage) + "%)"],
+                datasets: [{
+
+                    data: [storage, 100 - storage],
+                    backgroundColor: ['#107dac', 'transparent'],
+                    borderColor: '#107dac'
+                }],
+
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Storage'
+                },
+                animation: {
+                    duration: 0
+                }
+            }
+        });
+        let chart3 = new Chart(ctx3, {
+            type: 'line',
+            data: {
+                labels: ["1", "2", "3", "4", "5", "6", "7"],
+                datasets: [{
+                    label: 'CPU temp',
+
+                    borderColor: '#107dac',
+                    /*data: [0, 10, 5, 2, 20, 30, 45],*/
+                    data: cpuTemp,
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            fontColor: '#aaaaaa'
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            fontColor: '#181818'
+                        }
+                    }]
+                },
+                legend: {
+                    labels: {
+                        fontColor: '#aaaaaa'
+                    }
+                },
+                animation: {
+                    duration: 0
+                }
+            }
+        });
     }
 
     render() {

@@ -21,7 +21,7 @@ namespace SpotyPie.Player
 
         //Album Songs
         public static List<Item> AlbumSongsItem = new List<Item>();
-        public static RecycleViewList<List> AlbumSongs = new RecycleViewList<List>();
+        public static RecycleViewList<Item> AlbumSongs = new RecycleViewList<Item>();
         private RecyclerView.LayoutManager AlbumSongsLayoutManager;
         private static RecyclerView.Adapter AlbumSongsAdapter;
         private static RecyclerView AlbumSongsRecyclerView;
@@ -34,7 +34,7 @@ namespace SpotyPie.Player
             AlbumSongsLayoutManager = new LinearLayoutManager(this.Activity);
             AlbumSongsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.song_list);
             AlbumSongsRecyclerView.SetLayoutManager(AlbumSongsLayoutManager);
-            AlbumSongsAdapter = new VerticalRV(AlbumSongs, AlbumSongsRecyclerView, this.Context);
+            AlbumSongsAdapter = new VerticalRV(AlbumSongs, this.Context);
             AlbumSongs.Adapter = AlbumSongsAdapter;
             AlbumSongsRecyclerView.SetAdapter(AlbumSongsAdapter);
             AlbumSongsRecyclerView.NestedScrollingEnabled = false;
@@ -53,10 +53,7 @@ namespace SpotyPie.Player
 
         public override void OnResume()
         {
-            if (AlbumSongs == null || AlbumSongs.Count == 0)
-            {
-                Task.Run(() => GetSongsAsync(Current_state.ClickedInRVH.Id));
-            }
+            Task.Run(() => GetSongsAsync(Current_state.Current_Album.Id));
             base.OnResume();
         }
 
@@ -70,15 +67,15 @@ namespace SpotyPie.Player
                 if (response.IsSuccessful)
                 {
                     Album album = JsonConvert.DeserializeObject<Album>(response.Content);
+                    await AlbumSongs.ClearAsync();
                     Application.SynchronizationContext.Post(_ =>
                     {
                         Current_state.Current_Song_List = album.Songs;
                         foreach (var x in album.Songs)
                         {
-                            AlbumSongs.Add(new List(x.Id, x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name));
+                            AlbumSongs.Add(x);
                         }
                         List<Copyright> Copyright = JsonConvert.DeserializeObject<List<Copyright>>(album.Copyrights);
-                        //Copyrights.Text = string.Join("\n", Copyright.Select(x => x.Text));
                     }, null);
                 }
                 else
@@ -93,12 +90,6 @@ namespace SpotyPie.Player
             {
 
             }
-        }
-
-        public override void OnDestroyView()
-        {
-            AlbumSongs = new RecycleViewList<List>();
-            base.OnDestroyView();
         }
     }
 }

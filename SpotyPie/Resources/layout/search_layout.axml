@@ -39,7 +39,7 @@
             android:inputType="text"
             android:singleLine="true"
 			android:textCursorDrawable="@drawable/color_cursor"
-            android:text="Search song, album, playlist"
+			android:hint="Paieškos frazė"
             android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

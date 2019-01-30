@@ -516,6 +516,22 @@
         margin: 15px 0;
         width: 100%;
     }
+
+    .tracks .track__length i{
+        display: none;
+    }
+
+    .tracks .track__title{
+        margin-left: 25px !important;
+    }
+
+    .artist__header .artist__info .profile__img{
+        opacity: 0;
+    }
+
+    .artist__header .artist__navigation{
+        opacity: 0;
+    }
 }
 
 @media (max-width: 480px) {

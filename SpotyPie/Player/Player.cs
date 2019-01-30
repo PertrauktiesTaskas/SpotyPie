@@ -151,10 +151,17 @@ namespace SpotyPie.Player
                     {
                         Application.SynchronizationContext.Post(_ =>
                             {
-                                player.Reset();
-                                player.SetAudioStreamType(Stream.Music);
-                                player.SetDataSource("http://spotypie.pertrauktiestaskas.lt/api/stream/play/" + Current_state.Current_Song.Id);
-                                player.Prepare();
+                                try
+                                {
+                                    player.Reset();
+                                    player.SetAudioStreamType(Stream.Music);
+                                    player.SetDataSource("http://spotypie.pertrauktiestaskas.lt/api/stream/play/" + Current_state.Current_Song.Id);
+                                    player.Prepare();
+                                }
+                                catch (Exception e)
+                                {
+                                    Toast.MakeText(contextStatic, "Can't play " + Current_state.Current_Song.Id.ToString(), ToastLength.Short).Show();
+                                }
                             }, null);
                     }
                 }
@@ -162,7 +169,7 @@ namespace SpotyPie.Player
                 {
                     Application.SynchronizationContext.Post(_ =>
                     {
-                        Toast.MakeText(contextStatic, "Cant play " + Current_state.Current_Song.Id.ToString(), ToastLength.Short).Show();
+                        Toast.MakeText(contextStatic, "Can't play " + Current_state.Current_Song.Id.ToString(), ToastLength.Short).Show();
                     }, null);
                 }
             });

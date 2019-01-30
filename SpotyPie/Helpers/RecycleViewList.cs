@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -47,12 +48,26 @@ namespace SpotyPie.Helpers
             }, null);
         }
 
+        public void RemoveLoading()
+        {
+            Application.SynchronizationContext.Post(_ =>
+            {
+                mItems.RemoveAt(0);
+
+                if (Adapter != null)
+                {
+                    Adapter.NotifyItemRemoved(0);
+                }
+                Adapter.NotifyDataSetChanged();
+            }, null);
+        }
+
         public T Get(int position)
         {
             return mItems[position];
         }
 
-        public void Remove(int position)
+        private void Remove(int position)
         {
             mItems.RemoveAt(position);
 
@@ -73,30 +88,28 @@ namespace SpotyPie.Helpers
             get { return mItems.Count; }
         }
 
-        public void Clear()
+        public async Task ClearAsync()
         {
-            Application.SynchronizationContext.Post(_ =>
+            if (mItems.Count != 0 || Adapter.ItemCount != 0)
             {
-                try
+                Application.SynchronizationContext.Post(_ =>
                 {
-                    int size = mItems.Count;
-                    for (int i = 0; i < mItems.Count; i++)
+                    try
                     {
-                        if (mItems[i] != null)
-                        {
-                            Remove(i);
-                        }
+                        int size = mItems.Count;
+                        mItems = new List<T>();
+                        Adapter.NotifyItemRangeRemoved(0, size);
                     }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-                Adapter.NotifyDataSetChanged();
-            }, null);
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                    Adapter.NotifyDataSetChanged();
+                }, null);
 
-            if (mItems.Count != 0)
-                Clear();
+                while (mItems.Count != 0 || Adapter.ItemCount != 0)
+                    await Task.Delay(50);
+            }
         }
     }
 }

@@ -49,15 +49,7 @@ namespace SpotyPie.Library.Fragments
                 {
                     if (AlbumsLocal.Count == AlbumsData.Count)
                     {
-                        var data = new BlockWithImage
-                        {
-                            Id = AlbumsLocal[position].Id,
-                            Image = AlbumsLocal[position].Images.First().Url,
-                            SubTitle = JsonConvert.DeserializeObject<List<Artist>>(AlbumsLocal[position].Artists).First().Name,
-                            Title = AlbumsLocal[position].Name,
-                            Type = RvType.Album
-                        };
-                        Current_state.SetAlbum(data);
+                        Current_state.SetAlbum(AlbumsLocal[position]);
                         FragmentManager.BeginTransaction()
                         .Replace(Resource.Id.content_frame, MainActivity.Album)
                         .Commit();
@@ -95,12 +87,7 @@ namespace SpotyPie.Library.Fragments
                     {
                         if (albums.Count != AlbumsData.Count)
                         {
-                            if (AlbumsData != null && AlbumsData.Count != 0)
-                            {
-                                AlbumsData.Clear();
-                                while (AlbumsData.Count != 0)
-                                    await Task.Delay(50);
-                            }
+                            await AlbumsData.ClearAsync();
 
                             albums = albums.OrderByDescending(x => x.Name).ToList();
                             Application.SynchronizationContext.Post(_ =>

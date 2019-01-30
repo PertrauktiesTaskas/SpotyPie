@@ -1,4 +1,4 @@
-const apiEnd = 'http://spotypie.deveim.com/api';
+const apiEnd = 'http://spotypie.pertrauktiestaskas.lt/api';
 /*const apiEnd = 'https://localhost:9876/api';*/
 
 export const itemService = {
@@ -18,7 +18,10 @@ export const itemService = {
     uploadSong,
     getFileList,
     getPlaylists,
-    getPlaylistSongs
+    getPlaylistSongs,
+    getRecentAlbum,
+    getMostPopularAlbum,
+    getPopRecentSong
 };
 
 async function getAlbums() {
@@ -241,6 +244,30 @@ function uploadSong(data) {
     };
 
     return fetch(apiEnd + "/upload", requestOptions);
+}
+
+function getRecentAlbum(){
+    const requestOptions = {
+        method: 'GET'
+    };
+    return fetch(apiEnd + '/album/Recent', requestOptions)
+        .then(handleResponse);
+}
+
+function getMostPopularAlbum(){
+    const requestOptions = {
+        method: 'GET'
+    };
+    return fetch(apiEnd + '/album/Popular', requestOptions)
+        .then(handleResponse);
+}
+
+function getPopRecentSong(){
+    const requestOptions = {
+        method: 'GET'
+    };
+    return fetch(apiEnd + '/Songs/PopularRecent', requestOptions)
+        .then(handleResponse);
 }
 
 function handleResponse(response) {
