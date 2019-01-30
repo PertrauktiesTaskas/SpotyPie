@@ -23,7 +23,7 @@ namespace API
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin",
-                    builder => builder.WithOrigins("http://localhost:50249"));
+                    builder => builder.WithOrigins("http://spoty.pie"));
             });
 
 

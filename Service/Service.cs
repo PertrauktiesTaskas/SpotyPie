@@ -210,6 +210,12 @@ namespace Services
                             .FirstOrDefaultAsync(x =>
                             x.Name.Contains(Path.GetFileNameWithoutExtension(name), StringComparison.InvariantCultureIgnoreCase));
                         }
+
+                        if(audioDb == null)
+                        {
+                            audioDb = await _ctx.Items
+                            .FirstOrDefaultAsync(x => x.DurationMs == (audio.TotalSeconds / 1000));
+                        }
                     }
                     else
                     {
@@ -224,6 +230,12 @@ namespace Services
                             audioDb = await _ctx.Items
                             .FirstOrDefaultAsync(x => x.Name.Contains(replaced, StringComparison.InvariantCultureIgnoreCase)
                             && x.Artists.Contains(replacedArtist));
+                        }
+
+                        if (audioDb == null)
+                        {
+                            audioDb = await _ctx.Items
+                            .FirstOrDefaultAsync(x => x.DurationMs == (audio.TotalSeconds / 1000));
                         }
                     }
                 }
@@ -259,6 +271,9 @@ namespace Services
             {
                 var song = await _ctx.Items.FirstOrDefaultAsync(x => x.Id == id);
 
+                song.Popularity++;
+                song.LastActiveTime = DateTime.Now;
+
                 _ctx.CurrentSong.Add(new CurrentSong
                 {
                     SongId = id,
@@ -272,6 +287,7 @@ namespace Services
                     PlaylistId = plId
                 });
 
+                _ctx.Entry(song).State = EntityState.Modified;
                 _ctx.SaveChanges();
                 return true;
             }
@@ -415,16 +431,16 @@ namespace Services
 
         public int GetRAMUsage()
         {
-            var output = "free | awk 'FNR == 3 {print $3/($3+$4)*100}'"
+            var output = "free | awk 'FNR == 2 {print ($3*100)/$2}'"
                 .Bash();
             return double.TryParse(output, out double dPercent) ? Convert.ToInt32(dPercent) : -1;
         }
 
         public int GetCPUTemperature()
         {
-            var output = @"sensors 2>/dev/null | awk '/id 0:/{printf "" % d\n"", $4}'"
+            var output = @"cat /sys/class/thermal/thermal_zone0/temp | awk '{print $1/1000}'"
                   .Bash();
-            return int.TryParse(output, out int dPercent) ? dPercent : -1;
+            return (int) (double.TryParse(output, out double dPercent) ? dPercent : -1);
         }
 
         public int GetUsedStorage()
