@@ -7,6 +7,30 @@ using System.Text;
 
 namespace Models
 {
+    public partial class Artists
+    {
+        [JsonProperty("Id")]
+        public long Id { get; set; }
+
+        [JsonProperty("Name")]
+        public string Name { get; set; }
+
+        [JsonProperty("Genres")]
+        public object Genres { get; set; }
+
+        [JsonProperty("Images")]
+        public object Images { get; set; }
+
+        [JsonProperty("Songs")]
+        public object Songs { get; set; }
+
+        [JsonProperty("Albums")]
+        public object Albums { get; set; }
+
+        [JsonProperty("Popularity")]
+        public long Popularity { get; set; }
+    }
+
     public static class Helpers
     {
         public static Tracks GetTrack(Models.Spotify.Tracks old)

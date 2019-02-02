@@ -47,7 +47,7 @@ namespace UploadMusic.Controllers
                     multiContent.Add(new ByteArrayContent(buffer), "file", file.FileName);
                 }
                 //http://spotypie.deveim.com
-                var response = await client.PostAsync($"http://spotypie.deveim.com/api/upload/", multiContent);
+                var response = await client.PostAsync($"http://spotypie.pertrauktiestaskas.lt/api/upload/", multiContent);
                 if (response.IsSuccessStatusCode)
                 {
                     var rResult = JsonConvert.DeserializeObject<Dictionary<string, string>>(response.Content.ReadAsStringAsync().Result);
