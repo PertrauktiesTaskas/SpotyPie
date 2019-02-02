@@ -174,15 +174,17 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    <FrameLayout
-        android:id="@+id/player_frame"
+
+
+				<FrameLayout
+        android:id="@+id/song_options"
         android:translationX="500dp"
         android:background="@color/greylight"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-				<FrameLayout
-        android:id="@+id/song_options"
+	    <FrameLayout
+        android:id="@+id/player_frame"
         android:translationX="500dp"
         android:background="@color/greylight"
         android:layout_width="match_parent"

@@ -57,6 +57,7 @@ namespace SpotyPie
         int scrolled;
         public bool isPlayable;
         public bool IsMeniuActive = false;
+        FrameLayout containerx;
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
@@ -67,6 +68,9 @@ namespace SpotyPie
             IsMeniuActive = false;
             scrolled = 0;
             //Background binding
+
+            containerx = RootView.FindViewById<FrameLayout>(Resource.Id.frameLayout);
+            containerx.Touch += Containerx_Touch;
             ShufflePlay = RootView.FindViewById<Button>(Resource.Id.button_text);
             ShufflePlay.Visibility = ViewStates.Gone;
 
@@ -119,7 +123,7 @@ namespace SpotyPie
                     if (AlbumSongsRecyclerView != null && AlbumSongsRecyclerView.ChildCount != 0)
                     {
                         var c = AlbumSongsRecyclerView.Width;
-                        float Procent = (Search.Action.Event.GetX() * 100) / AlbumSongsRecyclerView.Width;
+                        float Procent = (Search.Action * 100) / AlbumSongsRecyclerView.Width;
                         if (Procent <= 80 && AlbumSongsItem[position] != null)
                         {
                             Current_state.SetSong(AlbumSongsItem[position]);
@@ -130,7 +134,7 @@ namespace SpotyPie
                             {
                                 IsMeniuActive = true;
                                 MainActivity activity = (MainActivity)this.Activity;
-                                activity.LoadOptionsMeniu();
+                                //activity.LoadOptionsMeniu();
                             }
                         }
                     }
@@ -141,6 +145,11 @@ namespace SpotyPie
             });
 
             return RootView;
+        }
+
+        private void Containerx_Touch(object sender, TouchEventArgs e)
+        {
+            Search.Action = e.Event.GetX();
         }
 
         public override void OnDestroyView()
@@ -168,6 +177,15 @@ namespace SpotyPie
                 {
                     Album album = JsonConvert.DeserializeObject<Album>(response.Content);
 
+                    if (album.Songs.Any(x => x.LocalUrl != null))
+                        Application.SynchronizationContext.Post(_ =>
+                        {
+                            isPlayable = true;
+                            PlayableButton.Text = "Playable";
+                            PlayableButton.SetBackgroundResource(Resource.Drawable.playable_button);
+                            ShufflePlay.Visibility = ViewStates.Visible;
+                        }, null);
+
                     Application.SynchronizationContext.Post(_ =>
                     {
                         Current_state.Current_Song_List = album.Songs;
@@ -182,15 +200,6 @@ namespace SpotyPie
                         await Task.Delay(200);
                     }
                     AlbumSongs.RemoveLoading();
-
-                    if (album.Songs.Any(x => x.LocalUrl != null))
-                        Application.SynchronizationContext.Post(_ =>
-                        {
-                            isPlayable = true;
-                            PlayableButton.Text = "Playable";
-                            PlayableButton.SetBackgroundResource(Resource.Drawable.playable_button);
-                            ShufflePlay.Visibility = ViewStates.Visible;
-                        }, null);
                 }
                 else
                 {

@@ -52,13 +52,16 @@ namespace SpotyPie.Helpers
         {
             Application.SynchronizationContext.Post(_ =>
             {
-                mItems.RemoveAt(0);
-
-                if (Adapter != null)
+                if (mItems.Count !=0 && mItems[0] == null)
                 {
-                    Adapter.NotifyItemRemoved(0);
+                    mItems.RemoveAt(0);
+
+                    if (Adapter != null)
+                    {
+                        Adapter.NotifyItemRemoved(0);
+                    }
+                    Adapter.NotifyDataSetChanged();
                 }
-                Adapter.NotifyDataSetChanged();
             }, null);
         }
 

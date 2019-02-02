@@ -4004,8 +4004,8 @@ namespace SpotyPie
 			// aapt resource value: 0x7f0900a9
 			public const int playable_button = 2131296425;
 			
-			// aapt resource value: 0x7f0900a5
-			public const int player_frame = 2131296421;
+			// aapt resource value: 0x7f0900a6
+			public const int player_frame = 2131296422;
 			
 			// aapt resource value: 0x7f0900e9
 			public const int playlist = 2131296489;
@@ -4175,8 +4175,8 @@ namespace SpotyPie
 			// aapt resource value: 0x7f0900a1
 			public const int song_name = 2131296417;
 			
-			// aapt resource value: 0x7f0900a6
-			public const int song_options = 2131296422;
+			// aapt resource value: 0x7f0900a5
+			public const int song_options = 2131296421;
 			
 			// aapt resource value: 0x7f09011f
 			public const int song_progress = 2131296543;

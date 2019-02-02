@@ -69,6 +69,7 @@
     <Compile Include="Helpers\IFastScrollRecyclerViewAdapter.cs" />
     <Compile Include="Helpers\RecycleViewList.cs" />
     <Compile Include="Helpers\RV_click.cs" />
+    <Compile Include="Helpers\Rv_OnTouch.cs" />
     <Compile Include="Helpers\VerticalRV.cs" />
     <Compile Include="Home.cs" />
     <Compile Include="Library\Fragments\Albums.cs" />
@@ -91,6 +92,8 @@
     <Compile Include="Player\player_song_list.cs" />
     <Compile Include="Player\PlaylistFragment.cs" />
     <Compile Include="Player\Playlist_choose.cs" />
+    <Compile Include="PlaylistSongList.cs" />
+    <Compile Include="Playlist_view.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search.cs" />

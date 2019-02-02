@@ -47,9 +47,13 @@ namespace SpotyPie
 
         public static FrameLayout Fragment;
 
+        public static int Add_to_playlist_id = 0;
+
         ConstraintLayout HeaderContainer;
 
         public static SupportFragmentManager mSupportFragmentManager;
+
+        public static Android.Support.V4.App.Fragment CurrentFragment;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -65,7 +69,7 @@ namespace SpotyPie
 
             widthInDp = Resources.DisplayMetrics.WidthPixels;
             HeightInDp = Resources.DisplayMetrics.HeightPixels;
-            PlayerContainer.TranslationX = widthInDp;
+            PlayerContainer.TranslationX = 0;
             Fragment.TranslationX = widthInDp;
 
             Home = new Home();
@@ -75,6 +79,10 @@ namespace SpotyPie
             Player = new Player.Player();
             Album = new AlbumFragment();
             Artist = new ArtistFragment();
+
+            SupportFragmentManager.BeginTransaction()
+                .Replace(Resource.Id.player_frame, Player)
+                .Commit();
 
             PlayToggle = FindViewById<ImageButton>(Resource.Id.play_stop);
             bottomNavigation = FindViewById<BottomNavigationView>(Resource.Id.NavBot);
@@ -111,12 +119,26 @@ namespace SpotyPie
                 PlayerContainer.TranslationX = widthInDp;
                 return;
             }
+            if (Fragment.TranslationX == 0)
+            {
+                Fragment.TranslationX = widthInDp;
+                return;
+            }
+
+            if (CurrentFragment != null)
+            {
+                RemoveCurrentFragment();
+                SupportFragmentManager.BeginTransaction()
+                   .Replace(Resource.Id.content_frame, Home)
+                   .Commit();
+                return;
+            }
             base.OnBackPressed();
         }
 
-        public void LoadOptionsMeniu()
+        public static void LoadOptionsMeniu()
         {
-            SupportFragmentManager.BeginTransaction()
+            mSupportFragmentManager.BeginTransaction()
                 .Replace(Resource.Id.song_options, new PlaylistFragment())
                 .Commit();
             MainActivity.Fragment.TranslationX = 0;
@@ -257,29 +279,18 @@ namespace SpotyPie
         }
 
 
-        //public virtual void RemoveCurrentFragment(bool WithStateLoss = false)
-        //{
-        //    Application.SynchronizationContext.Post(_ =>
-        //    {
-        //        if (CurrentFragment != null)
-        //        {
-        //            ab.SetHomeAsUpIndicator(Resource.Drawable.menu_new_vec);
-        //            FragmentTransaction transaction = SupFragmentManager.BeginTransaction();
-        //            transaction.Remove(CurrentFragment);
-        //            if (WithStateLoss)
-        //            {
-        //                transaction.CommitAllowingStateLoss();
-        //            }
-        //            else
-        //            {
-        //                transaction.Commit();
-        //            }
-        //            transaction.SetTransition(FragmentTransaction.TransitFragmentClose);
-        //            CurrentFragment = null;
-        //            CURRENT_FRAGMENT_ID = 0;
-        //        }
-        //    }, null);
-        //}
+        public void RemoveCurrentFragment()
+        {
+            if (CurrentFragment != null)
+            {
+                var transaction = mSupportFragmentManager.BeginTransaction();
+                transaction.Remove(CurrentFragment);
+                transaction.Commit();
+                transaction.SetTransition(Android.Support.V4.App.FragmentTransaction.TransitFragmentClose);
+                CurrentFragment = null;
+                MainActivity.Fragment.TranslationX = widthInDp;
+            }
+        }
     }
 }
 

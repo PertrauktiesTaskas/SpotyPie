@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using RestSharp;
 using SpotyPie.Helpers;
 using SpotyPie.Models;
+using SpotyPie.Player;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,35 +24,35 @@ namespace SpotyPie
 
         //Recent albums
         public List<Album> RecentAlbumsData;
-        public RecycleViewList<BlockWithImage> RecentAlbums = new RecycleViewList<BlockWithImage>();
+        public RecycleViewList<BlockWithImage> RecentAlbums;
         private RecyclerView.LayoutManager RecentAlbumsLayoutManager;
         private RecyclerView.Adapter RecentAlbumsAdapter;
         private RecyclerView RecentAlbumsRecyclerView;
 
         //Best albums
         public List<Album> BestAlbumsData;
-        public RecycleViewList<BlockWithImage> BestAlbums = new RecycleViewList<BlockWithImage>();
+        public RecycleViewList<BlockWithImage> BestAlbums;
         private RecyclerView.LayoutManager BestAlbumsLayoutManager;
         private RecyclerView.Adapter BestAlbumsAdapter;
         private RecyclerView BestAlbumsRecyclerView;
 
         //Best artists
         public List<Artist> BestArtistList;
-        public RecycleViewList<BlockWithImage> BestArtists = new RecycleViewList<BlockWithImage>();
+        public RecycleViewList<BlockWithImage> BestArtists;
         private RecyclerView.LayoutManager BestArtistsLayoutManager;
         private RecyclerView.Adapter BestArtistsAdapter;
         private RecyclerView BestArtistsRecyclerView;
 
         //Jump back albums
         public List<Album> JumpBackData;
-        public RecycleViewList<BlockWithImage> JumpBack = new RecycleViewList<BlockWithImage>();
+        public RecycleViewList<BlockWithImage> JumpBack;
         private RecyclerView.LayoutManager JumpBackLayoutManager;
         private RecyclerView.Adapter JumpBackAdapter;
         private RecyclerView JumpBackRecyclerView;
 
         //Top playlist
         public List<Playlist> TopPlaylistData;
-        public RecycleViewList<BlockWithImage> TopPlaylist = new RecycleViewList<BlockWithImage>();
+        public RecycleViewList<BlockWithImage> TopPlaylist;
         private RecyclerView.LayoutManager TopPlaylistLayoutManager;
         private RecyclerView.Adapter TopPlaylistAdapter;
         private RecyclerView TopPlaylistRecyclerView;
@@ -60,6 +61,11 @@ namespace SpotyPie
         {
             RootView = inflater.Inflate(Resource.Layout.home_layout, container, false);
 
+            RecentAlbums = new RecycleViewList<BlockWithImage>();
+            BestAlbums = new RecycleViewList<BlockWithImage>();
+            BestArtists = new RecycleViewList<BlockWithImage>();
+            JumpBack = new RecycleViewList<BlockWithImage>();
+            TopPlaylist = new RecycleViewList<BlockWithImage>();
             //RECENT ALBUMS
             RecentAlbumsLayoutManager = new LinearLayoutManager(this.Activity, LinearLayoutManager.Horizontal, false);
             RecentAlbumsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.recent_rv);
@@ -72,9 +78,11 @@ namespace SpotyPie
             {
                 if (RecentAlbumsRecyclerView != null && RecentAlbumsRecyclerView.ChildCount != 0)
                 {
+                    MainActivity.Fragment.TranslationX = 0;
+                    MainActivity.CurrentFragment = new AlbumFragment();
                     Current_state.SetAlbum(RecentAlbumsData[position]);
-                    FragmentManager.BeginTransaction()
-                    .Replace(Resource.Id.content_frame, MainActivity.Album)
+                MainActivity.mSupportFragmentManager.BeginTransaction()
+                .Replace(Resource.Id.song_options, MainActivity.CurrentFragment)
                     .Commit();
                 }
             });
@@ -91,9 +99,11 @@ namespace SpotyPie
             {
                 if (BestAlbumsRecyclerView != null && BestAlbumsRecyclerView.ChildCount != 0)
                 {
+                    MainActivity.Fragment.TranslationX = 0;
+                    MainActivity.CurrentFragment = new AlbumFragment();
                     Current_state.SetAlbum(BestAlbumsData[position]);
-                    FragmentManager.BeginTransaction()
-                    .Replace(Resource.Id.content_frame, MainActivity.Album)
+                    MainActivity.mSupportFragmentManager.BeginTransaction()
+                    .Replace(Resource.Id.song_options, MainActivity.CurrentFragment)
                     .Commit();
                 }
             });
@@ -112,9 +122,11 @@ namespace SpotyPie
             {
                 if (BestArtistsRecyclerView != null && BestArtistsRecyclerView.ChildCount != 0)
                 {
+                    MainActivity.Fragment.TranslationX = 0;
+                    MainActivity.CurrentFragment = new ArtistFragment();
                     Current_state.SetArtist(BestArtistList[position]);
-                    FragmentManager.BeginTransaction()
-                    .Replace(Resource.Id.content_frame, MainActivity.Artist)
+                    MainActivity.mSupportFragmentManager.BeginTransaction()
+                    .Replace(Resource.Id.song_options, MainActivity.CurrentFragment)
                     .Commit();
                 }
             });
@@ -131,9 +143,11 @@ namespace SpotyPie
             {
                 if (JumpBackRecyclerView != null && JumpBackRecyclerView.ChildCount != 0)
                 {
+                    MainActivity.Fragment.TranslationX = 0;
+                    MainActivity.CurrentFragment = new AlbumFragment();
                     Current_state.SetAlbum(JumpBackData[position]);
-                    FragmentManager.BeginTransaction()
-                    .Replace(Resource.Id.content_frame, MainActivity.Album)
+                    MainActivity.mSupportFragmentManager.BeginTransaction()
+                    .Replace(Resource.Id.song_options, MainActivity.CurrentFragment)
                     .Commit();
                 }
             });
@@ -151,7 +165,12 @@ namespace SpotyPie
             {
                 if (TopPlaylistRecyclerView != null && TopPlaylistRecyclerView.ChildCount != 0)
                 {
-                    Toast.MakeText(this.Context, "Dar nesukurta playlist", ToastLength.Short).Show();
+                    MainActivity.Fragment.TranslationX = 0;
+                    MainActivity.CurrentFragment = new Playlist_view();
+                    Current_state.Current_Playlist = TopPlaylistData[position];
+                    MainActivity.mSupportFragmentManager.BeginTransaction()
+                    .Replace(Resource.Id.song_options, MainActivity.CurrentFragment)
+                    .Commit();
                 }
             });
 
@@ -166,17 +185,15 @@ namespace SpotyPie
         public override void OnResume()
         {
             base.OnResume();
-            if (RecentAlbums == null || RecentAlbums.Count == 0)
-                Task.Run(() => GetRecentAlbumsAsync(this.Context));
+            Task.Run(() => GetRecentAlbumsAsync(this.Context));
 
-            if (BestAlbums == null || BestAlbums.Count == 0)
-                Task.Run(() => GetPolularAlbumsAsync(this.Context));
+            Task.Run(() => GetPolularAlbumsAsync(this.Context));
 
-            if (BestArtists == null || BestArtists.Count == 0)
-                Task.Run(() => GetPolularArtistsAsync(this.Context));
+            Task.Run(() => GetPolularArtistsAsync(this.Context));
 
-            if (JumpBack == null || JumpBack.Count == 0)
-                Task.Run(() => GetOldAlbumsAsync(this.Context));
+            Task.Run(() => GetOldAlbumsAsync(this.Context));
+
+            Task.Run(() => GetPlaylists(this.Context));
 
             //if (TopPlaylist == null || TopPlaylist.Count == 0)
             //Todo add playlist call
@@ -320,6 +337,39 @@ namespace SpotyPie
                         foreach (var x in album)
                         {
                             JumpBack.Add(new BlockWithImage(x.Id, RvType.Album, x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name, x.Images.First().Url));
+                        }
+                    }, null);
+                }
+                else
+                {
+                    Application.SynchronizationContext.Post(_ =>
+                    {
+                        Toast.MakeText(this.Context, "Recent Albums API error", ToastLength.Short).Show();
+                    }, null);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        public async Task GetPlaylists(Context cnt)
+        {
+            try
+            {
+                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/playlist/playlists");
+                var request = new RestRequest(Method.GET);
+                IRestResponse response = await Client.ExecuteGetTaskAsync(request);
+                if (response.IsSuccessful)
+                {
+                    List<Playlist> album = JsonConvert.DeserializeObject<List<Playlist>>(response.Content);
+                    Application.SynchronizationContext.Post(_ =>
+                    {
+                        TopPlaylistData = album;
+                        foreach (var x in album)
+                        {
+                            TopPlaylist.Add(new BlockWithImage(x.Id, RvType.Playlist, x.Name, x.Created.ToString("yyyy-MM-dd"), x.ImageUrl));
                         }
                     }, null);
                 }

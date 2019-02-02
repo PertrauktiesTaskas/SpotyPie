@@ -101,9 +101,14 @@ namespace SpotyPie.Helpers
                 BlockImage view = holder as BlockImage;
                 view.Title.Text = Dataset[position].Name;
                 view.SubTitile.Text = JsonConvert.DeserializeObject<List<Artist>>(Dataset[position].Artists).First().Name;
-                //Picasso.With(Context).Load(Dataset[position].Image).Into(view.Image);
-
+                view.Options.Click += Options_Click;
+                MainActivity.Add_to_playlist_id = Dataset[position].Id;
             }
+        }
+
+        private void Options_Click(object sender, EventArgs e)
+        {
+            MainActivity.LoadOptionsMeniu();
         }
 
         public override int ItemCount

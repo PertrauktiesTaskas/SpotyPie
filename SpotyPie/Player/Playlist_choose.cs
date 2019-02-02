@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.OS;
+using Android.Support.Design.Widget;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
@@ -24,6 +25,9 @@ namespace SpotyPie.Player
         private RecyclerView.Adapter PlaylistsAdapter;
         private RecyclerView PlaylistRecyclerView;
 
+        bool Adding = false;
+        Snackbar Snackbar;
+
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             RootView = inflater.Inflate(Resource.Layout.playlist_list_choose, container, false);
@@ -41,10 +45,76 @@ namespace SpotyPie.Player
             {
                 if (PlaylistRecyclerView != null && PlaylistRecyclerView.ChildCount != 0)
                 {
+                    if (!Adding)
+                    {
+                        Adding = true;
+                        Task.Run(() => AddToPlaylistAsync(PlaylistItem[position].Id));
+                    }
                 }
             });
 
             return RootView;
+        }
+
+        public async Task AddToPlaylistAsync(int id)
+        {
+            try
+            {
+                Application.SynchronizationContext.Post(_ =>
+                {
+                    Snackbar = Snackbar.Make(RootView, "Adding...", Snackbar.LengthIndefinite);
+                    Snackbar.Show();
+                }, null);
+                var client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/Playlist/" + id + "/tracks");
+                var request = new RestRequest(Method.POST);
+                request.AddHeader("Postman-Token", "76285a40-ead5-4f55-8863-1ccbcb6d61d8");
+                request.AddHeader("cache-control", "no-cache");
+                request.AddHeader("Content-Type", "application/json");
+                request.AddParameter("undefined", MainActivity.Add_to_playlist_id, ParameterType.RequestBody);
+                IRestResponse response = await client.ExecuteTaskAsync(request);
+                if (response.IsSuccessful)
+                {
+                    await Task.Delay(800);
+                    Application.SynchronizationContext.Post(_ =>
+                    {
+                        Snackbar = Snackbar.Make(RootView, "Succesfuly added", Snackbar.LengthIndefinite);
+                        Snackbar.Show();
+                        Snackbar.SetAction("Ok", (e) =>
+                        {
+                            MainActivity.Fragment.TranslationX = 10000;
+                            Snackbar.Dismiss();
+                            Snackbar.Dispose();
+                        });
+                    }, null);
+                }
+                else
+                {
+                    Application.SynchronizationContext.Post(_ =>
+                    {
+                        Snackbar = Snackbar.Make(RootView, "Song alredy added", Snackbar.LengthIndefinite);
+                        Snackbar.Show();
+                        Snackbar.SetAction("Ok", (e) =>
+                        {
+                            Snackbar.Dismiss();
+                            Snackbar.Dispose();
+                        });
+                    }, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                Application.SynchronizationContext.Post(_ =>
+                {
+                    Snackbar = Snackbar.Make(RootView, "Something whent wrong.", Snackbar.LengthIndefinite);
+                    Snackbar.Show();
+                    Snackbar.SetAction("Ok", (e) =>
+                    {
+                        MainActivity.Fragment.TranslationX = 10000;
+                        Snackbar.Dismiss();
+                        Snackbar.Dispose();
+                    });
+                }, null);
+            }
         }
 
         public override void OnResume()
@@ -173,7 +243,7 @@ namespace SpotyPie.Player
                 {
                     BlockImage view = holder as BlockImage;
                     view.Title.Text = Dataset[position].Name;
-                    view.SubTitile.Text = "Current song count -" + Dataset[position].Total;
+                    view.SubTitile.Text = "Current song count - " + Dataset[position].Total;
                     view.Options.Visibility = ViewStates.Gone;
                 }
             }

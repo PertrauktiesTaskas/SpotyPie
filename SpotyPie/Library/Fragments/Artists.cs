@@ -70,6 +70,8 @@ namespace SpotyPie.Library.Fragments
         {
             try
             {
+                await ArtistsData.ClearAsync();
+                ArtistsData.Add(null);
                 var client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/Artist/Artists");
                 var request = new RestRequest(Method.GET);
                 request.AddHeader("cache-control", "no-cache");
@@ -81,8 +83,6 @@ namespace SpotyPie.Library.Fragments
                     {
                         if (artists.Count != ArtistsLocal.Count)
                         {
-                            await ArtistsData.ClearAsync();
-
                             artists = artists.OrderByDescending(x => x.Popularity).ToList();
                             Application.SynchronizationContext.Post(_ =>
                             {
@@ -99,6 +99,10 @@ namespace SpotyPie.Library.Fragments
             }
             catch
             {
+            }
+            finally
+            {
+                ArtistsData.RemoveLoading();
             }
         }
     }

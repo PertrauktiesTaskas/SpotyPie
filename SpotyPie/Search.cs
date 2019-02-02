@@ -60,7 +60,7 @@ namespace SpotyPie
         EditText search;
         ImageView SearchIcon;
 
-        public static View.TouchEventArgs Action;
+        public static float Action;
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
@@ -115,7 +115,7 @@ namespace SpotyPie
                 if (SongsRecyclerView != null && SongsRecyclerView.ChildCount != 0)
                 {
                     var c = SongsRecyclerView.Width;
-                    float Procent = (Search.Action.Event.GetX() * 100) / AlbumsRecyclerView.Width;
+                    float Procent = (Action * 100) / AlbumsRecyclerView.Width;
                     if (Procent <= 50)
                     {
                         Current_state.SetAlbum(AlbumsData[position]);

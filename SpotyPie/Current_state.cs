@@ -33,6 +33,8 @@ namespace SpotyPie
 
         public static Item Current_Song { get; set; } = null;
 
+        public static Playlist Current_Playlist { get; set; } = null;
+
         public static List<Item> Current_Song_List { get; set; } = null;
 
         public static RestClient client = new RestClient();
@@ -41,9 +43,8 @@ namespace SpotyPie
         {
             if (song.LocalUrl != null)
             {
-                Player.Player.StartPlayMusic();
-
                 Current_Song = song;
+                Player.Player.StartPlayMusic();
                 Current_Artist = JsonConvert.DeserializeObject<List<Artist>>(Current_Song.Artists).First();
                 Current_Song.Playing = true;
                 Current_Song_List.First(x => x.Id == Current_Song.Id).Playing = true;

@@ -23,8 +23,8 @@ namespace SpotyPie.Library.Fragments
     {
         View RootView;
 
-        public List<SpotyPie.Playlist> PlaylistLocal = new List<SpotyPie.Playlist>();
-        public RecycleViewList<SpotyPie.Playlist> PlaylistsData = new RecycleViewList<SpotyPie.Playlist>();
+        public List<SpotyPie.Playlist> PlaylistLocal;
+        public RecycleViewList<SpotyPie.Playlist> PlaylistsData;
         private RecyclerView.LayoutManager PlaylistSongsLayoutManager;
         private RecyclerView.Adapter PlaylistSongsAdapter;
         private RecyclerView PlaylistsSongsRecyclerView;
@@ -33,6 +33,8 @@ namespace SpotyPie.Library.Fragments
         {
             RootView = inflater.Inflate(Resource.Layout.library_playlist_layout, container, false);
 
+            PlaylistLocal = new List<SpotyPie.Playlist>();
+            PlaylistsData = new RecycleViewList<SpotyPie.Playlist>();
             PlaylistSongsLayoutManager = new LinearLayoutManager(this.Activity);
             PlaylistsSongsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.playlist);
             PlaylistsSongsRecyclerView.SetLayoutManager(PlaylistSongsLayoutManager);
@@ -70,6 +72,9 @@ namespace SpotyPie.Library.Fragments
         {
             try
             {
+                await PlaylistsData.ClearAsync();
+                PlaylistsData.Add(null);
+
                 var client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/Playlist/playlists");
                 var request = new RestRequest(Method.GET);
                 request.AddHeader("cache-control", "no-cache");
@@ -81,8 +86,6 @@ namespace SpotyPie.Library.Fragments
                     {
                         if (playlists.Count != PlaylistLocal.Count)
                         {
-                            await PlaylistsData.ClearAsync();
-
                             playlists = playlists.OrderByDescending(x => x.Popularity).ToList();
                             Application.SynchronizationContext.Post(_ =>
                             {
@@ -99,6 +102,10 @@ namespace SpotyPie.Library.Fragments
             }
             catch
             {
+            }
+            finally
+            {
+                PlaylistsData.RemoveLoading();
             }
         }
 
