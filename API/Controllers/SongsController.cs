@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Models;
 using Models.BackEnd;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Threading;
@@ -85,6 +87,119 @@ namespace API.Controllers
             catch (System.Exception ex)
             {
                 return BadRequest(ex);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [EnableCors("AllowSpecificOrigin")]
+        public async Task<IActionResult> Remove(int id)
+        {
+            try
+            {
+                if (await _ctd.RemoveAudio(id))
+                    return Ok();
+                else
+                    return StatusCode(404);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+
+        [HttpGet("PopularRecent")]
+        [EnableCors("AllowSpecificOrigin")]
+        public async Task<IActionResult> GetMostPopularRecent()
+        {
+            try
+            {
+
+                var popular = await _ctx.Items.AsNoTracking()
+                    .Select(x => new
+                    {
+                        x.Name,
+                        x.ImageUrl,
+                        x.Id,
+                        Artist = JsonConvert.DeserializeObject<Artists[]>(x.Artists)[0].Name,
+                        AlbumName = "",
+                        x.Popularity
+                    })
+                    .OrderByDescending(x => x.Popularity).
+                    FirstOrDefaultAsync();
+
+                var recent = await _ctx.Items.AsNoTracking()
+                    .Select(x => new
+                    {
+                        x.Name,
+                        x.ImageUrl,
+                        x.Id,
+                        Artist = JsonConvert.DeserializeObject<Artists[]>(x.Artists)[0].Name,
+                        AlbumName = "",
+                        x.LastActiveTime
+                    })
+                    .OrderByDescending(x => x.LastActiveTime).
+                    FirstOrDefaultAsync();
+
+                if (popular != null && recent != null)
+                {
+
+                    var album = await _ctx.Albums.AsNoTracking()
+                        .Include(x => x.Songs)
+                        .Select(x => new { x.Name, x.Songs })
+                        .FirstOrDefaultAsync(x => x.Songs.Exists(y => y.Id == popular.Id));
+
+                    var albumRec = await _ctx.Albums.AsNoTracking()
+                        .Include(x => x.Songs)
+                        .Select(x => new { x.Name, x.Songs })
+                        .FirstOrDefaultAsync(x => x.Songs.Exists(y => y.Id == recent.Id));
+
+                    return Ok(new
+                    {
+                        Popular = new
+                        {
+                            popular.Name,
+                            popular.ImageUrl,
+                            popular.Id,
+                            popular.Artist,
+                            AlbumName = album.Name != null ? album.Name : ""
+                        },
+                        Recent = new
+                        {
+                            recent.Name,
+                            recent.ImageUrl,
+                            recent.Id,
+                            recent.Artist,
+                            AlbumName = albumRec.Name != null ? albumRec.Name : ""
+                        }
+                    });
+                }
+
+                return Ok(new
+                {
+                    Popular = new
+                    {
+                        Name = "",
+                        ImageUrl = "",
+                        Id = 0,
+                        Artist = "",
+                        AlbumName = ""
+                    },
+                    Recent = new
+                    {
+                        Name = "",
+                        ImageUrl = "",
+                        Id = 0,
+                        Artist = "",
+                        AlbumName = ""
+                    }
+                });
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return BadRequest(e.Message);
             }
         }
 

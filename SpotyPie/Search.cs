@@ -8,6 +8,7 @@ using Android.Widget;
 using Newtonsoft.Json;
 using RestSharp;
 using SpotyPie.Helpers;
+using SpotyPie.Library.Fragments;
 using SpotyPie.Models;
 using System;
 using System.Collections.Generic;
@@ -23,18 +24,20 @@ namespace SpotyPie
         View RootView;
 
         //List Songs
-        public List<Item> SearchSongs = new List<Item>();
-        public RecycleViewList<List> Songs = new RecycleViewList<List>();
-        private RecyclerView.LayoutManager AlbumSongsLayoutManager;
-        private RecyclerView.Adapter AlbumSongsAdapter;
-        private RecyclerView AlbumSongsRecyclerView;
+        public List<Item> SearchSongs;
+        public RecycleViewList<Item> Songs;
+        private RecyclerView.LayoutManager SongsLayoutManager;
+        private RecyclerView.Adapter SongsAdapter;
+        private RecyclerView SongsRecyclerView;
 
+        public List<Album> AlbumsData;
         public RecycleViewList<TwoBlockWithImage> Albums = new RecycleViewList<TwoBlockWithImage>();
         private RecyclerView.LayoutManager AlbumsLayoutManager;
         private RecyclerView.Adapter AlbumsAdapter;
         private RecyclerView AlbumsRecyclerView;
 
-        public RecycleViewList<TwoBlockWithImage> Artists = new RecycleViewList<TwoBlockWithImage>();
+        public List<Artist> ArtistsData;
+        public RecycleViewList<Artist> Artists;
         private RecyclerView.LayoutManager ArtistsLayoutManager;
         private RecyclerView.Adapter ArtistsAdapter;
         private RecyclerView ArtistsRecyclerView;
@@ -45,6 +48,8 @@ namespace SpotyPie
         private bool ArtistFinded = false;
         private bool PlaylistFinded = false;
 
+        public bool SearchNow = true;
+
         ConstraintLayout SongsContainer;
         ConstraintLayout AlbumsContainer;
         ConstraintLayout PlaylistContainer;
@@ -54,6 +59,8 @@ namespace SpotyPie
 
         EditText search;
         ImageView SearchIcon;
+
+        public static float Action;
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
@@ -70,24 +77,30 @@ namespace SpotyPie
             SearchIcon = RootView.FindViewById<ImageView>(Resource.Id.imageView);
 
             search = RootView.FindViewById<EditText>(Resource.Id.editText);
+            search.Text = "";
             search.BeforeTextChanged += Search_BeforeTextChanged;
             search.FocusChange += Search_FocusChange;
-            // song list
-            AlbumSongsLayoutManager = new LinearLayoutManager(this.Activity);
-            AlbumSongsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.song_rv);
-            AlbumSongsRecyclerView.SetLayoutManager(AlbumSongsLayoutManager);
-            AlbumSongsAdapter = new VerticalRV(Songs, AlbumSongsRecyclerView, this.Context);
-            Songs.Adapter = AlbumSongsAdapter;
-            AlbumSongsRecyclerView.SetAdapter(AlbumSongsAdapter);
-            AlbumSongsRecyclerView.NestedScrollingEnabled = false;
 
-            AlbumSongsRecyclerView.SetItemClickListener((rv, position, view) =>
+            // song list
+            SearchSongs = new List<Item>();
+            Songs = new RecycleViewList<Item>();
+            SongsLayoutManager = new LinearLayoutManager(this.Activity);
+            SongsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.song_rv);
+            SongsRecyclerView.SetLayoutManager(SongsLayoutManager);
+            SongsAdapter = new VerticalRV(Songs, this.Context);
+            Songs.Adapter = SongsAdapter;
+            SongsRecyclerView.SetAdapter(SongsAdapter);
+            SongsRecyclerView.NestedScrollingEnabled = false;
+
+            SongsRecyclerView.SetItemClickListener((rv, position, view) =>
             {
-                if (AlbumSongsRecyclerView != null && AlbumSongsRecyclerView.ChildCount != 0)
+                if (SongsRecyclerView != null && SongsRecyclerView.ChildCount != 0)
                 {
-                    //Current_state.SetSong(Current_state.Current_Song_List[position]);
+                    Current_state.Current_Song_List = SearchSongs;
+                    Current_state.SetSong(Current_state.Current_Song_List[position]);
                 }
             });
+
 
             AlbumsLayoutManager = new LinearLayoutManager(this.Activity);
             AlbumsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.albums_rv);
@@ -97,11 +110,36 @@ namespace SpotyPie
             AlbumsRecyclerView.SetAdapter(AlbumsAdapter);
             AlbumsRecyclerView.NestedScrollingEnabled = false;
 
+            AlbumsRecyclerView.SetItemClickListener((rv, position, view) =>
+            {
+                if (SongsRecyclerView != null && SongsRecyclerView.ChildCount != 0)
+                {
+                    var c = SongsRecyclerView.Width;
+                    float Procent = (Action * 100) / AlbumsRecyclerView.Width;
+                    if (Procent <= 50)
+                    {
+                        Current_state.SetAlbum(AlbumsData[position]);
+                        FragmentManager.BeginTransaction()
+                        .Replace(Resource.Id.content_frame, MainActivity.Album)
+                        .Commit();
+                    }
+                    else
+                    {
+                        Current_state.SetAlbum(AlbumsData[position + 1]);
+                        FragmentManager.BeginTransaction()
+                        .Replace(Resource.Id.content_frame, MainActivity.Album)
+                        .Commit();
+                    }
+                }
+            });
+
             //ARTIST RV
+            ArtistsData = new List<Artist>();
+            Artists = new RecycleViewList<Artist>();
             ArtistsLayoutManager = new LinearLayoutManager(this.Activity);
             ArtistsRecyclerView = RootView.FindViewById<RecyclerView>(Resource.Id.artists_rv);
             ArtistsRecyclerView.SetLayoutManager(ArtistsLayoutManager);
-            ArtistsAdapter = new BoxedRV(Artists, ArtistsRecyclerView, this.Context);
+            ArtistsAdapter = new ArtistRV(Artists, this.Context);
             Artists.Adapter = ArtistsAdapter;
             ArtistsRecyclerView.SetAdapter(ArtistsAdapter);
             ArtistsRecyclerView.NestedScrollingEnabled = false;
@@ -113,17 +151,27 @@ namespace SpotyPie
                     //Current_state.SetSong(Current_state.Current_Song_List[position]);
                 }
             });
-
-            Task.Run(() => Checker());
-
             return RootView;
+        }
+
+        public override void OnResume()
+        {
+            base.OnResume();
+            SearchNow = true;
+            Task.Run(() => Checker());
+        }
+
+        public override void OnStop()
+        {
+            base.OnStop();
+            SearchNow = false;
         }
 
         private void Search_FocusChange(object sender, View.FocusChangeEventArgs e)
         {
             if (search.IsFocused)
             {
-                if (search.Text.Contains("Search song, album, playlist"))
+                if (search.Text.Contains("Search"))
                     search.Text = "";
             }
 
@@ -140,19 +188,12 @@ namespace SpotyPie
         public async Task Checker()
         {
             var query = "";
-            while (true)
+            while (SearchNow)
             {
                 try
                 {
                     if (query != search.Text)
                     {
-                        Application.SynchronizationContext.Post(_ =>
-                        {
-                            Songs.clear();
-                            Albums.clear();
-                            Artists.clear();
-                        }, null);
-                        await Task.Delay(500);
                         var a = Task.Run(() => SearchSong(search.Text));
                         var b = Task.Run(() => SearchAlbums(search.Text));
                         var c = Task.Run(() => SearchArtist(search.Text));
@@ -181,7 +222,7 @@ namespace SpotyPie
         {
             try
             {
-                RestClient Client = new RestClient("http://spotypie.deveim.com/api/songs/search");
+                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/api/songs/search");
                 var request = new RestRequest(Method.POST);
                 request.AddHeader("cache-control", "no-cache");
                 request.AddHeader("content-type", "application/json");
@@ -189,19 +230,21 @@ namespace SpotyPie
                 IRestResponse response = await Client.ExecuteTaskAsync(request);
                 if (response.IsSuccessful)
                 {
+                    await Songs.ClearAsync();
                     var Songsx = JsonConvert.DeserializeObject<List<Item>>(response.Content);
                     if (Songsx != null && Songsx.Count != 0)
                     {
                         Application.SynchronizationContext.Post(_ =>
                         {
+                            SearchSongs = Songsx;
                             SongFinded = true;
                             if (SongsContainer.Visibility == ViewStates.Gone)
                                 SongsContainer.Visibility = ViewStates.Visible;
                         }, null);
 
-                        foreach (var x in Songsx.Take(8))
+                        foreach (var x in Songsx.Take(16))
                         {
-                            Songs.Add(new List(x.Id, x.Name, JsonConvert.DeserializeObject<List<Artist>>(x.Artists).First().Name));
+                            Songs.Add(x);
                         }
                     }
                     else
@@ -235,7 +278,7 @@ namespace SpotyPie
 
             try
             {
-                RestClient Client = new RestClient("http://spotypie.deveim.com/Api/Album/Search");
+                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/Api/Album/Search");
                 var request = new RestRequest(Method.POST);
                 request.AddHeader("cache-control", "no-cache");
                 request.AddHeader("content-type", "application/json");
@@ -246,8 +289,10 @@ namespace SpotyPie
                     var Albumsx = JsonConvert.DeserializeObject<List<Album>>(response.Content);
                     if (Albumsx != null && Albumsx.Count != 0)
                     {
+                        await Albums.ClearAsync();
                         Application.SynchronizationContext.Post(_ =>
                         {
+                            AlbumsData = Albumsx;
                             AlbumFinded = true;
                             if (AlbumsContainer.Visibility == ViewStates.Gone)
                                 AlbumsContainer.Visibility = ViewStates.Visible;
@@ -316,7 +361,7 @@ namespace SpotyPie
 
             try
             {
-                RestClient Client = new RestClient("http://spotypie.deveim.com/Api/artist/Search");
+                RestClient Client = new RestClient("http://spotypie.pertrauktiestaskas.lt/Api/artist/Search");
                 var request = new RestRequest(Method.POST);
                 request.AddHeader("cache-control", "no-cache");
                 request.AddHeader("content-type", "application/json");
@@ -327,44 +372,19 @@ namespace SpotyPie
                     var mArtists = JsonConvert.DeserializeObject<List<Artist>>(response.Content);
                     if (mArtists != null && mArtists.Count != 0)
                     {
+                        await Artists.ClearAsync();
+                        foreach (var x in mArtists)
+                        {
+                            Artists.Add(x);
+                        }
                         Application.SynchronizationContext.Post(_ =>
                         {
+                            ArtistsData = mArtists;
                             ArtistFinded = true;
                             if (ArtistContainer.Visibility == ViewStates.Gone)
                                 ArtistContainer.Visibility = ViewStates.Visible;
                         }, null);
-                        for (int i = 0; i < mArtists.Count && i <= 8; i = i + 2)
-                        {
-                            if (mArtists.Count - i == 1)
-                            {
-                                var x = mArtists[i];
-                                Artists.Add(new TwoBlockWithImage(
-                                new BlockWithImage(
-                                    x.Id,
-                                    RvType.Album,
-                                    x.Name,
-                                    x.Genres != null ? JsonConvert.DeserializeObject<List<string>>(x.Genres).First() : string.Empty,
-                                    x.Images.First().Url)));
-                            }
-                            else
-                            {
-                                var x = mArtists[i];
-                                var y = mArtists[i + 1];
-                                Albums.Add(new TwoBlockWithImage(
-                                    new BlockWithImage(
-                                        x.Id,
-                                        RvType.Album,
-                                        x.Name,
-                                        x.Genres != null ? JsonConvert.DeserializeObject<List<string>>(x.Genres).First() : string.Empty,
-                                        x.Images.First().Url),
-                                        new BlockWithImage(
-                                        y.Id,
-                                        RvType.Album,
-                                        y.Name,
-                                        x.Genres != null ? JsonConvert.DeserializeObject<List<string>>(x.Genres).First() : string.Empty,
-                                        y.Images.First().Url)));
-                            }
-                        }
+
                     }
                     else
                     {

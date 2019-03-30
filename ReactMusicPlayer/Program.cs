@@ -19,6 +19,7 @@ namespace ReactMusicPlayer
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+            .UseUrls("http://localhost:7770")
+            .UseStartup<Startup>();
     }
 }

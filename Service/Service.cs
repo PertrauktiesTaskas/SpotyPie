@@ -76,6 +76,15 @@ namespace Services
                 return "";
         }
 
+        public async Task<bool> RemoveAudio(int id)
+        {
+            var path = await GetAudioPathById(id);
+            File.Delete(path);
+            if (!File.Exists(path))
+                return true;
+            return false;
+        }
+
         public async Task<string> GetAudioPathById(int id)
         {
             try
@@ -102,76 +111,79 @@ namespace Services
             });
         }
 
-        public async Task<bool> BindAudioFiles()
+        public async Task<string> BindAudioFiles()
         {
             try
             {
-                await Task.Factory.StartNew(async () =>
+                //await Task.Factory.StartNew(async () =>
+                //{
+                if (Directory.Exists(settings.AudioStoragePath))
                 {
-                    if (Directory.Exists(settings.AudioStoragePath))
+                    foreach (var file in Directory.EnumerateFiles(settings.AudioStoragePath))
                     {
-                        foreach (var file in Directory.EnumerateFiles(settings.AudioStoragePath))
+                        Item audioDb = null;
+                        IAudioFile audio = AudioFile.Create(file, false);
+                        Console.WriteLine(file);
+
+                        if (audio != null && audio.FileType == AudioFileType.Flac)
                         {
-                            Item audioDb = null;
-                            IAudioFile audio = AudioFile.Create(file, false);
+                            VorbisComment flacTag = new VorbisComment(file);
 
-                            if (audio != null && audio.FileType == AudioFileType.Flac)
+                            if (string.IsNullOrWhiteSpace(flacTag.Title) || string.IsNullOrWhiteSpace(flacTag.Artist))
                             {
-                                VorbisComment flacTag = new VorbisComment(file);
+                                audioDb = await _ctx.Items
+                                    .FirstOrDefaultAsync(x =>
+                                    x.Name == Path.GetFileNameWithoutExtension(file));
 
-                                if (string.IsNullOrWhiteSpace(flacTag.Title) || string.IsNullOrWhiteSpace(flacTag.Artist))
+                                if (audioDb == null)
                                 {
                                     audioDb = await _ctx.Items
-                                        .FirstOrDefaultAsync(x =>
-                                        x.Name.Equals(Path.GetFileNameWithoutExtension(file), StringComparison.InvariantCultureIgnoreCase));
-
-                                    if (audioDb == null)
-                                    {
-                                        audioDb = await _ctx.Items
-                                        .FirstOrDefaultAsync(x =>
-                                        x.Name.Contains(Path.GetFileNameWithoutExtension(file), StringComparison.InvariantCultureIgnoreCase));
-                                    }
-                                }
-                                else
-                                {
-                                    var replaced = flacTag.Title.Replace("'", "’");
-                                    var replacedArtist = flacTag.Artist.Replace("'", "’");
-                                    audioDb = await _ctx.Items
-                                        .FirstOrDefaultAsync(x => x.Name.Equals(replaced, StringComparison.InvariantCultureIgnoreCase)
-                                        && x.Artists.Contains(replacedArtist));
-
-                                    if (audioDb == null)
-                                    {
-                                        audioDb = await _ctx.Items
-                                        .FirstOrDefaultAsync(x => x.Name.Contains(replaced, StringComparison.InvariantCultureIgnoreCase)
-                                        && x.Artists.Contains(replacedArtist));
-                                    }
+                                    .FirstOrDefaultAsync(x =>
+                                    x.Name.Contains(Path.GetFileNameWithoutExtension(file)));
                                 }
                             }
                             else
-                                audioDb = await _ctx.Items.FirstOrDefaultAsync(x => x.Name.Equals(Path.GetFileNameWithoutExtension(file), StringComparison.InvariantCultureIgnoreCase));
-
-                            if (audioDb != null)
                             {
-                                _ctx.Update(audioDb);
-                                audioDb.LocalUrl = file;
+                                var replaced = flacTag.Title.Replace("'", "’");
+                                var replacedArtist = flacTag.Artist.Replace("'", "’");
+                                audioDb = await _ctx.Items
+                                    .FirstOrDefaultAsync(x => x.Name.Contains(replaced)
+                                    && x.Artists.Contains(replacedArtist));
 
-                                if (audio != null)
+                                if (audioDb == null)
                                 {
-                                    audioDb.DurationMs = (long)audio.TotalSeconds * 1000;
+                                    audioDb = await _ctx.Items
+                                    .FirstOrDefaultAsync(x => x.Name.Contains(replaced)
+                                    && x.Artists.Contains(replacedArtist));
                                 }
-
-                                _ctx.SaveChanges();
-                                audio = null;
                             }
                         }
+                        else
+                            audioDb = await _ctx.Items.FirstOrDefaultAsync(x => x.Name == Path.GetFileNameWithoutExtension(file));
+
+                        if (audioDb != null)
+                        {
+                            Console.WriteLine("found file " + file);
+                            _ctx.Update(audioDb);
+                            audioDb.LocalUrl = file;
+
+                            if (audio != null)
+                            {
+                                audioDb.DurationMs = (long)audio.TotalSeconds * 1000;
+                            }
+
+                            _ctx.SaveChanges();
+                            audio = null;
+                        }
                     }
-                });
-                return true;
+                    return "true";
+                }
+                //});
+                return "false";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return false;
+                return ex.Message + " " + ex.StackTrace;
             }
         }
 
@@ -198,6 +210,12 @@ namespace Services
                             .FirstOrDefaultAsync(x =>
                             x.Name.Contains(Path.GetFileNameWithoutExtension(name), StringComparison.InvariantCultureIgnoreCase));
                         }
+
+                        if(audioDb == null)
+                        {
+                            audioDb = await _ctx.Items
+                            .FirstOrDefaultAsync(x => x.DurationMs == (audio.TotalSeconds / 1000));
+                        }
                     }
                     else
                     {
@@ -212,6 +230,12 @@ namespace Services
                             audioDb = await _ctx.Items
                             .FirstOrDefaultAsync(x => x.Name.Contains(replaced, StringComparison.InvariantCultureIgnoreCase)
                             && x.Artists.Contains(replacedArtist));
+                        }
+
+                        if (audioDb == null)
+                        {
+                            audioDb = await _ctx.Items
+                            .FirstOrDefaultAsync(x => x.DurationMs == (audio.TotalSeconds / 1000));
                         }
                     }
                 }
@@ -247,6 +271,9 @@ namespace Services
             {
                 var song = await _ctx.Items.FirstOrDefaultAsync(x => x.Id == id);
 
+                song.Popularity++;
+                song.LastActiveTime = DateTime.Now;
+
                 _ctx.CurrentSong.Add(new CurrentSong
                 {
                     SongId = id,
@@ -260,6 +287,7 @@ namespace Services
                     PlaylistId = plId
                 });
 
+                _ctx.Entry(song).State = EntityState.Modified;
                 _ctx.SaveChanges();
                 return true;
             }
@@ -328,6 +356,28 @@ namespace Services
             }
         }
 
+        public void TransferCache(string oldDir)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    if (!Directory.Exists(settings.AudioCachePath))
+                        Directory.CreateDirectory(settings.AudioCachePath);
+
+                    DirectoryInfo di = new DirectoryInfo(oldDir);
+                    foreach (FileInfo file in di.EnumerateFiles())
+                    {
+                        file.MoveTo(settings.AudioCachePath);
+                        file.Delete();
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            });
+        }
+
         public void RemoveCache()
         {
             DirectoryInfo di = new DirectoryInfo(settings.CachePath);
@@ -381,16 +431,16 @@ namespace Services
 
         public int GetRAMUsage()
         {
-            var output = "free | awk 'FNR == 3 {print $3/($3+$4)*100}'"
+            var output = "free | awk 'FNR == 2 {print ($3*100)/$2}'"
                 .Bash();
             return double.TryParse(output, out double dPercent) ? Convert.ToInt32(dPercent) : -1;
         }
 
         public int GetCPUTemperature()
         {
-            var output = @"sensors 2>/dev/null | awk '/id 0:/{printf "" % d\n"", $4}'"
+            var output = @"cat /sys/class/thermal/thermal_zone0/temp | awk '{print $1/1000}'"
                   .Bash();
-            return int.TryParse(output, out int dPercent) ? dPercent : -1;
+            return (int) (double.TryParse(output, out double dPercent) ? dPercent : -1);
         }
 
         public int GetUsedStorage()

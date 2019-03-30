@@ -234,7 +234,7 @@ class MusicPlayer extends React.Component {
                         </span>
                     </div>
 
-                    <ReactPlayer url={'http://spotypie.deveim.com/api/stream/play/' + this.props.props}
+                    <ReactPlayer url={'http://spotypie.pertrauktiestaskas.lt/api/stream/play/' + this.props.props}
                                  ref={this.ref}
                                  playing={this.state.playing}
                                  controls={true}

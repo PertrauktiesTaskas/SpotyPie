@@ -19,6 +19,9 @@ namespace SpotyPie
         {
             RootView = inflater.Inflate(Resource.Layout.library_layout, container, false);
 
+            MainActivity.ActionName.Text = "Library";
+            MainActivity.ActionName.Alpha = 1.0f;
+
             TabLayout tabs = RootView.FindViewById<TabLayout>(Resource.Id.tabs);
             ViewPager viewPager = RootView.FindViewById<ViewPager>(Resource.Id.viewpager);
 

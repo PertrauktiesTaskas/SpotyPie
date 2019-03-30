@@ -1,0 +1,273 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SpotyPie.AlbumFragment">
+    <Position X="11.25" Y="2.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>IAAANAIIBCAAIAhAEAhAABBCGAAAAAhCAmAAIABBAIA=</HashCode>
+      <FileName>AlbumFragment.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MainActivity" />
+      <Property Name="RecycleViewList" />
+      <Property Name="VerticalRV" />
+      <Property Name="HorizontalRV" />
+      <Property Name="BoxedRV" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SpotyPie.ArtistFragment">
+    <Position X="18.25" Y="12.5" Width="3.5" />
+    <AssociationLine Name="RecycleViewList" Type="SpotyPie.Helpers.RecycleViewList&lt;T&gt;" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="18.25" Y="16.188" />
+        <Point X="17.115" Y="16.188" Type="JumpStart" />
+        <Point X="16.948" Y="16.188" Type="JumpEnd" />
+        <Point X="16.352" Y="16.188" />
+        <Point X="16.352" Y="16.227" />
+        <Point X="15.197" Y="16.227" Type="JumpStart" />
+        <Point X="15.03" Y="16.227" Type="JumpEnd" />
+        <Point X="13.677" Y="16.227" Type="JumpStart" />
+        <Point X="13.51" Y="16.227" Type="JumpEnd" />
+        <Point X="13.443" Y="16.227" Type="JumpStart" />
+        <Point X="13.276" Y="16.227" Type="JumpEnd" />
+        <Point X="13.112" Y="16.227" Type="JumpStart" />
+        <Point X="12.945" Y="16.227" Type="JumpEnd" />
+        <Point X="12.5" Y="16.227" />
+        <Point X="12.5" Y="14" />
+        <Point X="11.917" Y="14" />
+        <Point X="11.917" Y="12.603" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>YQAAJAIIBCAAACgAEAgAABQACAAABAhCAEAgKAJJQIA=</HashCode>
+      <FileName>ArtistFragment.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="RecycleViewList" />
+      <Property Name="BoxedRV" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SpotyPie.Current_state">
+    <Position X="14" Y="9.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAEEFAAIIBAAgAAAAACACoACAQoIACKACAJAACoBJA=</HashCode>
+      <FileName>Current_state.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MainActivity" />
+      <Property Name="ArtistFragment" />
+      <Property Name="AlbumFragment" />
+      <Property Name="LibraryFragment" />
+      <Property Name="SearchFragment" />
+      <Property Name="PlayerSongListFragment" />
+      <Property Name="HomeFragment" />
+      <Property Name="PlayerFragment" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SpotyPie.HomeFragment">
+    <Position X="8.75" Y="14.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>iAABBIAIAAAAgCgAgAiABBGAEGACQAAAAWQAIAAKQgQ=</HashCode>
+      <FileName>HomeFragment.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MainActivity" />
+      <Property Name="RecycleViewList" />
+      <Property Name="HorizontalRV" />
+      <Property Name="BoxedRV" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SpotyPie.LibraryFragment">
+    <Position X="15.25" Y="4" Width="3.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="SpotyPie.LibraryFragment.TabAdapter">
+        <TypeIdentifier>
+          <NewMemberFileName>Library\LibraryFragment.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAABAAAAAAAAAAACAAIAAAAAA=</HashCode>
+      <FileName>Library\LibraryFragment.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MainActivity" />
+      <Property Name="RecycleViewList" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SpotyPie.MainActivity">
+    <Position X="20" Y="1.25" Width="3.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="SpotyPie.MainActivity.TabAdapter">
+        <TypeIdentifier>
+          <NewMemberFileName>MainActivity.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAkBAAAAAACAAEgALVAAAIIAgKQggQCAAAAGKwAkABA=</HashCode>
+      <FileName>MainActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SpotyPie.SearchFragment">
+    <Position X="6.5" Y="5.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>QAQAFAAQAAAACADBCgjlABgCEABIJSCAQGQAqAAAAIA=</HashCode>
+      <FileName>SearchFragment.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MainActivity" />
+      <Property Name="RecycleViewList" />
+      <Property Name="VerticalRV" />
+      <Property Name="HorizontalRV" />
+      <Property Name="BoxedRV" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SpotyPie.Player.PlayerFragment">
+    <Position X="22.5" Y="12.5" Width="2.75" />
+    <AssociationLine Name="PlayerSongListFragment" Type="SpotyPie.Player.PlayerSongListFragment" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="22.5" Y="20.312" />
+        <Point X="20.083" Y="20.312" Type="JumpStart" />
+        <Point X="19.917" Y="20.312" Type="JumpEnd" />
+        <Point X="16.344" Y="20.312" />
+        <Point X="16.344" Y="19.723" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>QSBFAAAIAJAoYAgAIAgILCEgAiBAMgABABIooIAAUAA=</HashCode>
+      <FileName>Player\PlayerFragment.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="PlayerSongListFragment" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SpotyPie.Player.PlayerSongListFragment">
+    <Position X="14" Y="16.5" Width="3.25" />
+    <AssociationLine Name="VerticalRV" Type="SpotyPie.Helpers.VerticalRV" ManuallyRouted="true">
+      <Path>
+        <Point X="14" Y="18.111" />
+        <Point X="13.677" Y="18.111" Type="JumpStart" />
+        <Point X="13.51" Y="18.111" Type="JumpEnd" />
+        <Point X="13.443" Y="18.111" Type="JumpStart" />
+        <Point X="13.276" Y="18.111" Type="JumpEnd" />
+        <Point X="13.029" Y="18.111" />
+        <Point X="13.029" Y="13.75" />
+        <Point X="12" Y="13.75" Type="JumpStart" />
+        <Point X="11.833" Y="13.75" Type="JumpEnd" />
+        <Point X="11.354" Y="13.75" Type="JumpStart" />
+        <Point X="11.187" Y="13.75" Type="JumpEnd" />
+        <Point X="10.458" Y="13.75" Type="JumpStart" />
+        <Point X="10.292" Y="13.75" Type="JumpEnd" />
+        <Point X="7.677" Y="13.75" Type="JumpStart" />
+        <Point X="7.51" Y="13.75" Type="JumpEnd" />
+        <Point X="5.333" Y="13.75" Type="JumpStart" />
+        <Point X="5.167" Y="13.75" Type="JumpEnd" />
+        <Point X="5" Y="13.75" />
+        <Point X="5" Y="12.5" />
+        <Point X="3.375" Y="12.5" />
+        <Point X="3.375" Y="11.543" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAFAAAAAAAAAhAAAhAABBCEAAAAAAAAkAAIAAAAIA=</HashCode>
+      <FileName>Player\PlayerSongListFragment.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="VerticalRV" />
+      <Property Name="HorizontalRV" />
+      <Property Name="BoxedRV" />
+      <Property Name="RecycleViewList" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SpotyPie.Helpers.AttachStateChangeListener" Collapsed="true">
+    <Position X="26.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAIAAAAAAAAAgAAAAAAAAAAAAEAAAAQA=</HashCode>
+      <FileName>Helpers\RV_click.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SpotyPie.Helpers.BoxedRV">
+    <Position X="13.25" Y="20.75" Width="3.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="SpotyPie.Helpers.BoxedRV.Loading">
+        <TypeIdentifier>
+          <NewMemberFileName>Helpers\BoxedRV.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="SpotyPie.Helpers.BoxedRV.BlockImage">
+        <TypeIdentifier>
+          <NewMemberFileName>Helpers\BoxedRV.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAJAAEAAgIAAAAAEAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\BoxedRV.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SpotyPie.Helpers.HorizontalRV">
+    <Position X="1.5" Y="12.75" Width="3.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="SpotyPie.Helpers.HorizontalRV.Loading">
+        <TypeIdentifier>
+          <NewMemberFileName>Helpers\HorizontalRV.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="SpotyPie.Helpers.HorizontalRV.BlockImage">
+        <TypeIdentifier>
+          <NewMemberFileName>Helpers\HorizontalRV.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAJAAEAAgIAAAAAEAAAAAgAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>Helpers\HorizontalRV.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ArtistFragment" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SpotyPie.Helpers.RecycleViewList&lt;T&gt;">
+    <Position X="10.75" Y="9.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AEIAAAAAAAAAAAIACAQABAQACAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Helpers\RecycleViewList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SpotyPie.Helpers.VerticalRV">
+    <Position X="2" Y="4" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="SpotyPie.Helpers.VerticalRV.Loading">
+        <TypeIdentifier>
+          <NewMemberFileName>Helpers\VerticalRV.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="SpotyPie.Helpers.VerticalRV.BlockImage">
+        <TypeIdentifier>
+          <NewMemberFileName>Helpers\VerticalRV.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAJAAEAAgIAAAAAEAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\VerticalRV.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="API.Controllers.AlbumController">
+    <Position X="0.5" Y="4.5" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAABAAAAABBAAAAAhAAQAIAIAAAAgAAA=</HashCode>
+      <FileName>Controllers\AlbumController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="API.Controllers.ArtistController">
+    <Position X="15" Y="0.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAgAAAAAAAAAAAAQhSAAAABAAAAIAAAABAgAAA=</HashCode>
+      <FileName>Controllers\ArtistController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="API.Controllers.ConfigurationController">
+    <Position X="18.75" Y="0.5" Width="5.25" />
+    <TypeIdentifier>
+      <HashCode>gBAAABAAAAAAAAAAQAAAEBAAAACAAAAAoAgAABAAAAA=</HashCode>
+      <FileName>Controllers\ConfigurationController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="API.Controllers.InfoController">
+    <Position X="5.75" Y="5.25" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAIAAAAAAAAAABAAAACAAAAAIAAAAAAAAAI=</HashCode>
+      <FileName>Controllers\InfoController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="API.Controllers.PlaylistController">
+    <Position X="10.75" Y="0.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>BAABABAAAAAAAAAAAAAAABAAAAQFIAAAIAAAAAAgAAA=</HashCode>
+      <FileName>Controllers\PlaylistController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="API.Controllers.SongsController">
+    <Position X="24.25" Y="0.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAABAAAAAABAAAEABAAAAIAAACAAgAAI=</HashCode>
+      <FileName>Controllers\SongsController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="API.Controllers.StreamController">
+    <Position X="0.5" Y="0.5" Width="5.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQABAAAACBAAAAIAAACAAAAAA=</HashCode>
+      <FileName>Controllers\StreamController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="API.Controllers.UploadController">
+    <Position X="6.75" Y="0.5" Width="3.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="API.Controllers.UploadController.DisableFormValueModelBindingAttribute" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Controllers\UploadController.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAABAACACBAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\UploadController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.AspNetCore.Mvc.ControllerBase" Collapsed="true">
+    <Position X="15.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Services.Service">
+    <Position X="23" Y="6" Width="5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Service.Helpers.MusicPlayPost">
+    <Position X="19.25" Y="7" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Service.Helpers.ShellHelper">
+    <Position X="16" Y="8.25" Width="2.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Services.TagHelpers.AudioFile">
+    <Position X="13.75" Y="9.75" Width="5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="IdSharp.AudioInfo.Flac">
+    <Position X="6.75" Y="10.25" Width="2.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="IdSharp.AudioInfo.OggVorbis">
+    <Position X="10.5" Y="10" Width="2.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="Service.Settings.ISettings">
+    <Position X="17.75" Y="11.5" Width="2.75" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Services.TagHelpers.IAudioFile">
+    <Position X="2.25" Y="10" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

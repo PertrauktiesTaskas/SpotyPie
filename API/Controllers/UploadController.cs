@@ -17,15 +17,13 @@ namespace API.Controllers
     [ApiController]
     public class UploadController : ControllerBase
     {
-        private readonly SpotyPieIDbContext _ctx;
         private readonly CancellationTokenSource cts;
         private CancellationToken ct;
         private readonly IDb _ctd;
         private ISettings settings;
 
-        public UploadController(SpotyPieIDbContext ctx, IDb ctd)
+        public UploadController(IDb ctd)
         {
-            _ctx = ctx;
             _ctd = ctd;
             cts = new CancellationTokenSource();
             ct = cts.Token;

@@ -28,15 +28,15 @@ namespace SpotyPie.Helpers
             view.Click += View_Click;
         }
 
-        public void OnChildViewDetachedFromWindow(View view)
-        {
-            view.Click -= View_Click;
-        }
-
         private void View_Click(object sender, EventArgs e)
         {
             RecyclerView.ViewHolder holder = mRecyclerview.GetChildViewHolder(((View)sender));
             mAction.Invoke(mRecyclerview, holder.AdapterPosition, ((View)sender));
+        }
+
+        public void OnChildViewDetachedFromWindow(View view)
+        {
+            view.Click -= View_Click;
         }
     }
 }
