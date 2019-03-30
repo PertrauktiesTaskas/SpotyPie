@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace API
 {
@@ -26,6 +27,26 @@ namespace API
                     builder => builder.WithOrigins("http://localhost:50249"));
             });
 
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1",
+                    new Info
+                    {
+                        Title = "Supplier Sync System (SSS)",
+                        Version = "v1",
+                        Description = "For development purpose",
+                        TermsOfService = "WTFPL",
+                        Contact = new Contact
+                        {
+                            Email = "eimantas@kiro.tech",
+                            Name = "Eimantas Noreika",
+                            Url = "kiro.tech"
+                        }
+                    }
+                );
+                options.DescribeAllEnumsAsStrings();
+            });
+
 
             services.AddScoped<IDb, Services.Service>();
             services.AddDbContext<SpotyPieIDbContext>(options =>
@@ -45,6 +66,14 @@ namespace API
             {
                 app.UseHsts();
             }
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SpotyPie API V1");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseHttpsRedirection();
             app.UseMvc();
